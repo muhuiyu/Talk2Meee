@@ -26,6 +26,20 @@ class HomeViewController: Base.MVVMViewController<HomeViewModel> {
         
         viewModel.fetchConversations()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+}
+
+// MARK: - Handlers
+extension HomeViewController {
+    @objc
+    private func didTapCompose() {
+        let viewController = NewConversationViewController()
+        present(viewController.embedInNavgationController(), animated: true)
+    }
 }
 
 // MARK: - View Config
@@ -40,6 +54,7 @@ extension HomeViewController {
 //        searchBar.setImage(UIImage(systemName: Icons.line3HorizontalDecrease), for: .bookmark, state: .normal)
 //        navigationItem.titleView = searchBar
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didTapCompose))
         
         // TableView
         tableView.delegate = self

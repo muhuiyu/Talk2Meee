@@ -15,7 +15,6 @@ class AppCoordinator: Coordinator {
     private let disposeBag = DisposeBag()
 
     private(set) var mainTabBarController: MainTabBarController?
-    let dataProvider = LocalStorage()
     
     // Login
     private var loginObserver: NSObjectProtocol?
