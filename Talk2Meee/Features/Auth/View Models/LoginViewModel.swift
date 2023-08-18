@@ -34,9 +34,17 @@ extension LoginViewModel {
             }
             
             let authResult = try await Auth.auth().signIn(with: GoogleAuthProvider.credential(withIDToken: idToken, accessToken: signInResult.user.accessToken.tokenString))
-            NotificationCenter.default.post(Notification(name: .didChangeAuthState))
             
-            // TODO: - insert user name
+            guard let email = authResult.user.email else {
+                print("cannot find user email")
+                return
+            }
+            
+            let userExists = await DatabaseManager.shared.userExists(with: email)
+            if !userExists {
+                await DatabaseManager.shared.insertUser(authResult.user)
+            }
+            NotificationCenter.default.post(Notification(name: .didChangeAuthState))
             
         } catch {
             print(error)

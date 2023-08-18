@@ -72,6 +72,7 @@
 		E49FC2122A8FEDF30016F309 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E49FC2112A8FEDF30016F309 /* RealmSwift */; };
 		E49FC2152A8FEE230016F309 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = E49FC2142A8FEE230016F309 /* Kingfisher */; };
 		E49FC2172A8FF3670016F309 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FC2162A8FF3670016F309 /* Message.swift */; };
+		E49FC2192A900C540016F309 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FC2182A900C540016F309 /* StorageManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -122,6 +123,7 @@
 		E41D2BC72A8FDDF5004C917D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E49FC1EE2A8FE8570016F309 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		E49FC2162A8FF3670016F309 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		E49FC2182A900C540016F309 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -404,6 +406,7 @@
 			isa = PBXGroup;
 			children = (
 				E49FC1EE2A8FE8570016F309 /* DatabaseManager.swift */,
+				E49FC2182A900C540016F309 /* StorageManager.swift */,
 			);
 			path = "Data Provider";
 			sourceTree = "<group>";
@@ -583,6 +586,7 @@
 				E49FC1EF2A8FE8570016F309 /* DatabaseManager.swift in Sources */,
 				E41D2B562A8FD419004C917D /* IconButton.swift in Sources */,
 				E41D2B962A8FD4C6004C917D /* LoginViewController.swift in Sources */,
+				E49FC2192A900C540016F309 /* StorageManager.swift in Sources */,
 				E41D2B632A8FD419004C917D /* ViewController.swift in Sources */,
 				E41D2B6A2A8FD419004C917D /* UINavigationController+Extensions.swift in Sources */,
 				E41D2B5B2A8FD419004C917D /* ErrorHandler.swift in Sources */,
