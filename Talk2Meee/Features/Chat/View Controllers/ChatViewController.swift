@@ -9,10 +9,24 @@ import UIKit
 import RxSwift
 import RxRelay
 import MessageKit
+import InputBarAccessoryView
 
-//class ChatViewController: Base.MVVMViewController<ChatViewModel> {
 class ChatViewController: MessagesViewController {
-        
+    
+    weak var appCoordinator: AppCoordinator?
+    private let disposeBag = DisposeBag()
+    private let viewModel: ChatViewModel
+    
+    init(appCoordinator: AppCoordinator? = nil, viewModel: ChatViewModel) {
+        self.viewModel = viewModel
+        self.appCoordinator = appCoordinator
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private var messages = [Message]()
     private var selfSender = Sender(senderId: "mikan123",
                                     displayName: "Mikan",
@@ -20,17 +34,6 @@ class ChatViewController: MessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Testing
-        messages.append(Message(sender: selfSender,
-                                messageId: "1",
-                                sentDate: Date.now,
-                                kind: .text("How are you doing?")))
-        messages.append(Message(sender: selfSender,
-                                messageId: "2",
-                                sentDate: Date.now,
-                                kind: .text("Wanna hangout and get some food?")))
-        
         configureViews()
         configureConstraints()
         configureBindings()
@@ -53,6 +56,7 @@ extension ChatViewController {
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        messageInputBar.delegate = self
     }
     private func configureConstraints() {
         
@@ -62,6 +66,7 @@ extension ChatViewController {
     }
 }
 
+// MARK: - MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate
 extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
     var currentSender: MessageKit.SenderType {
         return selfSender
@@ -77,3 +82,11 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
 }
 
+// MARK: - InputBarAccessoryViewDelegate
+extension ChatViewController: InputBarAccessoryViewDelegate {
+    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        guard !text.replacingOccurrences(of: " ", with: "").isEmpty else { return }
+        
+        // determine if it's new 
+    }
+}
