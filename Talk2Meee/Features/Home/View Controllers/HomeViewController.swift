@@ -27,7 +27,7 @@ class HomeViewController: Base.MVVMViewController<HomeViewModel> {
         configureBindings()
         
         spinner.show(in: view)
-        viewModel.fetchChats()
+        viewModel.listenForAllChats()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,7 +46,7 @@ extension HomeViewController {
     }
     @objc
     private func refreshData() {
-        viewModel.fetchChats()
+        viewModel.listenForAllChats()
     }
 }
 
@@ -66,13 +66,14 @@ extension HomeViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(ChatPreviewCell.self, forCellReuseIdentifier: ChatPreviewCell.reuseID)
         view.addSubview(tableView)
         
         emptyStateLabel.text = "No converstaions"
         emptyStateLabel.textAlignment = .center
         emptyStateLabel.textColor = .secondaryLabel
         emptyStateLabel.isHidden = true // hide while loading
-        emptyStateLabel.font = .preferredFont(forTextStyle: .body)
+        emptyStateLabel.font = .body
         
         view.addSubview(emptyStateLabel)
     }
@@ -94,6 +95,7 @@ extension HomeViewController {
             emptyStateLabel.isHidden = true
             tableView.reloadData()
         }
+        refreshControl.endRefreshing()
     }
     private func configureBindings() {
         viewModel.displayedChats
@@ -114,24 +116,19 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         return viewModel.displayedChats.value.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
-        var content = cell.defaultContentConfiguration()
-        content.text = viewModel.getChatTitle(at: indexPath)
-        content.secondaryText = viewModel.getChatSubtitle(at: indexPath)
-        cell.contentConfiguration = content
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ChatPreviewCell.reuseID, for: indexPath) as? ChatPreviewCell else { return UITableViewCell() }
+        cell.viewModel = ChatViewModel(appCoordinator: self.appCoordinator, chat: viewModel.getChat(at: indexPath))
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         defer {
             tableView.deselectRow(at: indexPath, animated: true)
         }
-        
-        let viewController = ChatViewController(appCoordinator: self.appCoordinator, viewModel: ChatViewModel(appCoordinator: self.appCoordinator, chat: viewModel.displayedChats.value[indexPath.row]))
-        viewController.title = viewModel.getChatTitle(at: indexPath)
-//        viewController.navigationItem.largeTitleDisplayMode = .never
+//        let viewController = ChatViewController(appCoordinator: self.appCoordinator, viewModel: ChatViewModel(appCoordinator: self.appCoordinator, chat: viewModel.displayedChats.value[indexPath.row]))
+        guard let cell = tableView.cellForRow(at: indexPath) as? ChatPreviewCell, let viewModel = cell.viewModel else { return }
+        let viewController = ChatViewController(appCoordinator: self.appCoordinator, viewModel: viewModel)
         navigationController?.pushViewController(viewController, animated: true)
     }
-    
 }
 
 // MARK: - UISearchResultsUpdating

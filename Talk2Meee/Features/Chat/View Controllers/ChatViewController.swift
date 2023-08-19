@@ -27,21 +27,13 @@ class ChatViewController: MessagesViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var messages = [Message]()
-    private var selfSender = Sender(senderId: "mikan123",
-                                    displayName: "Mikan",
-                                    photoURL: "")
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViews()
         configureConstraints()
         configureBindings()
         
-        DispatchQueue.main.async { [weak self] in
-            self?.messagesCollectionView.reloadData()
-            self?.messagesCollectionView.scrollToLastItem()
-        }
+        viewModel.listenForMessages()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,6 +45,7 @@ class ChatViewController: MessagesViewController {
 // MARK: - View Config
 extension ChatViewController {
     private func configureViews() {
+        title = viewModel.getChatTitle()
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
@@ -62,23 +55,35 @@ extension ChatViewController {
         
     }
     private func configureBindings() {
-        
+        viewModel.displayedMessages
+            .asObservable()
+            .subscribe { _ in
+                DispatchQueue.main.async { [weak self] in
+//                    self?.messagesCollectionView.reloadDataAndKeepOffset()
+                    self?.messagesCollectionView.reloadData()
+                    self?.messagesCollectionView.scrollToLastItem()
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }
 
 // MARK: - MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate
 extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
     var currentSender: MessageKit.SenderType {
-        return selfSender
+        guard let sender = viewModel.sender else {
+            fatalError("Self sender is nil, user data should be cached")
+        }
+        return sender
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessageKit.MessagesCollectionView) -> MessageKit.MessageType {
         // MessageKit uses Section to select messages
-        return messages[indexPath.section]
+        return viewModel.displayedMessages.value[indexPath.section]
     }
     
     func numberOfSections(in messagesCollectionView: MessageKit.MessagesCollectionView) -> Int {
-        return messages.count
+        return viewModel.displayedMessages.value.count
     }
 }
 
@@ -86,7 +91,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
 extension ChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty else { return }
-        
-        // determine if it's new 
+        viewModel.sendMessage(text)
+        inputBar.inputTextView.text = ""
     }
 }

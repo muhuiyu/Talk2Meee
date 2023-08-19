@@ -81,7 +81,7 @@ extension AppCoordinator {
         mainTabBarController?.configureTabBarItems()
     }
     private func configureRootViewController() {
-        if let _ = Auth.auth().currentUser {
+        if let _ = UserManager.shared.currentUser {
             showHome()
         } else {
             showLogin()

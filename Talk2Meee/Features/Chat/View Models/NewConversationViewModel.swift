@@ -24,7 +24,7 @@ extension NewConversationViewModel {
             self.filterUsers(with: query)
         } else {
             Task {
-                let result = await DatabaseManager.shared.getAllUsers()
+                let result = await DatabaseManager.shared.fetchAllUsers()
                 hasFetched = true
                 
                 switch result {

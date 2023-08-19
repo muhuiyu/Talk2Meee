@@ -33,11 +33,12 @@ struct Chat: Codable {
 
 struct ChatMessagePreview: Codable {
     let id: MessageID
+    let senderID: UserID
     let preview: String
     
     func toFirebaseData() -> [String: String] {
         return [
-            "id": id, "preview": preview
+            "id": id, "senderID": senderID, "preview": preview
         ]
     }
 }
@@ -69,5 +70,9 @@ extension Chat {
             "title": title,
             "lastMessage": lastMessage?.toFirebaseData()
         ]
+    }
+    
+    var isSingleChat: Bool {
+        return members.count == 2
     }
 }

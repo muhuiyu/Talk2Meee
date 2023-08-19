@@ -60,7 +60,7 @@ extension NewConversationViewController {
         emptyStateLabel.text = "No results"
         emptyStateLabel.textAlignment = .center
         emptyStateLabel.textColor = .secondaryLabel
-        emptyStateLabel.font = .preferredFont(forTextStyle: .body)
+        emptyStateLabel.font = .body
         view.addSubview(emptyStateLabel)
     }
     private func configureConstraints() {

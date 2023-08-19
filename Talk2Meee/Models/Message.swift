@@ -5,7 +5,7 @@
 //  Created by Grace, Mu-Hui Yu on 8/18/23.
 //
 
-import Foundation
+import UIKit
 import MessageKit
 
 struct Message: MessageType {
@@ -19,4 +19,11 @@ struct Sender: SenderType {
     var senderId: String
     var displayName: String
     var photoURL: String
+}
+
+struct Media: MediaItem {
+    var url: URL?
+    var image: UIImage?
+    var placeholderImage: UIImage
+    var size: CGSize
 }

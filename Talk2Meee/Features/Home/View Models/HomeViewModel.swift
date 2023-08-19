@@ -8,7 +8,6 @@
 import UIKit
 import RxSwift
 import RxRelay
-import FirebaseAuth
 
 class HomeViewModel: Base.ViewModel {
     
@@ -17,9 +16,8 @@ class HomeViewModel: Base.ViewModel {
 }
 
 extension HomeViewModel {
-    func fetchChats() {
-        Task {
-            let result = await DatabaseManager.shared.fetchChats()
+    func listenForAllChats() {
+        DatabaseManager.shared.listenForAllChats { result in
             switch result {
             case .success(let chats):
                 self.chats.accept(chats)
@@ -31,7 +29,7 @@ extension HomeViewModel {
         }
     }
     func fetchChat(with userID: UserID) async -> Chat? {
-        guard let currentUserID = Auth.auth().currentUser?.uid else { return nil }
+        guard let currentUserID = UserManager.shared.currentUserID else { return nil }
         let result = await DatabaseManager.shared.fetchChat([ currentUserID, userID ])
         switch result {
         case .failure(let error):
@@ -56,16 +54,11 @@ extension HomeViewModel {
 
 extension HomeViewModel {
     private func getChatTitle(for chat: Chat) -> String {
-        guard let currentUserID = Auth.auth().currentUser?.uid else { return "" }
+        guard let currentUserID = UserManager.shared.currentUserID else { return "" }
         return chat.title ?? chat.members.filter({ $0 != currentUserID }).compactMap({ DatabaseManager.shared.getUser($0)?.name }).joined(separator: ", ")
     }
-    func getChatTitle(at indexPath: IndexPath) -> String {
-        let chat = displayedChats.value[indexPath.row]
-        return getChatTitle(for: chat)
-    }
-    func getChatSubtitle(at indexPath: IndexPath) -> String {
-        let chat = displayedChats.value[indexPath.row]
-        return chat.lastMessage?.preview ?? ""
+    func getChat(at indexPath: IndexPath) -> Chat {
+        return displayedChats.value[indexPath.row]
     }
 }
 

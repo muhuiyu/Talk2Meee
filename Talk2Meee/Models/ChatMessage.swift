@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MessageKit
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseFirestoreCombineSwift
@@ -20,7 +21,11 @@ struct ChatMessage {
     let content: ChatMessageContent
     let searchableContent: String?
     let quotedMessageID: MessageID?
-    
+}
+
+
+// MARK: - Codable
+extension ChatMessage {
     private struct ChatMessageData: Codable {
         let sender: UserID
         let sentTime: Date
@@ -39,11 +44,21 @@ struct ChatMessage {
             case quotedMessageID = "quotedMessageId"
         }
         
+        init(sender: UserID, sentTime: Date, type: ChatMessageType, content: ChatMessageContent, searchableContent: String?, quotedMessageID: MessageID?) {
+            self.sender = sender
+            self.sentTime = sentTime
+            self.type = type
+            self.content = content
+            self.searchableContent = searchableContent
+            self.quotedMessageID = quotedMessageID
+        }
+        
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             sender = try container.decode(UserID.self, forKey: .sender)
-            sentTime = try container.decode(Date.self, forKey: .sentTime)
-            
+            let sentTimeInterval = try container.decode(TimeInterval.self, forKey: .sentTime)
+            sentTime = Date(timeIntervalSince1970: sentTimeInterval)
+
             let typeRawValue = try container.decode(ChatMessageType.RawValue.self, forKey: .type)
             guard let messageType = ChatMessageType(rawValue: typeRawValue) else {
                 fatalError("Invalid mesasge type")
@@ -64,7 +79,7 @@ struct ChatMessage {
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(sender, forKey: .sender)
-            try container.encode(sentTime, forKey: .sentTime)
+            try container.encode(sentTime.timeIntervalSince1970, forKey: .sentTime)
             try container.encode(type.rawValue, forKey: .type)
             try container.encode(content, forKey: .content)
             try container.encodeIfPresent(searchableContent, forKey: .searchableContent)
@@ -84,33 +99,58 @@ struct ChatMessage {
     }
 }
 
-enum ChatMessageType: String {
-    case text
-    case image
-    case sticker
-}
-
-protocol ChatMessageContent: Codable {
+extension ChatMessage {
+    var toMessage: Message? {
+        let placeholderImage = UIImage(systemName: Icons.questionmarkCircle) ?? UIImage()
+        
+        guard let senderUser = DatabaseManager.shared.getUser(self.sender) else { return nil }
+        
+        let sender = Sender(senderId: senderUser.id, displayName: senderUser.name, photoURL: senderUser.photoURL)
+        let kind: MessageKind
+        switch self.type {
+        case .text:
+            guard let content = self.content as? ChatMessageTextContent else { return nil }
+            kind = .text(content.text)
+        case .image:
+            guard let content = self.content as? ChatMessageImageContent else { return nil }
+            kind = .photo(Media(url: URL(string: content.imageStoragePath), placeholderImage: placeholderImage, size: CGSize(width: content.width, height: content.height)))
+        case .sticker:
+//            guard let content = self.content as? ChatMessageStickerContent else { return nil }
+//            let url =
+//            kind = .photo(Media(url: URL(string: content.imageStoragePath ?? ""), placeholderImage: placeholderImage, size: <#T##CGSize#>))
+            // TODO: - Add sticker URL and size
+            return nil
+        }
+        return Message(sender: sender, messageId: self.id, sentDate: self.sentTime, kind: kind)
+    }
     
-}
-
-struct ChatMessageTextContent: ChatMessageContent, Codable {
-    let text: String
-}
-
-struct ChatMessageImageContent: ChatMessageContent, Codable {
-    let imageStoragePath: String
-    let thumbnailStoragePath: String
-    let caption: String?
-    let width: Int
-    let height: Int
-    let format: String      // File format of the original image, e.g. png, jepg, gif.
-}
-
-typealias StickerID = String
-typealias StickerPackID = String
-
-struct ChatMessageStickerContent: ChatMessageContent, Codable {
-    let id: StickerID
-    let packID: StickerPackID
+    private var toChatMessageData: ChatMessageData {
+        return ChatMessageData(sender: sender, sentTime: sentTime, type: type, content: content, searchableContent: searchableContent, quotedMessageID: quotedMessageID)
+    }
+    
+    var toFirebaseMessage: [String: Any] {
+        do {
+            let encoder = JSONEncoder()
+            let jsonData = try encoder.encode(self.toChatMessageData)
+            if let dataDictionary = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as? [String: Any] {
+                return dataDictionary
+            }
+            return [:]
+        } catch {
+            print("Error:", error)
+            fatalError("Failed converting to FirebaseMessage")
+        }
+    }
+    
+    func generateMessagePreview() -> String {
+        switch type {
+        case .text:
+            guard let content = content as? ChatMessageTextContent else { return "" }
+            return content.text
+        case .image:
+            return "🏞️[image]"
+        case .sticker:
+            return "🧡[sticker]"
+        }
+    }
 }
