@@ -33,10 +33,15 @@ class AppCoordinator: Coordinator {
     func start() {
         configureBindings()
         setupMainTabBar()
-        configureDatabase()
-        configureRootViewController()
-        window.overrideUserInterfaceStyle = .light
-        window.makeKeyAndVisible()
+        Task {
+            await configureDatabase()
+            await restoreUserSession()
+            DispatchQueue.main.async { [weak self] in
+                self?.configureRootViewController()
+                self?.window.overrideUserInterfaceStyle = .light
+                self?.window.makeKeyAndVisible()
+            }
+        }
     }
 
     private func configureBindings() {
@@ -68,8 +73,18 @@ extension AppCoordinator {
 
 // MARK: - Services and managers
 extension AppCoordinator {
-    private func configureDatabase() {
+    private func configureDatabase() async {
 //        dataProvider.setup()
+    }
+    private func restoreUserSession() async {
+        guard let currentUserID = UserManager.shared.currentUserID else { return }
+        // fetch user
+        if let user = await DatabaseManager.shared.fetchUser(currentUserID) {
+            UserManager.shared.setChatUser(user)
+            // fetch messages
+            // fetch stickers
+            await DatabaseManager.shared.fetchStickers(for: user.stickerPacks, isForCurrentUser: true)
+        }
     }
 }
 

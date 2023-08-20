@@ -19,9 +19,10 @@ final class DatabaseManager {
         
     }
     
-    private let usersCollectionRef: CollectionReference = Firestore.firestore().collection("users")
-    private let friendsCollectionRef: CollectionReference = Firestore.firestore().collection("friends")
-    private let chatsCollectionRef: CollectionReference = Firestore.firestore().collection("chats")
+    internal let usersCollectionRef: CollectionReference = Firestore.firestore().collection("users")
+    internal let friendsCollectionRef: CollectionReference = Firestore.firestore().collection("friends")
+    internal let chatsCollectionRef: CollectionReference = Firestore.firestore().collection("chats")
+    internal let stickersCollectionRef: CollectionReference = Firestore.firestore().collection("stickers")
     
     // Signal -> when user changes: always have the latest, use firebase to send signal everytime when user changes
     private var fetchedUsers = [UserID: ChatUser]()
@@ -92,7 +93,7 @@ extension DatabaseManager {
             return .failure(error)
         }
     }
-    private func fetchUser(_ userID: UserID) async -> ChatUser? {
+    func fetchUser(_ userID: UserID) async -> ChatUser? {
         do {
             let snapshot = try await usersCollectionRef.document(userID).getDocument()
             guard snapshot.exists else { return nil }
@@ -291,44 +292,6 @@ extension DatabaseManager {
         } catch {
             print("Failed sendMessage():", error.localizedDescription)
             return .failure(error)
-        }
-    }
-}
-
-// MARK: - Stickers
-extension DatabaseManager {
-    func getStickers(for packID: StickerPackID, completion: @escaping (([ChatMessageSticker]) -> Void)) {
-        // TODO: - Add pack ID and sticker ID
-        let stickers = [
-            ChatMessageSticker(packID: "1385382", stickerID: "sticker_15040500.png", image: nil),
-            ChatMessageSticker(packID: "1385382", stickerID: "sticker_15040501.png", image: nil),
-            ChatMessageSticker(packID: "1385382", stickerID: "sticker_15040502.png", image: nil),
-            ChatMessageSticker(packID: "1385382", stickerID: "sticker_15040503.png", image: nil),
-            ChatMessageSticker(packID: "1385382", stickerID: "sticker_15040504.png", image: nil),
-            ChatMessageSticker(packID: "1385382", stickerID: "sticker_15040505.png", image: nil),
-            ChatMessageSticker(packID: "1385382", stickerID: "sticker_15040506.png", image: nil),
-        ]
-        
-        let group = DispatchGroup()
-        var stickersWithImage = [ChatMessageSticker]()
-        stickers.forEach { sticker in
-            group.enter()
-            let urlString = sticker.toImageURL()
-            let ref = Storage.storage().reference(forURL: urlString)
-            ref.getData(maxSize: 1 * 1024 * 1024) { data, error in
-                if let error = error {
-                    print("Error downloading image: \(error.localizedDescription)")
-                    return
-                }
-                guard let data = data else { return }
-                let image = UIImage(data: data)
-                stickersWithImage.append(ChatMessageSticker(packID: sticker.packID, stickerID: sticker.stickerID, image: image))
-                group.leave()
-            }
-        }
-        group.notify(queue: .main) {
-            print("Finished all requests.")
-            completion(stickersWithImage)
         }
     }
 }

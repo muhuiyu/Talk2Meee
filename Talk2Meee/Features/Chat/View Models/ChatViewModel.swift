@@ -15,7 +15,7 @@ class ChatViewModel: Base.ViewModel {
     private let messages: BehaviorRelay<[ChatMessage]> = BehaviorRelay(value: [])
     let displayedMessages: BehaviorRelay<[Message]> = BehaviorRelay(value: [])
     
-    private(set) var stickers: [ChatMessageSticker] = []
+    private(set) var stickerPacks = UserManager.shared.getStickerPacks()
     
     var sender: Sender? {
         guard let currentUser = UserManager.shared.currentUser else { return nil }
@@ -59,11 +59,11 @@ extension ChatViewModel {
             sendMessageResultHandler(result)
         }
     }
-    func sendMessage(_ sticker: ChatMessageSticker) {
+    func sendMessage(_ stickerID: StickerID, _ packID: StickerPackID) {
         let newIdentifier = UUID().uuidString
-        guard !sticker.stickerID.isEmpty, let sender = sender else { return }
+        guard let sender = sender else { return }
         Task {
-            let chatMessage = ChatMessage(id: newIdentifier, sender: sender.senderId, sentTime: Date(), type: .sticker, content: ChatMessageStickerContent(id: sticker.stickerID, packID: sticker.packID))
+            let chatMessage = ChatMessage(id: newIdentifier, sender: sender.senderId, sentTime: Date(), type: .sticker, content: ChatMessageStickerContent(id: stickerID, packID: packID))
             let result = await DatabaseManager.shared.sendMessage(to: chat.id, chatMessage)
             sendMessageResultHandler(result)
         }
@@ -74,18 +74,6 @@ extension ChatViewModel {
             print("Error: ", error)
         case .success:
             return
-        }
-    }
-}
-
-// MARK: - stickers
-extension ChatViewModel {
-    func fetchStickers() {
-        Task {
-            // TODO: - Add pack ID and sticker ID
-            DatabaseManager.shared.getStickers(for: "1385382") { stickers in
-                self.stickers = stickers
-            }
         }
     }
 }

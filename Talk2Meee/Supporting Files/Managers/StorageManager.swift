@@ -12,6 +12,8 @@ final class StorageManager {
     static let shared = StorageManager()
     
     private let storage = Storage.storage().reference()
+    
+    let storageToken = "6f97edbc-aa9f-4b19-90e8-1889c6437a42"
 }
 
 extension StorageManager {
@@ -27,7 +29,7 @@ extension StorageManager {
                                      filename: String) async -> UploadPictureResult {
         do {
             let path = "images/\(filename)"
-            let metadata = try await storage.child(path).putDataAsync(data)
+            _ = try await storage.child(path).putDataAsync(data)
             let downloadURL = try await storage.child(path).downloadURL()
             return .success(downloadURL.absoluteString)
         } catch {

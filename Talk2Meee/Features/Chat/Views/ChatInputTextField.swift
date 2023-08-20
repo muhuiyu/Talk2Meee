@@ -9,12 +9,16 @@ import UIKit
 import MessageKit
 import InputBarAccessoryView
 
+protocol ChatInputTextFieldDelegate: AnyObject {
+    func chatInputTextField(_ view: ChatInputTextField, didSelect stickerID: StickerID, from packID: StickerPackID)
+}
+
 class ChatInputTextField: UIView {
     
-    private let inputTextView = InputTextView()
+    let inputTextView = InputTextView()
     private let stickerButton = InputBarButtonItem()
     private let stickerTextField = UITextField()
-    private var stickerInputView = StickerInputView()
+    var stickerInputView = StickerInputView()
     
     private var isShowingStickerPanel = false
     
@@ -23,6 +27,8 @@ class ChatInputTextField: UIView {
             inputTextView.inputBarAccessoryView = inputBarAccessoryView
         }
     }
+    
+    weak var delegate: ChatInputTextFieldDelegate?
     
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
@@ -35,6 +41,19 @@ class ChatInputTextField: UIView {
     }
 }
 
+extension ChatInputTextField {
+    func dismissInputView(shouldKeepTextInputView: Bool = false, shouldKeepStickerInputView: Bool = false) {
+        if !shouldKeepTextInputView {
+            inputTextView.resignFirstResponder()
+        }
+        if !shouldKeepStickerInputView {
+            stickerTextField.resignFirstResponder()
+        }
+        reconfigureStickerButton()
+//        dismissKeyboard()
+    }
+}
+
 // MARK: - View Config
 extension ChatInputTextField {
     private func configureViews() {
@@ -42,7 +61,7 @@ extension ChatInputTextField {
         stickerTextField.inputView = stickerInputView
         stickerInputView.delegate = self
         
-//        inputTextView.inputBarAccessoryView = messageInputBar
+        inputTextView.delegate = self
         inputTextView.returnKeyType = .next
         addSubview(inputTextView)
         stickerButton.setSize(CGSize(width: 32, height: 32), animated: false)
@@ -89,11 +108,17 @@ extension ChatInputTextField {
     }
 }
 
-extension ChatInputTextField: StickerInputViewDelegate {
+extension ChatInputTextField: StickerInputViewDelegate, UITextViewDelegate {
     func stickerInputViewDidTapDone(_ view: StickerInputView) {
         stickerTextField.resignFirstResponder()
+        reconfigureStickerButton()
     }
     func stickerInputView(_ view: StickerInputView, didSelect stickerID: StickerID, from packID: StickerPackID) {
-        // TODO: -
+        delegate?.chatInputTextField(self, didSelect: stickerID, from: packID)
+    }
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView == inputTextView {
+            dismissInputView(shouldKeepTextInputView: true)
+        }
     }
 }

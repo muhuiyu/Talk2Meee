@@ -17,6 +17,7 @@ struct ChatUser: Codable {
     let name: String
     let email: String
     let photoURL: String
+    var stickerPacks: [StickerPackID]
 }
 
 extension ChatUser {
@@ -24,6 +25,7 @@ extension ChatUser {
         let name: String
         let email: String
         let photoURL: String
+        let stickerPacks: [StickerPackID]
     }
     init(snapshot: DocumentSnapshot) throws {
         id = snapshot.documentID
@@ -31,5 +33,6 @@ extension ChatUser {
         name = data.name
         email = data.email
         photoURL = data.photoURL
+        stickerPacks = data.stickerPacks
     }
 }

@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E41B98322A91C0B900E3544A /* ChatViewController+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41B98312A91C0B900E3544A /* ChatViewController+Keyboard.swift */; };
+		E41B98342A91C71F00E3544A /* ChatViewController+Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41B98332A91C71F00E3544A /* ChatViewController+Attachment.swift */; };
+		E41B98362A91C74E00E3544A /* ChatAddAttachmentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41B98352A91C74E00E3544A /* ChatAddAttachmentButton.swift */; };
+		E41B98382A91C7FD00E3544A /* ChatSendButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41B98372A91C7FD00E3544A /* ChatSendButton.swift */; };
+		E41B983A2A925FF500E3544A /* DataManager+Stickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41B98392A925FF500E3544A /* DataManager+Stickers.swift */; };
+		E41B983C2A9264F600E3544A /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41B983B2A9264F600E3544A /* CacheManager.swift */; };
 		E41D2B1F2A8FD3AA004C917D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41D2B1E2A8FD3AA004C917D /* AppDelegate.swift */; };
 		E41D2B212A8FD3AA004C917D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41D2B202A8FD3AA004C917D /* SceneDelegate.swift */; };
 		E41D2B282A8FD3AB004C917D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E41D2B272A8FD3AB004C917D /* Assets.xcassets */; };
@@ -54,11 +60,10 @@
 		E41D2BAC2A8FD5B9004C917D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E41D2BAB2A8FD5B9004C917D /* RxSwift */; };
 		E41D2BAF2A8FD61D004C917D /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41D2BAE2A8FD61D004C917D /* LoginViewModel.swift */; };
 		E41D2BC82A8FDDF5004C917D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E41D2BC72A8FDDF5004C917D /* GoogleService-Info.plist */; };
-		E453E8272A911DD200C2D615 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E8262A911DD200C2D615 /* TestViewController.swift */; };
 		E453E82B2A912DB800C2D615 /* StickerInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E82A2A912DB800C2D615 /* StickerInputView.swift */; };
 		E453E82D2A912F8600C2D615 /* ChatInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E82C2A912F8600C2D615 /* ChatInputTextField.swift */; };
 		E453E82F2A91349600C2D615 /* ChatMessageSticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E82E2A91349600C2D615 /* ChatMessageSticker.swift */; };
-		E453E8312A91355800C2D615 /* StickerInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E8302A91355800C2D615 /* StickerInputCell.swift */; };
+		E453E8312A91355800C2D615 /* StickerInputViewContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E8302A91355800C2D615 /* StickerInputViewContentCell.swift */; };
 		E49FC1EF2A8FE8570016F309 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FC1EE2A8FE8570016F309 /* DatabaseManager.swift */; };
 		E49FC1F22A8FE87A0016F309 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = E49FC1F12A8FE87A0016F309 /* GoogleSignIn */; };
 		E49FC1F42A8FE87A0016F309 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E49FC1F32A8FE87A0016F309 /* GoogleSignInSwift */; };
@@ -87,9 +92,17 @@
 		E49FC23A2A9051370016F309 /* ChatMessageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FC2392A9051370016F309 /* ChatMessageContent.swift */; };
 		E49FC23C2A9052F20016F309 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FC23B2A9052F20016F309 /* UserManager.swift */; };
 		E49FC23E2A9057B60016F309 /* ChatPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FC23D2A9057B60016F309 /* ChatPreviewCell.swift */; };
+		E4D3AE4C2A926AAE00208684 /* StickerInputViewHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE4B2A926AAE00208684 /* StickerInputViewHeaderCell.swift */; };
+		E4D3AE4E2A92731700208684 /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE4D2A92731700208684 /* ChatInputBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E41B98312A91C0B900E3544A /* ChatViewController+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatViewController+Keyboard.swift"; sourceTree = "<group>"; };
+		E41B98332A91C71F00E3544A /* ChatViewController+Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatViewController+Attachment.swift"; sourceTree = "<group>"; };
+		E41B98352A91C74E00E3544A /* ChatAddAttachmentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAddAttachmentButton.swift; sourceTree = "<group>"; };
+		E41B98372A91C7FD00E3544A /* ChatSendButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSendButton.swift; sourceTree = "<group>"; };
+		E41B98392A925FF500E3544A /* DataManager+Stickers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataManager+Stickers.swift"; sourceTree = "<group>"; };
+		E41B983B2A9264F600E3544A /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		E41D2B1B2A8FD3AA004C917D /* Talk2Meee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Talk2Meee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E41D2B1E2A8FD3AA004C917D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E41D2B202A8FD3AA004C917D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -135,11 +148,10 @@
 		E41D2BA12A8FD565004C917D /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		E41D2BAE2A8FD61D004C917D /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		E41D2BC72A8FDDF5004C917D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		E453E8262A911DD200C2D615 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		E453E82A2A912DB800C2D615 /* StickerInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputView.swift; sourceTree = "<group>"; };
 		E453E82C2A912F8600C2D615 /* ChatInputTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputTextField.swift; sourceTree = "<group>"; };
 		E453E82E2A91349600C2D615 /* ChatMessageSticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageSticker.swift; sourceTree = "<group>"; };
-		E453E8302A91355800C2D615 /* StickerInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputCell.swift; sourceTree = "<group>"; };
+		E453E8302A91355800C2D615 /* StickerInputViewContentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputViewContentCell.swift; sourceTree = "<group>"; };
 		E49FC1EE2A8FE8570016F309 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		E49FC2162A8FF3670016F309 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		E49FC2182A900C540016F309 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
@@ -151,6 +163,8 @@
 		E49FC2392A9051370016F309 /* ChatMessageContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageContent.swift; sourceTree = "<group>"; };
 		E49FC23B2A9052F20016F309 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		E49FC23D2A9057B60016F309 /* ChatPreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPreviewCell.swift; sourceTree = "<group>"; };
+		E4D3AE4B2A926AAE00208684 /* StickerInputViewHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputViewHeaderCell.swift; sourceTree = "<group>"; };
+		E4D3AE4D2A92731700208684 /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,8 +294,10 @@
 			children = (
 				E49FC2182A900C540016F309 /* StorageManager.swift */,
 				E49FC1EE2A8FE8570016F309 /* DatabaseManager.swift */,
-				E41D2B402A8FD419004C917D /* ErrorHandler.swift */,
+				E41B98392A925FF500E3544A /* DataManager+Stickers.swift */,
 				E49FC23B2A9052F20016F309 /* UserManager.swift */,
+				E41B983B2A9264F600E3544A /* CacheManager.swift */,
+				E41D2B402A8FD419004C917D /* ErrorHandler.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -367,6 +383,7 @@
 		E41D2B742A8FD41E004C917D /* View Models */ = {
 			isa = PBXGroup;
 			children = (
+				E49FC21C2A901F0F0016F309 /* NewConversationViewModel.swift */,
 				E41D2B752A8FD41E004C917D /* HomeViewModel.swift */,
 			);
 			path = "View Models";
@@ -375,8 +392,8 @@
 		E41D2B762A8FD41E004C917D /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				E41D2B9B2A8FD501004C917D /* NewConversationViewController.swift */,
 				E41D2B772A8FD41E004C917D /* HomeViewController.swift */,
-				E453E8262A911DD200C2D615 /* TestViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -403,7 +420,6 @@
 			isa = PBXGroup;
 			children = (
 				E41D2BA12A8FD565004C917D /* ChatViewModel.swift */,
-				E49FC21C2A901F0F0016F309 /* NewConversationViewModel.swift */,
 			);
 			path = "View Models";
 			sourceTree = "<group>";
@@ -413,8 +429,9 @@
 			children = (
 				E41D2B992A8FD4E7004C917D /* VideoPlayerViewController.swift */,
 				E41D2B972A8FD4DE004C917D /* PhotoViewerViewController.swift */,
-				E41D2B9B2A8FD501004C917D /* NewConversationViewController.swift */,
 				E41D2B9F2A8FD552004C917D /* ChatViewController.swift */,
+				E41B98332A91C71F00E3544A /* ChatViewController+Attachment.swift */,
+				E41B98312A91C0B900E3544A /* ChatViewController+Keyboard.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -424,7 +441,11 @@
 			children = (
 				E453E82A2A912DB800C2D615 /* StickerInputView.swift */,
 				E453E82C2A912F8600C2D615 /* ChatInputTextField.swift */,
-				E453E8302A91355800C2D615 /* StickerInputCell.swift */,
+				E4D3AE4B2A926AAE00208684 /* StickerInputViewHeaderCell.swift */,
+				E453E8302A91355800C2D615 /* StickerInputViewContentCell.swift */,
+				E41B98372A91C7FD00E3544A /* ChatSendButton.swift */,
+				E41B98352A91C74E00E3544A /* ChatAddAttachmentButton.swift */,
+				E4D3AE4D2A92731700208684 /* ChatInputBar.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -588,6 +609,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E41B98342A91C71F00E3544A /* ChatViewController+Attachment.swift in Sources */,
 				E41D2B662A8FD419004C917D /* UIView+Extensions.swift in Sources */,
 				E49FC23A2A9051370016F309 /* ChatMessageContent.swift in Sources */,
 				E41D2B5F2A8FD419004C917D /* Icons.swift in Sources */,
@@ -598,7 +620,9 @@
 				E41D2B8D2A8FD41E004C917D /* Base.swift in Sources */,
 				E41D2B872A8FD41E004C917D /* HomeViewController.swift in Sources */,
 				E41D2B572A8FD419004C917D /* RoundButton.swift in Sources */,
+				E41B98322A91C0B900E3544A /* ChatViewController+Keyboard.swift in Sources */,
 				E41D2B612A8FD419004C917D /* YearMonthDay.swift in Sources */,
+				E41B98382A91C7FD00E3544A /* ChatSendButton.swift in Sources */,
 				E453E82B2A912DB800C2D615 /* StickerInputView.swift in Sources */,
 				E41D2B5C2A8FD419004C917D /* Constants.swift in Sources */,
 				E41D2B5D2A8FD419004C917D /* DateFormat.swift in Sources */,
@@ -615,6 +639,7 @@
 				E41D2B6C2A8FD419004C917D /* Date+Extensions.swift in Sources */,
 				E41D2B652A8FD419004C917D /* UIImageView+loadImageUsingURL.swift in Sources */,
 				E41D2BA22A8FD565004C917D /* ChatViewModel.swift in Sources */,
+				E41B983C2A9264F600E3544A /* CacheManager.swift in Sources */,
 				E49FC2382A9051280016F309 /* ChatMessageType.swift in Sources */,
 				E41D2B862A8FD41E004C917D /* HomeViewModel.swift in Sources */,
 				E41D2B5A2A8FD419004C917D /* BaseCell.swift in Sources */,
@@ -622,25 +647,28 @@
 				E41D2B982A8FD4DE004C917D /* PhotoViewerViewController.swift in Sources */,
 				E41D2BAF2A8FD61D004C917D /* LoginViewModel.swift in Sources */,
 				E41D2B592A8FD419004C917D /* TextButton.swift in Sources */,
+				E41B983A2A925FF500E3544A /* DataManager+Stickers.swift in Sources */,
 				E41D2B602A8FD419004C917D /* YearMonth.swift in Sources */,
+				E4D3AE4C2A926AAE00208684 /* StickerInputViewHeaderCell.swift in Sources */,
 				E41D2B6B2A8FD419004C917D /* UUID+Extensions.swift in Sources */,
 				E49FC1EF2A8FE8570016F309 /* DatabaseManager.swift in Sources */,
 				E41D2B562A8FD419004C917D /* IconButton.swift in Sources */,
 				E49FC21D2A901F0F0016F309 /* NewConversationViewModel.swift in Sources */,
 				E41D2B962A8FD4C6004C917D /* LoginViewController.swift in Sources */,
+				E4D3AE4E2A92731700208684 /* ChatInputBar.swift in Sources */,
 				E49FC2192A900C540016F309 /* StorageManager.swift in Sources */,
 				E41D2B632A8FD419004C917D /* ViewController.swift in Sources */,
 				E41D2B6A2A8FD419004C917D /* UINavigationController+Extensions.swift in Sources */,
 				E41D2B5B2A8FD419004C917D /* ErrorHandler.swift in Sources */,
 				E49FC21B2A901A9C0016F309 /* ChatUser.swift in Sources */,
 				E41D2B622A8FD419004C917D /* Enum.swift in Sources */,
-				E453E8312A91355800C2D615 /* StickerInputCell.swift in Sources */,
+				E453E8312A91355800C2D615 /* StickerInputViewContentCell.swift in Sources */,
 				E41D2B852A8FD41E004C917D /* ProfileViewController.swift in Sources */,
 				E41D2B5E2A8FD419004C917D /* UIFont+Theme.swift in Sources */,
 				E41D2B582A8FD419004C917D /* CircleView.swift in Sources */,
+				E41B98362A91C74E00E3544A /* ChatAddAttachmentButton.swift in Sources */,
 				E453E82D2A912F8600C2D615 /* ChatInputTextField.swift in Sources */,
 				E41D2B682A8FD419004C917D /* UIColor+Extensions.swift in Sources */,
-				E453E8272A911DD200C2D615 /* TestViewController.swift in Sources */,
 				E41D2B212A8FD3AA004C917D /* SceneDelegate.swift in Sources */,
 				E49FC23E2A9057B60016F309 /* ChatPreviewCell.swift in Sources */,
 				E41D2B842A8FD41E004C917D /* ProfileViewModel.swift in Sources */,
