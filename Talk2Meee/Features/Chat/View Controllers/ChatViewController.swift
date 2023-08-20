@@ -10,7 +10,6 @@ import RxSwift
 import RxRelay
 import MessageKit
 import InputBarAccessoryView
-import Kingfisher
 import JGProgressHUD
 
 class ChatViewController: MessagesViewController {
@@ -21,7 +20,7 @@ class ChatViewController: MessagesViewController {
     
     // MARK: - Views
     private let spinner = JGProgressHUD(style: .dark)
-    private let chatInputTextField = ChatInputTextField()    
+    private let chatInputBar = ChatInputBar()
     internal var footerBottomConstraint: NSLayoutConstraint? = nil
     
     init(appCoordinator: AppCoordinator? = nil, viewModel: ChatViewModel) {
@@ -53,13 +52,13 @@ class ChatViewController: MessagesViewController {
 extension ChatViewController {
     @objc
     private func didTapInView() {
-        chatInputTextField.dismissInputView()
+        chatInputBar.dismissInputView()
     }
     @objc
     private func didSwipeDownInView(_ sender: UISwipeGestureRecognizer) {
         switch sender.direction {
         case .down, .up:
-            chatInputTextField.dismissInputView()
+            chatInputBar.dismissInputView()
         default:
             return
         }
@@ -70,11 +69,7 @@ extension ChatViewController {
 extension ChatViewController {
     private func configureViews() {
         title = viewModel.getChatTitle()
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
-        messagesCollectionView.messageCellDelegate = self
-        messageInputBar.delegate = self
+        configureMessageCollectionView()
         configureInputBar()
     }
     private func configureConstraints() {
@@ -83,6 +78,21 @@ extension ChatViewController {
             make.leading.equalTo(view.safeAreaLayoutGuide)
             footerBottomConstraint = make.bottom.equalTo(view.layoutMarginsGuide).constraint.layoutConstraints.first
         }
+    }
+    private func configureMessageCollectionView() {
+        messagesCollectionView.messagesDataSource = self
+        messagesCollectionView.messagesLayoutDelegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+        messagesCollectionView.messageCellDelegate = self
+    }
+    private func configureInputBar() {
+        chatInputBar.delegate = self
+        chatInputBar.chatInputBarDelegate = self
+        chatInputBar.isTranslucent = true
+        chatInputBar.separatorLine.isHidden = true
+        chatInputBar.stickerPacks = viewModel.stickerPacks
+        inputBarType = .custom(chatInputBar)
+        messageInputBar = chatInputBar
     }
     private func configureGestures() {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapInView))
@@ -95,7 +105,6 @@ extension ChatViewController {
             .asObservable()
             .subscribe { _ in
                 DispatchQueue.main.async { [weak self] in
-//                    self?.messagesCollectionView.reloadDataAndKeepOffset()
                     self?.messagesCollectionView.reloadData()
                     self?.messagesCollectionView.scrollToLastItem()
                 }
@@ -104,7 +113,7 @@ extension ChatViewController {
     }
 }
 
-// MARK: - MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate
+// MARK: - MessageCollectionView DataSource
 extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
     var currentSender: MessageKit.SenderType {
         guard let sender = viewModel.sender else {
@@ -135,51 +144,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
 }
 
-// MARK: - InputBarAccessoryViewDelegate, UITextViewDelegate
-extension ChatViewController: InputBarAccessoryViewDelegate {
-    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        guard !text.replacingOccurrences(of: " ", with: "").isEmpty else { return }
-        viewModel.sendMessage(text)
-        chatInputTextField.inputTextView.text = ""
-    }
-}
-
-
-// MARK: - InputBar UI
-extension ChatViewController {
-    private func configureInputBar() {
-        // InputBar
-        messageInputBar.isTranslucent = true
-        messageInputBar.separatorLine.isHidden = true
-        inputBarType = .custom(messageInputBar)
-        
-        // Left stack
-        let addAttachmentButton = ChatAddAttachmentButton()
-        addAttachmentButton.tapHandler = { [weak self] in
-            self?.presentInputActionSheet()
-        }
-        messageInputBar.setLeftStackViewWidthConstant(to: 36, animated: false)
-        messageInputBar.setStackViewItems([addAttachmentButton], forStack: .left, animated: true)
-        
-        // Right stack
-        let sendButton = ChatSendButton()
-        sendButton.tapHandler = { [weak self] in
-            guard let self = self else { return }
-            self.messageInputBar.delegate?.inputBar(self.messageInputBar,
-                                                    didPressSendButtonWith: self.chatInputTextField.inputTextView.text)
-        }
-        messageInputBar.setRightStackViewWidthConstant(to: 36, animated: false)
-        messageInputBar.setStackViewItems([sendButton], forStack: .right, animated: true)
-        
-        // Middle view
-        chatInputTextField.delegate = self
-        chatInputTextField.inputBarAccessoryView = messageInputBar
-        chatInputTextField.stickerInputView.stickerPacks = viewModel.stickerPacks
-        messageInputBar.setMiddleContentView(chatInputTextField, animated: false)
-    }
-}
-
-// MARK: - MessageCellDelegate
+// MARK: - MessageCollcetionView Delegate
 extension ChatViewController: MessageCellDelegate {
     func didTapImage(in cell: MessageCollectionViewCell) {
         guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
@@ -188,17 +153,6 @@ extension ChatViewController: MessageCellDelegate {
         let viewController = PhotoViewerViewController(appCoordinator: self.appCoordinator, url: imageURL)
         navigationController?.pushViewController(viewController, animated: true)
     }
-}
-
-// MARK: - DidSelectSticker
-extension ChatViewController: ChatInputTextFieldDelegate {
-    func chatInputTextField(_ view: ChatInputTextField, didSelect stickerID: StickerID, from packID: StickerPackID) {
-        viewModel.sendMessage(stickerID, packID)
-    }
-}
-
-// MARK: - ContextMenu
-extension ChatViewController {
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
         // Add double tap and long press gesture
         if indexPaths.count == 1 {
@@ -219,5 +173,19 @@ extension ChatViewController {
             return nil
         }
     }
-    
+}
+
+// MARK: - InputBar Delegate
+extension ChatViewController: InputBarAccessoryViewDelegate, ChatInputBarDelegate {
+    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        guard !text.replacingOccurrences(of: " ", with: "").isEmpty else { return }
+        viewModel.sendMessage(text)
+        chatInputBar.clearTextView()
+    }
+    func chatInputBarDidTapAttachmentButton(_ view: ChatInputBar) {
+        presentInputActionSheet()
+    }
+    func chatInputBar(_ view: ChatInputBar, didSelect stickerID: StickerID, from packID: StickerPackID) {
+        viewModel.sendMessage(stickerID, packID)
+    }
 }
