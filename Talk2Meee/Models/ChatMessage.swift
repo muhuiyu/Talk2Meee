@@ -21,6 +21,16 @@ struct ChatMessage {
     let content: ChatMessageContent
     let searchableContent: String?
     let quotedMessageID: MessageID?
+    
+    init(id: MessageID, sender: UserID, sentTime: Date, type: ChatMessageType, content: ChatMessageContent, searchableContent: String? = nil, quotedMessageID: MessageID? = nil) {
+        self.id = id
+        self.sender = sender
+        self.sentTime = sentTime
+        self.type = type
+        self.content = content
+        self.searchableContent = searchableContent
+        self.quotedMessageID = quotedMessageID
+    }
 }
 
 
@@ -100,28 +110,10 @@ extension ChatMessage {
 }
 
 extension ChatMessage {
-    var toMessage: Message? {
-        let placeholderImage = UIImage(systemName: Icons.questionmarkCircle) ?? UIImage()
-        
+    func toMessage() -> Message? {
         guard let senderUser = DatabaseManager.shared.getUser(self.sender) else { return nil }
-        
         let sender = Sender(senderId: senderUser.id, displayName: senderUser.name, photoURL: senderUser.photoURL)
-        let kind: MessageKind
-        switch self.type {
-        case .text:
-            guard let content = self.content as? ChatMessageTextContent else { return nil }
-            kind = .text(content.text)
-        case .image:
-            guard let content = self.content as? ChatMessageImageContent else { return nil }
-            kind = .photo(Media(url: URL(string: content.imageStoragePath), placeholderImage: placeholderImage, size: CGSize(width: content.width, height: content.height)))
-        case .sticker:
-//            guard let content = self.content as? ChatMessageStickerContent else { return nil }
-//            let url =
-//            kind = .photo(Media(url: URL(string: content.imageStoragePath ?? ""), placeholderImage: placeholderImage, size: <#T##CGSize#>))
-            // TODO: - Add sticker URL and size
-            return nil
-        }
-        return Message(sender: sender, messageId: self.id, sentDate: self.sentTime, kind: kind)
+        return Message(sender: sender, messageId: self.id, sentDate: self.sentTime, kind: self.content.toMessageKind())
     }
     
     private var toChatMessageData: ChatMessageData {

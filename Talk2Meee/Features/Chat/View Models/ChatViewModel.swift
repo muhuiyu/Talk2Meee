@@ -15,6 +15,8 @@ class ChatViewModel: Base.ViewModel {
     private let messages: BehaviorRelay<[ChatMessage]> = BehaviorRelay(value: [])
     let displayedMessages: BehaviorRelay<[Message]> = BehaviorRelay(value: [])
     
+    private(set) var stickers: [ChatMessageSticker] = []
+    
     var sender: Sender? {
         guard let currentUser = UserManager.shared.currentUser else { return nil }
         return Sender(senderId: currentUser.uid, displayName: currentUser.displayName ?? "", photoURL: currentUser.photoURL?.absoluteString ?? "")
@@ -27,13 +29,14 @@ class ChatViewModel: Base.ViewModel {
         messages
             .asObservable()
             .subscribe { value in
-                let convertedMessages = value.compactMap({ $0.toMessage })
+                let convertedMessages = value.compactMap({ $0.toMessage() })
                 self.displayedMessages.accept(convertedMessages)
             }
             .disposed(by: disposeBag)
     }
 }
 
+// MARK: - Listen and send messages
 extension ChatViewModel {
     func listenForMessages() {
         DatabaseManager.shared.listenForMessages(for: chat.id) { result in
@@ -46,22 +49,56 @@ extension ChatViewModel {
         }
     }
     func sendMessage(_ text: String) {
-        print("Sending: \(text)")
-        
         // TODO: - see if we need to use our customized id...?
         let newIdentifier = UUID().uuidString
         guard !text.isEmpty, let sender = sender else { return }
 //        let message = Message(sender: sender, messageId: newIdentifier, sentDate: Date(), kind: .text(text))
         Task {
-            let chatMessage = ChatMessage(id: newIdentifier, sender: sender.senderId, sentTime: Date(), type: .text, content: ChatMessageTextContent(text: text), searchableContent: text, quotedMessageID: nil)
-            await DatabaseManager.shared.sendMessage(to: chat.id, chatMessage)
-            // update messages
-            // reload tableview 
+            let chatMessage = ChatMessage(id: newIdentifier, sender: sender.senderId, sentTime: Date(), type: .text, content: ChatMessageTextContent(text: text), searchableContent: text)
+            let result = await DatabaseManager.shared.sendMessage(to: chat.id, chatMessage)
+            sendMessageResultHandler(result)
+        }
+    }
+    func sendMessage(_ sticker: ChatMessageSticker) {
+        let newIdentifier = UUID().uuidString
+        guard !sticker.stickerID.isEmpty, let sender = sender else { return }
+        Task {
+            let chatMessage = ChatMessage(id: newIdentifier, sender: sender.senderId, sentTime: Date(), type: .sticker, content: ChatMessageStickerContent(id: sticker.stickerID, packID: sticker.packID))
+            let result = await DatabaseManager.shared.sendMessage(to: chat.id, chatMessage)
+            sendMessageResultHandler(result)
+        }
+    }
+    private func sendMessageResultHandler(_ result: Result<Void, Error>) {
+        switch result {
+        case .failure(let error):
+            print("Error: ", error)
+        case .success:
+            return
         }
     }
 }
 
+// MARK: - stickers
 extension ChatViewModel {
+    func fetchStickers() {
+        Task {
+            // TODO: - Add pack ID and sticker ID
+            DatabaseManager.shared.getStickers(for: "1385382") { stickers in
+                self.stickers = stickers
+            }
+        }
+    }
+}
+
+// MARK: - Get chat properties
+extension ChatViewModel {
+    func getMessage(at indexPath: IndexPath) -> ChatMessage {
+        return messages.value[indexPath.section]
+    }
+    func getImageURL(at indexPath: IndexPath) -> URL? {
+        guard let content = messages.value[indexPath.section].content as? ChatMessageImageContent else { return nil }
+        return URL(string: content.imageStoragePath)
+    }
     func getChatImageURL() -> String? {
         if let imageURL = chat.imageStoragePath, !imageURL.isEmpty {
             return imageURL

@@ -34,4 +34,17 @@ extension StorageManager {
             return .failure(error)
         }
     }
+    
+    /// Uploads image that will be sent in a chat message
+    public func uploadMessagePhoto(with data: Data,
+                                   filename: String) async -> UploadPictureResult {
+        do {
+            let path = "message_images/\(filename)"
+            let metadata = try await storage.child(path).putDataAsync(data)
+            let downloadURL = try await storage.child(path).downloadURL()
+            return .success(downloadURL.absoluteString)
+        } catch {
+            return .failure(error)
+        }
+    }
 }

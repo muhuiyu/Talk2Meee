@@ -54,6 +54,11 @@
 		E41D2BAC2A8FD5B9004C917D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E41D2BAB2A8FD5B9004C917D /* RxSwift */; };
 		E41D2BAF2A8FD61D004C917D /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41D2BAE2A8FD61D004C917D /* LoginViewModel.swift */; };
 		E41D2BC82A8FDDF5004C917D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E41D2BC72A8FDDF5004C917D /* GoogleService-Info.plist */; };
+		E453E8272A911DD200C2D615 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E8262A911DD200C2D615 /* TestViewController.swift */; };
+		E453E82B2A912DB800C2D615 /* StickerInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E82A2A912DB800C2D615 /* StickerInputView.swift */; };
+		E453E82D2A912F8600C2D615 /* ChatInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E82C2A912F8600C2D615 /* ChatInputTextField.swift */; };
+		E453E82F2A91349600C2D615 /* ChatMessageSticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E82E2A91349600C2D615 /* ChatMessageSticker.swift */; };
+		E453E8312A91355800C2D615 /* StickerInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E8302A91355800C2D615 /* StickerInputCell.swift */; };
 		E49FC1EF2A8FE8570016F309 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FC1EE2A8FE8570016F309 /* DatabaseManager.swift */; };
 		E49FC1F22A8FE87A0016F309 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = E49FC1F12A8FE87A0016F309 /* GoogleSignIn */; };
 		E49FC1F42A8FE87A0016F309 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E49FC1F32A8FE87A0016F309 /* GoogleSignInSwift */; };
@@ -130,6 +135,11 @@
 		E41D2BA12A8FD565004C917D /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		E41D2BAE2A8FD61D004C917D /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		E41D2BC72A8FDDF5004C917D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E453E8262A911DD200C2D615 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		E453E82A2A912DB800C2D615 /* StickerInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputView.swift; sourceTree = "<group>"; };
+		E453E82C2A912F8600C2D615 /* ChatInputTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputTextField.swift; sourceTree = "<group>"; };
+		E453E82E2A91349600C2D615 /* ChatMessageSticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageSticker.swift; sourceTree = "<group>"; };
+		E453E8302A91355800C2D615 /* StickerInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputCell.swift; sourceTree = "<group>"; };
 		E49FC1EE2A8FE8570016F309 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		E49FC2162A8FF3670016F309 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		E49FC2182A900C540016F309 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
@@ -366,6 +376,7 @@
 			isa = PBXGroup;
 			children = (
 				E41D2B772A8FD41E004C917D /* HomeViewController.swift */,
+				E453E8262A911DD200C2D615 /* TestViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -411,6 +422,9 @@
 		E41D2B7E2A8FD41E004C917D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E453E82A2A912DB800C2D615 /* StickerInputView.swift */,
+				E453E82C2A912F8600C2D615 /* ChatInputTextField.swift */,
+				E453E8302A91355800C2D615 /* StickerInputCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -463,6 +477,7 @@
 				E49FC21A2A901A9C0016F309 /* ChatUser.swift */,
 				E49FC2332A90286E0016F309 /* Chat.swift */,
 				E49FC2352A9029190016F309 /* ChatMessage.swift */,
+				E453E82E2A91349600C2D615 /* ChatMessageSticker.swift */,
 				E49FC2392A9051370016F309 /* ChatMessageContent.swift */,
 				E49FC2372A9051280016F309 /* ChatMessageType.swift */,
 			);
@@ -584,9 +599,11 @@
 				E41D2B872A8FD41E004C917D /* HomeViewController.swift in Sources */,
 				E41D2B572A8FD419004C917D /* RoundButton.swift in Sources */,
 				E41D2B612A8FD419004C917D /* YearMonthDay.swift in Sources */,
+				E453E82B2A912DB800C2D615 /* StickerInputView.swift in Sources */,
 				E41D2B5C2A8FD419004C917D /* Constants.swift in Sources */,
 				E41D2B5D2A8FD419004C917D /* DateFormat.swift in Sources */,
 				E41D2B9C2A8FD501004C917D /* NewConversationViewController.swift in Sources */,
+				E453E82F2A91349600C2D615 /* ChatMessageSticker.swift in Sources */,
 				E41D2B552A8FD419004C917D /* Coordinator.swift in Sources */,
 				E49FC2342A90286E0016F309 /* Chat.swift in Sources */,
 				E41D2B642A8FD419004C917D /* UIViewController+Extensions.swift in Sources */,
@@ -617,10 +634,13 @@
 				E41D2B5B2A8FD419004C917D /* ErrorHandler.swift in Sources */,
 				E49FC21B2A901A9C0016F309 /* ChatUser.swift in Sources */,
 				E41D2B622A8FD419004C917D /* Enum.swift in Sources */,
+				E453E8312A91355800C2D615 /* StickerInputCell.swift in Sources */,
 				E41D2B852A8FD41E004C917D /* ProfileViewController.swift in Sources */,
 				E41D2B5E2A8FD419004C917D /* UIFont+Theme.swift in Sources */,
 				E41D2B582A8FD419004C917D /* CircleView.swift in Sources */,
+				E453E82D2A912F8600C2D615 /* ChatInputTextField.swift in Sources */,
 				E41D2B682A8FD419004C917D /* UIColor+Extensions.swift in Sources */,
+				E453E8272A911DD200C2D615 /* TestViewController.swift in Sources */,
 				E41D2B212A8FD3AA004C917D /* SceneDelegate.swift in Sources */,
 				E49FC23E2A9057B60016F309 /* ChatPreviewCell.swift in Sources */,
 				E41D2B842A8FD41E004C917D /* ProfileViewModel.swift in Sources */,

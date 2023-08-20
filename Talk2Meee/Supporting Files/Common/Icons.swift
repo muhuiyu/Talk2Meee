@@ -17,15 +17,33 @@ class Icons {
     static var arrowTriangleUp: String { "arrow.triangle.up" }
     static var arrowTriangleDown: String { "arrow.triangle.down" }
     static var transfer: String { "arrow.2.squarepath" }
+    static var photo: String { "photo" }
     static var photoFill: String { "photo.fill" }
     static var lightbulb: String { "lightbulb" }
     static var dollarsignCircle: String { "dollarsign.circle" }
     static var dollarsignCircleFill: String { "dollarsign.circle.fill" }
     static var dollarSignArrowCirclePath: String { "dollarsign.arrow.circlepath" }
     static var plus: String { "plus" }
+    static var keyboard: String { "keyboard" }
+    static var keyboardFill: String { "keyboard.fill" }
+    static var star: String { "star" }
+    static var starFill: String { "star.fill" }
+    static var mappinAndEllipse: String { "mappin.and.ellipse" }
+    static var info: String { "info" }
+    static var infoCircle: String { "info.circle" }
+    static var infoCircleFill: String { "info.circle.fill" }
+    static var docOnDoc: String { "doc.on.doc" }
+    static var doc: String { "doc" }
+    static var arrowshapeTurnUpBackward: String { "arrowshape.turn.up.backward" }
+    static var arrowshapeTurnUpBackwardFill: String { "arrowshape.turn.up.backward.fill" }
+    static var arrowshapeTurnUpForward: String { "arrowshape.turn.up.forward" }
+    static var arrowshapeTurnUpForwardFill: String { "arrowshape.turn.up.forward.fill" }
     static var eyeglasses: String { "eyeglasses" }
     static var globe: String { "globe" }
+    static var trash: String { "trash" }
     static var trashFill: String { "trash.fill" }
+    static var camera: String { "camera" }
+    static var cameraFill: String { "camera.fill" }
     static var sparkle: String { "sparkle" }
     static var sparkles: String { "sparkles" }
     static var cursorarrowRays: String { "cursorarrow.rays" }
@@ -55,6 +73,7 @@ class Icons {
     static var questionmarkCircle: String { "questionmark.circle" }
     static var person: String { "person" }
     static var personFill: String { "person.fill" }
+    static var personCropCircle: String { "person.crop.circle" }
     static var plusminus: String { "plusminus" }
     static var plusminusFill: String { "plusminus.fill" }
     static var plusminusCircle: String { "plusminus.circle" }
@@ -116,6 +135,8 @@ class Icons {
     static var characterBubbleFill: String { "character.bubble.fill" }
     static var bubbleLeft: String { "bubble.left" }
     static var bubbleLeftFill: String { "bubble.left.fill" }
+    static var faceSmiling: String { "face.smiling" }
+    static var faceSmilingInverse: String { "face.smiling.inverse" }
     static var bubbleRight: String { "bubble.right" }
     static var bubbleRightFill: String { "bubble.right.fill" }
     static var textBookClosedFill: String { "text.book.closed.fill" }
