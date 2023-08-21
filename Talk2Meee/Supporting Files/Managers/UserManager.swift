@@ -51,6 +51,9 @@ extension UserManager {
             UserDefaults.standard.set(encoded, forKey: UserManager.chatThemeKey)
         }
     }
+    func removeChatUser() {
+        UserDefaults.standard.removeObject(forKey: UserManager.userKey)
+    }
 }
 
 

@@ -10,6 +10,7 @@ import RxSwift
 import RxRelay
 import JGProgressHUD
 
+/// ChatList
 class HomeViewController: Base.MVVMViewController<HomeViewModel> {
     
     // MARK: - Views
@@ -128,6 +129,28 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.cellForRow(at: indexPath) as? ChatPreviewCell, let viewModel = cell.viewModel else { return }
         let viewController = ChatViewController(appCoordinator: self.appCoordinator, viewModel: viewModel)
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: nil, handler: { [weak self] _, _, completion in
+            self?.presentDeleteConfirmation(for: indexPath, { hasRemoved in
+                if hasRemoved {
+                    self?.viewModel.deleteChat(at: indexPath)
+                }
+                completion(true)
+            })
+        })
+        deleteAction.image = UIImage(systemName: Icons.trash)
+        return UISwipeActionsConfiguration(actions: [ deleteAction ])
+    }
+    func presentDeleteConfirmation(for indexPath: IndexPath, _ completion: @escaping ((Bool) -> Void)) {
+        let alert = UIAlertController(title: nil, message: "Remove chat?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+            completion(true)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+            completion(false)
+        }))
+        present(alert, animated: true)
     }
 }
 

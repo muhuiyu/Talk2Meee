@@ -9,15 +9,16 @@ import UIKit
 import RxRelay
 import RxSwift
 import Firebase
+import FirebaseAuth
 
 class AppCoordinator: Coordinator {
     private let window: UIWindow
     private let disposeBag = DisposeBag()
 
     private(set) var mainTabBarController: MainTabBarController?
-    
-    // Login
     private var loginObserver: NSObjectProtocol?
+    
+    let cacheManager = try! CacheManager()
 
     init?(window: UIWindow?) {
         guard let window = window else { return nil }
@@ -34,8 +35,8 @@ class AppCoordinator: Coordinator {
         configureBindings()
         setupMainTabBar()
         Task {
-            await configureDatabase()
             await restoreUserSession()
+            await configureDatabase()
             DispatchQueue.main.async { [weak self] in
                 self?.configureRootViewController()
                 self?.window.overrideUserInterfaceStyle = .light
@@ -73,21 +74,15 @@ extension AppCoordinator {
 
 // MARK: - Services and managers
 extension AppCoordinator {
-    private func configureDatabase() async {
-//        dataProvider.setup()
-    }
     private func restoreUserSession() async {
         guard let currentUserID = UserManager.shared.currentUserID else { return }
-        // fetch user
         if let user = await DatabaseManager.shared.fetchUser(currentUserID) {
             UserManager.shared.setChatUser(user)
-            // fetch messages
-            
-            // Update fetch stickers
-            Task {
-                await DatabaseManager.shared.fetchStickers(for: user.stickerPacks, isForCurrentUser: true)
-            }
         }
+    }
+    private func configureDatabase() async {
+        DatabaseManager.shared.appCoordinator = self
+        await DatabaseManager.shared.syncData()
     }
 }
 
@@ -107,6 +102,19 @@ extension AppCoordinator {
     }
 }
 
+// MARK: - Logout
+extension AppCoordinator {
+    func logOutUser() {
+        do {
+            try Auth.auth().signOut()
+            NotificationCenter.default.post(Notification(name: .didChangeAuthState))
+            UserManager.shared.removeChatUser()
+            DatabaseManager.shared.clearUserData()
+        } catch let signOutError as NSError {
+            print("Failed to logout", signOutError)
+        }
+    }
+}
 
 extension Notification.Name {
     static let didChangeAuthState = Notification.Name("didChangeAuthState")

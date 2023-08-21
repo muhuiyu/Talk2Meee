@@ -211,7 +211,9 @@ extension ChatViewController: MessageCellDelegate {
                     UIAction(title: "Forward", image: UIImage(systemName: Icons.arrowshapeTurnUpForward)) { _ in /* Implement the action. */ },
                     UIAction(title: "Copy", image: UIImage(systemName: Icons.docOnDoc)) { _ in /* Implement the action. */ },
                     UIAction(title: "Info", image: UIImage(systemName: Icons.infoCircle)) { _ in /* Implement the action. */ },
-                    UIAction(title: "Delete", image: UIImage(systemName: Icons.trash), attributes: .destructive) { _ in /* Implement the action. */ }
+                    UIAction(title: "Delete", image: UIImage(systemName: Icons.trash), attributes: .destructive) { [weak self] _ in
+                        // TODO: add delete messages
+                    }
                 ])
             })
         } else {

@@ -50,6 +50,9 @@ extension HomeViewModel {
             displayedChats.accept(filteredChats)
         }
     }
+    func deleteChat(at indexPath: IndexPath) {
+        // TODO: 
+    }
 }
 
 extension HomeViewModel {

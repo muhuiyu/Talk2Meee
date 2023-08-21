@@ -58,13 +58,20 @@ extension ChatViewModel {
             sendMessageResultHandler(result)
         }
     }
-    private func sendMessageResultHandler(_ result: Result<Void, Error>) {
+    private func sendMessageResultHandler(_ result: VoidResult) {
         switch result {
         case .failure(let error):
             print("Error: ", error)
         case .success:
             return
         }
+    }
+}
+
+// MARK: - Delete message
+extension ChatViewModel {
+    func deleteMessage(at indexPath: IndexPath) {
+        
     }
 }
 

@@ -15,11 +15,6 @@ class ProfileViewModel: Base.ViewModel {
 
 extension ProfileViewModel {
     func logOutUser() {
-        do {
-            try Auth.auth().signOut()
-            NotificationCenter.default.post(Notification(name: .didChangeAuthState))
-        } catch let signOutError as NSError {
-            print("Failed to logout", signOutError)
-        }
+        appCoordinator?.logOutUser()
     }
 }

@@ -36,3 +36,17 @@ extension ChatUser {
         stickerPacks = data.stickerPacks
     }
 }
+
+// MARK: - Persistable
+extension ChatUser: Persistable {
+    init(managedObject: UserObject) {
+        id = managedObject.id
+        name = managedObject.name
+        email = managedObject.email
+        photoURL = managedObject.photoURL
+        stickerPacks = managedObject.stickerPacks
+    }
+    func managedObject() -> UserObject {
+        return UserObject(id: id, name: name, email: email, photoURL: photoURL)
+    }
+}

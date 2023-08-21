@@ -30,7 +30,7 @@ extension DatabaseManager {
             if isForCurrentUser {
                 UserManager.shared.setStickerPacks(packs)
             }
-            CacheManager.shared.addStickerPackCache(for: packs) // save to cache
+            self.appCoordinator?.cacheManager.addStickerPackCache(for: packs) // save to cache
         } catch {
             print("Error", error)
         }
@@ -50,7 +50,9 @@ extension DatabaseManager {
     func fetchAllStickerPacks() async -> [StickerPack] {
         do {
             let snapshot = try await stickersCollectionRef.getDocuments()
-            return try snapshot.documents.compactMap({ try StickerPack(snapshot: $0) })
+            let packs = try snapshot.documents.compactMap({ try StickerPack(snapshot: $0) })
+            self.appCoordinator?.cacheManager.addStickerPackCache(for: packs)
+            return packs
         } catch {
             print("Failed fetchAllStickerPacks():", error.localizedDescription)
             return []

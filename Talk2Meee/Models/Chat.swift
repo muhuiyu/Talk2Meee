@@ -13,6 +13,7 @@ import FirebaseFirestoreCombineSwift
 
 typealias ChatID = String
 
+// MARK: - Chat
 struct Chat: Codable {
     let id: ChatID
     let title: String?
@@ -31,6 +32,7 @@ struct Chat: Codable {
     }
 }
 
+// MARK: - ChatMessagePreview
 struct ChatMessagePreview: Codable {
     let id: MessageID
     let senderID: UserID

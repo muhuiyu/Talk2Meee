@@ -1,5 +1,5 @@
 //
-//  ChatMessageSticker.swift
+//  Sticker.swift
 //  Talk2Meee
 //
 //  Created by Grace, Mu-Hui Yu on 8/19/23.
@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 import FirebaseFirestoreCombineSwift
 import FirebaseStorage
 
-struct ChatMessageSticker {
+struct Sticker {
     let packID: StickerPackID
     let stickerID: StickerID
     
@@ -43,9 +43,9 @@ struct StickerPack: Codable {
         return (1...numberOfStickers).map({ "\($0).png" })
     }
     
-    func getStickers() -> [ChatMessageSticker] {
+    func getStickers() -> [Sticker] {
         return getStickerIDs().compactMap { stickerID in
-            return ChatMessageSticker(packID: id, stickerID: stickerID)
+            return Sticker(packID: id, stickerID: stickerID)
         }
     }
     

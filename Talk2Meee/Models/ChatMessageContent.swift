@@ -58,7 +58,7 @@ struct ChatMessageStickerContent: ChatMessageContent, Codable {
     
     func toMessageKind() -> MessageKind {
         let placeholderImage = UIImage(systemName: Icons.questionmarkCircle) ?? UIImage()
-        return .photo(Media(url: URL(string: ChatMessageSticker.getImageURL(for: id, from: packID)),
+        return .photo(Media(url: URL(string: Sticker.getImageURL(for: id, from: packID)),
                             placeholderImage: placeholderImage,
                             size: ChatMessageStickerContent.size))
     }
