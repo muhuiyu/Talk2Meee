@@ -101,7 +101,7 @@ extension DatabaseManager {
             group.enter()
             fetchUser(userID) { user in
                 if let user = user  {
-                    self.appCoordinator?.cacheManager.saveUser(user)
+                    self.updateUserCache(for: user)
                 }
                 group.leave()
             }
@@ -116,7 +116,7 @@ extension DatabaseManager {
         for userID in userIDs {
             group.enter()
             if let user = await fetchUser(userID) {
-                self.appCoordinator?.cacheManager.saveUser(user)
+                self.updateUserCache(for: user)
             }
             group.leave()
         }
@@ -125,14 +125,8 @@ extension DatabaseManager {
         }
     }
     func getUser(_ userID: UserID) -> ChatUser? {
-        return self.appCoordinator?.cacheManager.getUser(for: userID)
-        
-
-        // TODO: - Add cache
         // find in cache first
-//        if let user = cacheManager.getUser(for: userID) {
-//            return user
-//        }
+        return getUserFromCache(for: userID)
         // if not, query user
 //        return await fetchUser(userID)
     }

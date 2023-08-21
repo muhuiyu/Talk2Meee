@@ -6,18 +6,194 @@
 //
 
 import Foundation
-import Firebase
-import FirebaseAuth
-import FirebaseCore
-import FirebaseFirestore
-import FirebaseStorage
+import RealmSwift
 
 extension DatabaseManager {
     func syncData() async {
-        DispatchQueue.main.async {
-            self.appCoordinator?.cacheManager.setup()
-        }
         guard let user = UserManager.shared.getChatUser() else { return }
         await DatabaseManager.shared.fetchStickers(for: user.stickerPacks, isForCurrentUser: true)
+    }
+}
+
+// MARK: - Stickers
+extension DatabaseManager {
+    func getAllPacks() -> [StickerPack] {
+        do {
+            let realm = try Realm()
+            return realm.objects(StickerPackObject.self).map({ StickerPack(managedObject: $0) })
+        } catch {
+            print("Error", error)
+            return []
+        }
+    }
+    func getStickerPack(for packID: StickerPackID) -> StickerPack? {
+        do {
+            let realm = try Realm()
+            return realm.objects(StickerPackObject.self).first(where: { $0.id == packID }).map({ StickerPack(managedObject: $0) })
+        } catch {
+            print("Error", error)
+            return nil
+        }
+    }
+    func updateStickerPackCache(for updatedPacks: [StickerPack]) {
+        updatedPacks.forEach({ updateStickerPackCache(for: $0) })
+    }
+    func updateStickerPackCache(for updatedPack: StickerPack) {
+        do {
+            let realm = try Realm()
+            
+            if let _ = realm.objects(StickerPackObject.self).first(where: { $0.id == updatedPack.id }) {
+                updateData(of: updatedPack) { result in
+                    self.resultHandler(result)
+                }
+            } else {
+                addData(of: updatedPack, as: StickerPackObject.self) { result in
+                    self.resultHandler(result)
+                }
+            }
+        } catch {
+            print("Error", error)
+        }
+    }
+}
+// MARK: - Chats
+extension DatabaseManager {
+    func getAllChats() -> [Chat] {
+        do {
+            let realm = try Realm()
+            return realm.objects(ChatObject.self).map({ Chat(managedObject: $0) })
+        } catch {
+            print("Error", error)
+            return []
+        }
+    }
+    func updateChatCache(for updatedChats: [Chat]) {
+        updatedChats.forEach({ updateChatCache(for: $0) })
+    }
+    func updateChatCache(for updatedChat: Chat) {
+        do {
+            let realm = try Realm()
+            if let _ = realm.objects(ChatObject.self).first(where: { $0.id == updatedChat.id }) {
+                updateData(of: updatedChat) { result in
+                    self.resultHandler(result)
+                }
+            } else {
+                addData(of: updatedChat, as: ChatObject.self) { result in
+                    self.resultHandler(result)
+                }
+            }
+        } catch {
+            print("Error", error)
+        }
+    }
+}
+
+// MARK: - Messages
+extension DatabaseManager {
+    func getMessages(for chatID: ChatID) -> [ChatMessage] {
+        do {
+            let realm = try Realm()
+            return realm.objects(ChatMessageObject.self).filter({ $0.chatID == chatID }).map({ ChatMessage(managedObject: $0) })
+        } catch {
+            print("Error", error)
+            return []
+        }
+    }
+    func updateMessageCache(for updatedMessages: [ChatMessage]) {
+        updatedMessages.forEach({ updateMessageCache(for: $0) })
+    }
+    func updateMessageCache(for updatedMessage: ChatMessage) {
+        do {
+            let realm = try Realm()
+            if let _ = realm.objects(ChatMessageObject.self).first(where: { $0.id == updatedMessage.id }) {
+                updateData(of: updatedMessage) { result in
+                    self.resultHandler(result)
+                }
+            } else {
+                addData(of: updatedMessage, as: ChatMessageObject.self) { result in
+                    self.resultHandler(result)
+                }
+            }
+        } catch {
+            print("Error", error)
+        }
+    }
+}
+// MARK: - Users
+extension DatabaseManager {
+    /// Returns all users
+    func getAllUsers() -> [ChatUser] {
+        do {
+            let realm = try Realm()
+            return realm.objects(UserObject.self).map({ ChatUser(managedObject: $0) })
+        } catch {
+            print("Error", error)
+            return []
+        }
+    }
+    func getUserFromCache(for userID: UserID) -> ChatUser? {
+        do {
+            let realm = try Realm()
+            return realm.objects(UserObject.self).first(where: { $0.id == userID }).map({ ChatUser(managedObject: $0) })
+        } catch {
+            print("Error", error)
+            return nil
+        }
+    }
+    func updateUserCache(for updatedUser: ChatUser) {
+        do {
+            let realm = try Realm()
+            if let _ = realm.objects(UserObject.self).first(where: { $0.id == updatedUser.id }) {
+                updateData(of: updatedUser) { result in
+                    self.resultHandler(result)
+                }
+            } else {
+                addData(of: updatedUser, as: UserObject.self) { result in
+                    self.resultHandler(result)
+                }
+            }
+        } catch {
+            print("Error", error)
+        }
+    }
+    func updateUserCache(for updatedUsers: [ChatUser]) {
+        updatedUsers.forEach({ updateUserCache(for: $0) })
+    }
+}
+
+// MARK: - Private methods
+extension DatabaseManager {
+    private func addData<T: Persistable, TObject: Object>(of data: T, as objectType: TObject.Type, completion: @escaping (VoidResult) -> Void) {
+        do {
+            let realm = try Realm()
+            try realm.write({
+                let _ = realm.create(TObject.self, value: data.managedObject())
+            })
+            completion(.success)
+        } catch {
+            completion(.failure(error))
+        }
+    }
+    private func updateData<T: Persistable>(of data: T, completion: @escaping (VoidResult) -> Void) {
+        do {
+            let realm = try Realm()
+            try realm.write({
+                realm.add(data.managedObject(), update: .modified)
+            })
+            completion(.success)
+        } catch {
+            completion(.failure(error))
+        }
+    }
+    private func deleteData(of id: UserID, completion: @escaping (VoidResult) -> Void) {
+        // TODO: -
+    }
+    private func resultHandler(_ result: VoidResult) {
+        switch result {
+        case .success:
+            return
+        case .failure(let error):
+            print("Failed with error", error)
+        }
     }
 }

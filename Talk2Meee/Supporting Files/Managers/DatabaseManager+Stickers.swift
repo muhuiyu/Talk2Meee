@@ -14,8 +14,8 @@ import FirebaseStorage
 // MARK: - Stickers
 extension DatabaseManager {
     func fetchStickers(for packIDs: [StickerPackID], isForCurrentUser: Bool = false) async {
-        var packs = [StickerPack]()
         do {
+            var packs = [StickerPack]()
             try await withThrowingTaskGroup(of: StickerPack.self) { group in
                 for packID in packIDs {
                     group.addTask {
@@ -30,7 +30,7 @@ extension DatabaseManager {
             if isForCurrentUser {
                 UserManager.shared.setStickerPacks(packs)
             }
-            self.appCoordinator?.cacheManager.addStickerPackCache(for: packs) // save to cache
+            self.updateStickerPackCache(for: packs)
         } catch {
             print("Error", error)
         }
@@ -51,7 +51,7 @@ extension DatabaseManager {
         do {
             let snapshot = try await stickersCollectionRef.getDocuments()
             let packs = try snapshot.documents.compactMap({ try StickerPack(snapshot: $0) })
-            self.appCoordinator?.cacheManager.addStickerPackCache(for: packs)
+            self.updateStickerPackCache(for: packs)
             return packs
         } catch {
             print("Failed fetchAllStickerPacks():", error.localizedDescription)

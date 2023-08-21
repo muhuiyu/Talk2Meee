@@ -27,6 +27,16 @@ struct ChatMessageTextContent: ChatMessageContent, Codable {
     }
 }
 
+extension ChatMessageTextContent {
+    init() {
+        text = ""
+    }
+    
+    init(content: ChatMessageTextContentObject) {
+        text = content.text
+    }
+}
+
 struct ChatMessageImageContent: ChatMessageContent, Codable {
     let imageStoragePath: String
     let thumbnailStoragePath: String
@@ -44,6 +54,17 @@ struct ChatMessageImageContent: ChatMessageContent, Codable {
     
     func getSearchableContent() -> String? {
         return nil
+    }
+}
+
+extension ChatMessageImageContent {
+    init(content: ChatMessageImageContentObject) {
+        imageStoragePath = content.imageStoragePath
+        thumbnailStoragePath = content.thumbnailStoragePath
+        caption = content.caption
+        width = content.width
+        height = content.height
+        format = content.format
     }
 }
 
@@ -68,6 +89,13 @@ struct ChatMessageStickerContent: ChatMessageContent, Codable {
     }
 }
 
+extension ChatMessageStickerContent {
+    init(content: ChatMessageStickerContentObject) {
+        id = content.id
+        packID = content.packID
+    }
+}
+
 struct ChatMessageLocationContent: ChatMessageContent, Codable {
     let longtitude: Double
     let latitdue: Double
@@ -80,5 +108,12 @@ struct ChatMessageLocationContent: ChatMessageContent, Codable {
     
     func getSearchableContent() -> String? {
         return nil
+    }
+}
+
+extension ChatMessageLocationContent {
+    init(content: ChatMessageLocationContentObject) {
+        longtitude = content.longtitude
+        latitdue = content.latitdue
     }
 }

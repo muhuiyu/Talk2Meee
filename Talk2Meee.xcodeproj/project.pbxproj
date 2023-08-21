@@ -19,7 +19,6 @@
 		E41B98362A91C74E00E3544A /* ChatAddAttachmentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41B98352A91C74E00E3544A /* ChatAddAttachmentButton.swift */; };
 		E41B98382A91C7FD00E3544A /* ChatSendButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41B98372A91C7FD00E3544A /* ChatSendButton.swift */; };
 		E41B983A2A925FF500E3544A /* DatabaseManager+Stickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41B98392A925FF500E3544A /* DatabaseManager+Stickers.swift */; };
-		E41B983C2A9264F600E3544A /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41B983B2A9264F600E3544A /* CacheManager.swift */; };
 		E41D2B1F2A8FD3AA004C917D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41D2B1E2A8FD3AA004C917D /* AppDelegate.swift */; };
 		E41D2B212A8FD3AA004C917D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41D2B202A8FD3AA004C917D /* SceneDelegate.swift */; };
 		E41D2B282A8FD3AB004C917D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E41D2B272A8FD3AB004C917D /* Assets.xcassets */; };
@@ -120,7 +119,6 @@
 		E41B98352A91C74E00E3544A /* ChatAddAttachmentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAddAttachmentButton.swift; sourceTree = "<group>"; };
 		E41B98372A91C7FD00E3544A /* ChatSendButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSendButton.swift; sourceTree = "<group>"; };
 		E41B98392A925FF500E3544A /* DatabaseManager+Stickers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DatabaseManager+Stickers.swift"; sourceTree = "<group>"; };
-		E41B983B2A9264F600E3544A /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		E41D2B1B2A8FD3AA004C917D /* Talk2Meee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Talk2Meee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E41D2B1E2A8FD3AA004C917D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E41D2B202A8FD3AA004C917D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -332,7 +330,6 @@
 				E40DE6042A93DDA800EEC51F /* DatabaseManager+Cache.swift */,
 				E41B98392A925FF500E3544A /* DatabaseManager+Stickers.swift */,
 				E49FC23B2A9052F20016F309 /* UserManager.swift */,
-				E41B983B2A9264F600E3544A /* CacheManager.swift */,
 				E41D2B402A8FD419004C917D /* ErrorHandler.swift */,
 			);
 			path = Managers;
@@ -703,7 +700,6 @@
 				E41D2B652A8FD419004C917D /* UIImageView+loadImageUsingURL.swift in Sources */,
 				E41D2BA22A8FD565004C917D /* ChatViewModel.swift in Sources */,
 				E4D3AE502A9277ED00208684 /* ChatTheme.swift in Sources */,
-				E41B983C2A9264F600E3544A /* CacheManager.swift in Sources */,
 				E49FC2382A9051280016F309 /* ChatMessageType.swift in Sources */,
 				E41D2B862A8FD41E004C917D /* HomeViewModel.swift in Sources */,
 				E41D2B5A2A8FD419004C917D /* BaseCell.swift in Sources */,

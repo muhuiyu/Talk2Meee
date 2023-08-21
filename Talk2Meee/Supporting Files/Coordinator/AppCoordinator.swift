@@ -18,8 +18,6 @@ class AppCoordinator: Coordinator {
     private(set) var mainTabBarController: MainTabBarController?
     private var loginObserver: NSObjectProtocol?
     
-    let cacheManager = try! CacheManager()
-
     init?(window: UIWindow?) {
         guard let window = window else { return nil }
         self.window = window
@@ -81,7 +79,6 @@ extension AppCoordinator {
         }
     }
     private func configureDatabase() async {
-        DatabaseManager.shared.appCoordinator = self
         await DatabaseManager.shared.syncData()
     }
 }

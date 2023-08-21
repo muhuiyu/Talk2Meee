@@ -67,3 +67,15 @@ struct StickerPack: Codable {
         numberOfStickers = data.numberOfStickers
     }
 }
+
+// MARK: - Persistable
+extension StickerPack: Persistable {
+    init(managedObject: StickerPackObject) {
+        id = managedObject.id
+        name = managedObject.name
+        numberOfStickers = managedObject.numberOfStickers
+    }
+    func managedObject() -> StickerPackObject {
+        return StickerPackObject(id: id, name: name, numberOfStickers: numberOfStickers)
+    }
+}

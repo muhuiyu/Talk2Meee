@@ -74,7 +74,36 @@ extension Chat {
         ]
     }
     
+    static func getCreateChatFirebaseData(for members: [UserID]) -> [String: Any?] {
+        return [
+            "members": members.sorted(),
+            "createdTime": Timestamp(date: Date()),
+            "imageStoragePath": nil,
+            "title": nil,
+            "lastMessage": nil
+        ]
+    }
+    
     var isSingleChat: Bool {
         return members.count == 2
+    }
+}
+
+// MARK: - Persistable
+extension Chat: Persistable {
+    init(managedObject: ChatObject) {
+        id = managedObject.id
+        title = managedObject.title
+        createdTime = managedObject.createdTime
+        imageStoragePath = managedObject.imageStoragePath
+        members = managedObject.members
+        if let lastMessageID = managedObject.lastMessageID, let lastMessageSenderID = managedObject.lastMessageSenderID, let lastMessagePreview = managedObject.lastMessagePreview {
+            lastMessage = ChatMessagePreview(id: lastMessageID, senderID: lastMessageSenderID, preview: lastMessagePreview)
+        } else {
+            lastMessage = nil
+        }
+    }
+    func managedObject() -> ChatObject {
+        return ChatObject(id: id, title: title, imageStoragePath: imageStoragePath, members: members, lastMessage: lastMessage)
     }
 }

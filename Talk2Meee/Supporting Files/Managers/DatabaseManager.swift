@@ -21,8 +21,6 @@ public enum VoidResult {
 final class DatabaseManager {
     static let shared = DatabaseManager()
     
-    weak var appCoordinator: AppCoordinator?
-    
     // MARK: - Cache
     internal var users = [UserID: ChatUser]()
     internal var chats = [ChatID: Chat]()
@@ -66,7 +64,7 @@ extension DatabaseManager {
                 return
             }
             let chats = documents.compactMap({ try? Chat(snapshot: $0) })
-            self.appCoordinator?.cacheManager.saveChats(chats)
+            self.updateChatCache(for: chats)
             if shouldFetchUsers {
                 let uniqueUserIDs = Array(Set(chats.flatMap({ $0.members })))
                 self.fetchUsers(uniqueUserIDs) {
@@ -79,7 +77,6 @@ extension DatabaseManager {
     }
     /// Fetches and returns chats with given members
     public func fetchChat(_ memberIDs: [UserID], shouldFetchUsers: Bool = true) async -> Result<Chat, Error> {
-        //
         do {
             let snapshot = try await chatsCollectionRef.whereField(Field.members, isEqualTo: memberIDs.sorted()).getDocuments()
             print("snapshot.documentChanges: ", snapshot.documentChanges)
@@ -110,14 +107,9 @@ extension DatabaseManager {
     private func createChat(for memberIDs: [UserID]) async -> Chat? {
         do {
             let createdTime = Date.now
-            let document = try await chatsCollectionRef.addDocument(data: [
-                Field.members: memberIDs.sorted(),
-                "createdTime": Timestamp(date: createdTime),
-                "imageStoragePath": nil,
-                "title": nil,
-                "lastMessage": nil
-            ])
+            let document = try await chatsCollectionRef.addDocument(data: Chat.getCreateChatFirebaseData(for: memberIDs))
             let chat = Chat(id: document.documentID, createdTime: createdTime, members: memberIDs.sorted())
+            self.updateChatCache(for: chat)
             return chat
         } catch {
             print("Error in createChat():", error.localizedDescription)
@@ -133,17 +125,17 @@ extension DatabaseManager {
 extension DatabaseManager {
     /// Gets all messages for a given chat
     func fetchMessages(for chatID: ChatID) async -> Result<[ChatMessage], Error> {
-        // TODO: - add pagings and certain time
-        
+        // TODO: - add pagings and certain time?
         do {
             let snapshot = try await chatsCollectionRef.document(chatID).collection("messages").getDocuments()
             let messages = snapshot.documents.compactMap({ try? ChatMessage(snapshot: $0) })
+            self.updateMessageCache(for: messages)
             return .success(messages)
         } catch {
             return .failure(error)
         }
     }
-    
+    /// Fetches and returns all messages for current chat
     func listenForMessages(for chatID: ChatID, completion: @escaping ((Result<[ChatMessage], Error>) -> Void)) {
         chatsCollectionRef.document(chatID).collection("messages").order(by: "sentTime", descending: false).addSnapshotListener({ snapshot, error in
             if let error = error {
@@ -153,6 +145,7 @@ extension DatabaseManager {
                 return completion(.failure(DatabaseManagerError.emptySnapshot))
             }
             let messages = snapshot.documents.compactMap({ try? ChatMessage(snapshot: $0) })
+            self.updateMessageCache(for: messages)
             return completion(.success(messages))
         })
     }
@@ -164,11 +157,13 @@ extension DatabaseManager {
     public func createNewConversation(with otherUserID: UserID, firstMessage: ChatMessageContent) {
         
     }
-    public func sendMessage(to chatID: ChatID, _ message: ChatMessage) async -> VoidResult {
+    public func sendMessage(_ message: ChatMessage) async -> VoidResult {
         do {
-            let reference = try await chatsCollectionRef.document(chatID).collection("messages").addDocument(data: message.toFirebaseMessage)
+            let data = message.toFirebaseMessage
+            print("data", data)
+            let reference = try await chatsCollectionRef.document(message.chatID).collection("messages").addDocument(data: data)
             let previewMessage = ChatMessagePreview(id: reference.documentID, senderID: message.sender, preview: message.generateMessagePreview())
-            try await chatsCollectionRef.document(chatID).setData([
+            try await chatsCollectionRef.document(message.chatID).setData([
                 "lastMessage": previewMessage.toFirebaseData()
             ], merge: true)
             return .success

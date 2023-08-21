@@ -53,8 +53,8 @@ extension ChatViewModel {
         let newIdentifier = UUID().uuidString
         guard let sender = sender else { return }
         Task {
-            let chatMessage = ChatMessage(id: newIdentifier, sender: sender.senderId, sentTime: Date(), type: type, content: content, searchableContent: content.getSearchableContent())
-            let result = await DatabaseManager.shared.sendMessage(to: chat.id, chatMessage)
+            let chatMessage = ChatMessage(id: newIdentifier, chatID: chat.id, sender: sender.senderId, sentTime: Date(), type: type, content: content, searchableContent: content.getSearchableContent())
+            let result = await DatabaseManager.shared.sendMessage(chatMessage)
             sendMessageResultHandler(result)
         }
     }
