@@ -81,6 +81,8 @@ extension ChatMessage {
                 self.content = try container.decode(ChatMessageImageContent.self, forKey: .content)
             case .sticker:
                 self.content = try container.decode(ChatMessageStickerContent.self, forKey: .content)
+            case .location:
+                self.content = try container.decode(ChatMessageLocationContent.self, forKey: .content)
             }
             searchableContent = try container.decodeIfPresent(String.self, forKey: .searchableContent)
             quotedMessageID = try container.decodeIfPresent(MessageID.self, forKey: .quotedMessageID)
@@ -143,6 +145,8 @@ extension ChatMessage {
             return "🏞️[image]"
         case .sticker:
             return "🧡[sticker]"
+        case .location:
+            return "📍[location]"
         }
     }
 }

@@ -7,9 +7,12 @@
 
 import UIKit
 import MessageKit
+import Kingfisher
+import CoreLocation
 
 protocol ChatMessageContent: Codable {
     func toMessageKind() -> MessageKind
+    func getSearchableContent() -> String?
 }
 
 struct ChatMessageTextContent: ChatMessageContent, Codable {
@@ -17,6 +20,10 @@ struct ChatMessageTextContent: ChatMessageContent, Codable {
     
     func toMessageKind() -> MessageKind {
         return .text(text)
+    }
+    
+    func getSearchableContent() -> String? {
+        return text
     }
 }
 
@@ -34,6 +41,10 @@ struct ChatMessageImageContent: ChatMessageContent, Codable {
                             placeholderImage: placeholderImage,
                             size: CGSize(width: width, height: height)))
     }
+    
+    func getSearchableContent() -> String? {
+        return nil
+    }
 }
 
 typealias StickerID = String
@@ -43,23 +54,31 @@ struct ChatMessageStickerContent: ChatMessageContent, Codable {
     let id: StickerID
     let packID: StickerPackID
     
-    static let size: CGSize = CGSize(width: 96, height: 96)
-    
-    func toFireStoragePath() -> String {
-        return "gs://hey-there-muyuuu.appspot.com/stickers/\(packID)/\(id)"
-    }
-    
-    func toImageURL() -> String {
-        return "https://firebasestorage.googleapis.com/v0/b/hey-there-muyuuu.appspot.com/o/stickers%2F\(packID)%2F\(id)?alt=media&token=41e84e51-2ea4-438c-ad16-fd67270a4eda"
-    }
+    static let size = CGSize(width: 96, height: 96)
     
     func toMessageKind() -> MessageKind {
         let placeholderImage = UIImage(systemName: Icons.questionmarkCircle) ?? UIImage()
-        return .photo(Media(url: URL(string: self.toImageURL()),
+        return .photo(Media(url: URL(string: ChatMessageSticker.getImageURL(for: id, from: packID)),
                             placeholderImage: placeholderImage,
                             size: ChatMessageStickerContent.size))
     }
     
-//    "https://stickershop.line-scdn.net/stickershop/v1/product/1385382/LINEStorePC/main.png"
+    func getSearchableContent() -> String? {
+        return nil
+    }
 }
 
+struct ChatMessageLocationContent: ChatMessageContent, Codable {
+    let longtitude: Double
+    let latitdue: Double
+    
+    static let size = CGSize(width: 200, height: 140)
+    
+    func toMessageKind() -> MessageKind {
+        return .location(Location(location: CLLocation(latitude: latitdue, longitude: longtitude), size: ChatMessageLocationContent.size))
+    }
+    
+    func getSearchableContent() -> String? {
+        return nil
+    }
+}

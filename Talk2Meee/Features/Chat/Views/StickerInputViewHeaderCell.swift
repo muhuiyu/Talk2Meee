@@ -20,13 +20,9 @@ final class StickerInputViewHeaderCell: UICollectionViewCell, BaseCell {
         imageView.contentMode = .scaleAspectFit
         contentView.addSubview(imageView)
         
-        layer.borderWidth = 1
-        layer.borderColor = UIColor.secondaryLabel.cgColor
-        layer.cornerRadius = 6
-        
         imageView.snp.remakeConstraints { make in
             make.center.equalToSuperview()
-            make.size.equalTo(32)
+            make.size.equalTo(24)
         }
     }
     

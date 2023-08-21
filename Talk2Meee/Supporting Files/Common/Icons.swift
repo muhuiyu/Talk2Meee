@@ -65,6 +65,8 @@ class Icons {
     static var cartFill: String { "cart.fill" }
     static var giftcard: String { "giftcard" }
     static var checkmark: String { "checkmark" }
+    static var checkmarkCircle: String { "checkmark.circle" }
+    static var checkmarkCircleFill: String { "checkmark.circle.fill" }
     static var pause: String { "pause" }
     static var pauseFill: String { "pause.fill" }
     static var pauseCircle: String { "pause.circle" }

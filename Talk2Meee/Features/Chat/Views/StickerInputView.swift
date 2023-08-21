@@ -9,9 +9,11 @@ import UIKit
 
 protocol StickerInputViewDelegate: AnyObject {
     func stickerInputView(_ view: StickerInputView, didSelect stickerID: StickerID, from packID: StickerPackID)
+    func stickerInputViewDidTapAddStickerPackButton(_ view: StickerInputView)
 }
 
 class StickerInputView: UIInputView {
+    private let addStickerPackButton = UIButton(type: .contactAdd)
     private lazy var headerCollectionView = UICollectionView(
            frame: .zero,
            collectionViewLayout: GridCompositionalLayout.generateHeaderLayout()
@@ -49,10 +51,22 @@ class StickerInputView: UIInputView {
     }
 }
 
+// MARK: - Handlers
+extension StickerInputView {
+    @objc
+    private func didTapAddStickerPackButton() {
+        delegate?.stickerInputViewDidTapAddStickerPackButton(self)
+    }
+}
+
 // MARK: - View Config
 extension StickerInputView {
     private func configureViews() {
         backgroundColor = .white
+        
+        // Button
+        addStickerPackButton.addTarget(self, action: #selector(didTapAddStickerPackButton), for: .touchUpInside)
+        addSubview(addStickerPackButton)
         
         // Header
         headerCollectionView.tag = Section.headerTag
@@ -71,15 +85,21 @@ extension StickerInputView {
         addSubview(collectionView)
     }
     private func configureConstraints() {
-        let screenWidth = UIScreen.main.bounds.width
+        addStickerPackButton.snp.remakeConstraints { make in
+            make.leading.equalToSuperview().inset(Constants.Spacing.trivial)
+            make.size.equalTo(32)
+            make.centerY.equalTo(headerCollectionView)
+        }
         headerCollectionView.snp.remakeConstraints { make in
-            make.leading.top.trailing.equalToSuperview()
-            make.height.equalTo(60)
+            make.leading.equalTo(addStickerPackButton.snp.trailing)
+            make.top.trailing.equalToSuperview()
+            make.height.equalTo(48)
         }
         collectionView.snp.remakeConstraints { make in
             make.top.equalTo(headerCollectionView.snp.bottom).offset(Constants.Spacing.trivial)
             make.leading.trailing.bottom.equalToSuperview()
         }
+        let screenWidth = UIScreen.main.bounds.width
         snp.remakeConstraints { make in
             make.width.equalTo(screenWidth)
             make.height.equalTo(400)
@@ -98,6 +118,7 @@ extension StickerInputView: UICollectionViewDataSource, UICollectionViewDelegate
         case Section.headerTag:
             return stickerPacks.count
         case Section.contentTag:
+            if stickerPacks.isEmpty { return 0 }
             return stickerPacks[selectedPackIndex].getStickers().count
         default:
             return 0
@@ -138,17 +159,6 @@ extension StickerInputView: UICollectionViewDataSource, UICollectionViewDelegate
 
 // MARK: - GridCompositionalLayout
 enum GridCompositionalLayout {
-    static func generateHeaderLayout() -> UICollectionViewCompositionalLayout {
-        
-        let config = UICollectionViewCompositionalLayoutConfiguration()
-        return UICollectionViewCompositionalLayout(
-            sectionProvider: { section, _ in
-                return makeHeaderSection()
-            },
-            configuration: config
-        )
-    }
-    
     static func generateLayout() -> UICollectionViewCompositionalLayout {
         
         let config = UICollectionViewCompositionalLayoutConfiguration()
@@ -189,6 +199,16 @@ enum GridCompositionalLayout {
 }
 
 extension GridCompositionalLayout {
+    static func generateHeaderLayout() -> UICollectionViewCompositionalLayout {
+        
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        return UICollectionViewCompositionalLayout(
+            sectionProvider: { section, _ in
+                return makeHeaderSection()
+            },
+            configuration: config
+        )
+    }
     
     private static func makeHeaderItem() -> NSCollectionLayoutItem {
         let item = NSCollectionLayoutItem(
@@ -197,14 +217,14 @@ extension GridCompositionalLayout {
                 heightDimension: .fractionalHeight(1)
             )
         )
-        item.contentInsets = .init(top: 3, leading: 3, bottom: 3, trailing: 3)
+//        item.contentInsets = .init(top: 3, leading: 3, bottom: 3, trailing: 3)
         return item
     }
     
     private static func makeHeaderGroup() -> NSCollectionLayoutGroup {
         let group =  NSCollectionLayoutGroup.horizontal(
             layoutSize: .init(
-                widthDimension: .fractionalWidth(1/6),
+                widthDimension: .fractionalWidth(1/8),
                 heightDimension: .fractionalHeight(1)
             ),
             subitems: [makeHeaderItem()]

@@ -31,6 +31,7 @@ final class DatabaseManager {
         case notLoggedIn
         case emptySnapshot
         case failedCreateChat
+        case noStickers
     }
     
     private struct Field {

@@ -11,12 +11,14 @@ import RxRelay
 import MessageKit
 import InputBarAccessoryView
 import JGProgressHUD
+import Kingfisher
+import CoreLocation
 
 class ChatViewController: MessagesViewController {
     
     weak var appCoordinator: AppCoordinator?
     private let disposeBag = DisposeBag()
-    private let viewModel: ChatViewModel
+    internal let viewModel: ChatViewModel
     
     // MARK: - Views
     private let spinner = JGProgressHUD(style: .dark)
@@ -80,6 +82,7 @@ extension ChatViewController {
         }
     }
     private func configureMessageCollectionView() {
+        messagesCollectionView.backgroundColor = UIColor(hex: UserManager.shared.getChatTheme().backgroundColor)
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
@@ -93,6 +96,7 @@ extension ChatViewController {
         chatInputBar.stickerPacks = viewModel.stickerPacks
         inputBarType = .custom(chatInputBar)
         messageInputBar = chatInputBar
+        messageInputBar.layer.opacity = 1
     }
     private func configureGestures() {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapInView))
@@ -123,13 +127,40 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessageKit.MessagesCollectionView) -> MessageKit.MessageType {
-        // MessageKit uses Section to select messages
         return viewModel.displayedMessages.value[indexPath.section]
+    }
+    
+    func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        let chatMessage = viewModel.getMessage(at: indexPath)
+        let chatTheme = UserManager.shared.getChatTheme()
+        if chatMessage.type.hasBackground {
+            if message.sender.senderId == viewModel.sender?.senderId {
+                return UIColor(hex: chatTheme.selfMessageBubbleColor)
+            } else {
+                return UIColor(hex: chatTheme.otherMessageBubbleColor)
+            }
+        } else {
+            return .clear
+        }
+    }
+    
+    func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        let chatTheme = UserManager.shared.getChatTheme()
+        if message.sender.senderId == viewModel.sender?.senderId {
+            return UIColor(hex: chatTheme.selfMessageBubbleTextColor)
+        } else {
+            return UIColor(hex: chatTheme.otherMessageBubbleTextColor)
+        }
     }
     
     func numberOfSections(in messagesCollectionView: MessageKit.MessagesCollectionView) -> Int {
         return viewModel.displayedMessages.value.count
     }
+    
+//    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+//        guard let sender = message.sender as? Sender else { return }
+        // TODO
+//    }
     
     func configureMediaMessageImageView(_ imageView: UIImageView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
         guard let message = message as? Message else { return }
@@ -152,6 +183,21 @@ extension ChatViewController: MessageCellDelegate {
         guard message.type == .image, let imageURL = viewModel.getImageURL(at: indexPath) else { return }
         let viewController = PhotoViewerViewController(appCoordinator: self.appCoordinator, url: imageURL)
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    func didTapMessage(in cell: MessageCollectionViewCell) {
+        guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
+        let message = viewModel.getMessage(at: indexPath)
+        
+        switch message.type {
+        case .location:
+            guard let content = message.content as? ChatMessageLocationContent else { return }
+            let viewController = LocationPickerViewController(appCoordinator: self.appCoordinator,
+                                                              coordinates: CLLocationCoordinate2D(latitude: content.latitdue, longitude: content.longtitude),
+                                                              isEditable: false)
+            navigationController?.pushViewController(viewController, animated: true)
+        default:
+            return
+        }
     }
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
         // Add double tap and long press gesture
@@ -179,13 +225,17 @@ extension ChatViewController: MessageCellDelegate {
 extension ChatViewController: InputBarAccessoryViewDelegate, ChatInputBarDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty else { return }
-        viewModel.sendMessage(text)
+        viewModel.sendMessage(for: ChatMessageTextContent(text: text), as: .text)
         chatInputBar.clearTextView()
     }
     func chatInputBarDidTapAttachmentButton(_ view: ChatInputBar) {
         presentInputActionSheet()
     }
     func chatInputBar(_ view: ChatInputBar, didSelect stickerID: StickerID, from packID: StickerPackID) {
-        viewModel.sendMessage(stickerID, packID)
+        viewModel.sendMessage(for: ChatMessageStickerContent(id: stickerID, packID: packID), as: .sticker)
+    }
+    func chatInputBarShowAddStickerPackView(_ view: ChatInputBar) {
+        let viewController = ManageStickerPackViewController(appCoordinator: self.appCoordinator)
+        present(viewController.embedInNavgationController(), animated: true)
     }
 }

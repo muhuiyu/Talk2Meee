@@ -5,6 +5,7 @@
 //  Created by Grace, Mu-Hui Yu on 8/18/23.
 //
 
+import CoreLocation
 import UIKit
 import MessageKit
 
@@ -25,5 +26,10 @@ struct Media: MediaItem {
     var url: URL?
     var image: UIImage?
     var placeholderImage: UIImage
+    var size: CGSize
+}
+
+struct Location: LocationItem {
+    var location: CLLocation
     var size: CGSize
 }

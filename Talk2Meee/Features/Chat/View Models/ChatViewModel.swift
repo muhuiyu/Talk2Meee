@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxRelay
+import CoreLocation
 
 class ChatViewModel: Base.ViewModel {
     
@@ -48,22 +49,11 @@ extension ChatViewModel {
             }
         }
     }
-    func sendMessage(_ text: String) {
-        // TODO: - see if we need to use our customized id...?
-        let newIdentifier = UUID().uuidString
-        guard !text.isEmpty, let sender = sender else { return }
-//        let message = Message(sender: sender, messageId: newIdentifier, sentDate: Date(), kind: .text(text))
-        Task {
-            let chatMessage = ChatMessage(id: newIdentifier, sender: sender.senderId, sentTime: Date(), type: .text, content: ChatMessageTextContent(text: text), searchableContent: text)
-            let result = await DatabaseManager.shared.sendMessage(to: chat.id, chatMessage)
-            sendMessageResultHandler(result)
-        }
-    }
-    func sendMessage(_ stickerID: StickerID, _ packID: StickerPackID) {
+    func sendMessage(for content: ChatMessageContent, as type: ChatMessageType) {
         let newIdentifier = UUID().uuidString
         guard let sender = sender else { return }
         Task {
-            let chatMessage = ChatMessage(id: newIdentifier, sender: sender.senderId, sentTime: Date(), type: .sticker, content: ChatMessageStickerContent(id: stickerID, packID: packID))
+            let chatMessage = ChatMessage(id: newIdentifier, sender: sender.senderId, sentTime: Date(), type: type, content: content, searchableContent: content.getSearchableContent())
             let result = await DatabaseManager.shared.sendMessage(to: chat.id, chatMessage)
             sendMessageResultHandler(result)
         }

@@ -82,8 +82,11 @@ extension AppCoordinator {
         if let user = await DatabaseManager.shared.fetchUser(currentUserID) {
             UserManager.shared.setChatUser(user)
             // fetch messages
-            // fetch stickers
-            await DatabaseManager.shared.fetchStickers(for: user.stickerPacks, isForCurrentUser: true)
+            
+            // Update fetch stickers
+            Task {
+                await DatabaseManager.shared.fetchStickers(for: user.stickerPacks, isForCurrentUser: true)
+            }
         }
     }
 }

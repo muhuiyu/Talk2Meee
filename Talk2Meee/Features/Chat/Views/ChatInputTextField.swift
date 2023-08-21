@@ -11,6 +11,7 @@ import InputBarAccessoryView
 
 protocol ChatInputTextFieldDelegate: AnyObject {
     func chatInputTextField(_ view: ChatInputTextField, didSelect stickerID: StickerID, from packID: StickerPackID)
+    func chatInputTextFieldDidTapAddStickerPackButton(_ view: ChatInputTextField)
 }
 
 class ChatInputTextField: UIView {
@@ -75,7 +76,7 @@ extension ChatInputTextField {
         layer.borderWidth = 1.0
         layer.cornerRadius = 16.0
         layer.masksToBounds = true
-        backgroundColor = .systemYellow
+        backgroundColor = UIColor(hex: UserManager.shared.getChatTheme().chatInputBarTextFieldColor)
     }
     private func configureConstraints() {
         inputTextView.snp.remakeConstraints { make in
@@ -109,12 +110,11 @@ extension ChatInputTextField {
 }
 
 extension ChatInputTextField: StickerInputViewDelegate, UITextViewDelegate {
-    func stickerInputViewDidTapDone(_ view: StickerInputView) {
-        stickerTextField.resignFirstResponder()
-        reconfigureStickerButton()
-    }
     func stickerInputView(_ view: StickerInputView, didSelect stickerID: StickerID, from packID: StickerPackID) {
         delegate?.chatInputTextField(self, didSelect: stickerID, from: packID)
+    }
+    func stickerInputViewDidTapAddStickerPackButton(_ view: StickerInputView) {
+        delegate?.chatInputTextFieldDidTapAddStickerPackButton(self)
     }
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView == inputTextView {

@@ -12,6 +12,7 @@ import InputBarAccessoryView
 protocol ChatInputBarDelegate: AnyObject {
     func chatInputBarDidTapAttachmentButton(_ view: ChatInputBar)
     func chatInputBar(_ view: ChatInputBar, didSelect stickerID: StickerID, from packID: StickerPackID)
+    func chatInputBarShowAddStickerPackView(_ view: ChatInputBar)
 }
 
 class ChatInputBar: InputBarAccessoryView {
@@ -69,11 +70,16 @@ extension ChatInputBar {
         chatInputTextField.delegate = self
         chatInputTextField.inputBarAccessoryView = self
         setMiddleContentView(chatInputTextField, animated: false)
+        
+        backgroundColor = UIColor(hex: UserManager.shared.getChatTheme().chatInputBarBackgroundColor)
     }
 }
 
 extension ChatInputBar: ChatInputTextFieldDelegate {
     func chatInputTextField(_ view: ChatInputTextField, didSelect stickerID: StickerID, from packID: StickerPackID) {
         chatInputBarDelegate?.chatInputBar(self, didSelect: stickerID, from: packID)
+    }
+    func chatInputTextFieldDidTapAddStickerPackButton(_ view: ChatInputTextField) {
+        chatInputBarDelegate?.chatInputBarShowAddStickerPackView(self)
     }
 }

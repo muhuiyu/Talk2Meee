@@ -9,44 +9,55 @@ import UIKit
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseFirestoreCombineSwift
+import FirebaseStorage
 
 struct ChatMessageSticker {
     let packID: StickerPackID
     let stickerID: StickerID
     
+    func getImageURL() -> String {
+        return "https://firebasestorage.googleapis.com/v0/b/hey-there-muyuuu.appspot.com/o/stickers%2F\(packID)%2F\(stickerID)?alt=media"
+    }
+    
     func getStorageLocation() -> String {
         return "gs://hey-there-muyuuu.appspot.com/stickers/\(packID)/\(stickerID)"
     }
     
-    func getImageURL() -> String {
-        return "https://firebasestorage.googleapis.com/v0/b/hey-there-muyuuu.appspot.com/o/stickers%2F\(packID)%2F\(stickerID)?alt=media&token=\(StorageManager.shared.storageToken)"
+    static func getImageURL(for stickerID: StickerID, from packID: StickerPackID) -> String {
+        return "https://firebasestorage.googleapis.com/v0/b/hey-there-muyuuu.appspot.com/o/stickers%2F\(packID)%2F\(stickerID)?alt=media"
     }
 }
 
 struct StickerPack: Codable {
+    static var coverImageName: String { return "cover.png" }
+    
     let id: StickerPackID
     let name: String
     let numberOfStickers: Int
     
     func getCoverImageURL() -> String {
-        return "https://firebasestorage.googleapis.com/v0/b/hey-there-muyuuu.appspot.com/o/stickers%2F\(id)%2Fcover.png?alt=media&token=\(StorageManager.shared.storageToken)"
+        return "https://firebasestorage.googleapis.com/v0/b/hey-there-muyuuu.appspot.com/o/stickers%2F\(id)%2F\(StickerPack.coverImageName)?alt=media"
     }
     
-    func getCoverImageStorageLocaltion() -> String {
-        return "gs://hey-there-muyuuu.appspot.com/stickers/\(id)/cover.png"
-    }
-    
-    var stickerImageURLs: [String] {
-        return (1...numberOfStickers).map({ "gs://hey-there-muyuuu.appspot.com/stickers/\(id)/\($0).png" })
+    func getStickerIDs() -> [StickerID] {
+        return (1...numberOfStickers).map({ "\($0).png" })
     }
     
     func getStickers() -> [ChatMessageSticker] {
-        return (1...numberOfStickers).map({ ChatMessageSticker(packID: id, stickerID: "\($0).png") })
+        return getStickerIDs().compactMap { stickerID in
+            return ChatMessageSticker(packID: id, stickerID: stickerID)
+        }
     }
     
     private struct StickerPackData: Codable {
         let name: String
         let numberOfStickers: Int
+    }
+    
+    init(id: StickerPackID, name: String, numberOfStickers: Int) {
+        self.id = id
+        self.name = name
+        self.numberOfStickers = numberOfStickers
     }
     
     init?(snapshot: DocumentSnapshot) throws {

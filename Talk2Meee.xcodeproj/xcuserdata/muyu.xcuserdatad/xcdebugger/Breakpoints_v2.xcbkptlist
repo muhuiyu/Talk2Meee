@@ -30,13 +30,13 @@
             filePath = "Talk2Meee/Supporting Files/Managers/DatabaseManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "110"
-            endingLineNumber = "110"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
             landmarkName = "fetchUser(_:completion:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "9D7FE05B-5EA3-40A8-A83C-23F93CDF10EE - 4fb939ff0a50d45e"
+                  uuid = "9D7FE05B-5EA3-40A8-A83C-23F93CDF10EE - 4fb939ff0a50d4f9"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -46,12 +46,12 @@
                   urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/Supporting%20Files/Managers/DatabaseManager.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "109"
-                  endingLineNumber = "109"
-                  offsetFromSymbolStart = "476">
+                  startingLineNumber = "112"
+                  endingLineNumber = "112"
+                  offsetFromSymbolStart = "180">
                </Location>
                <Location
-                  uuid = "9D7FE05B-5EA3-40A8-A83C-23F93CDF10EE - 4fb939ff0a50d4bf"
+                  uuid = "9D7FE05B-5EA3-40A8-A83C-23F93CDF10EE - 4fb939ff0a50d4f9"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -61,8 +61,23 @@
                   urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/Supporting%20Files/Managers/DatabaseManager.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "110"
-                  endingLineNumber = "110"
+                  startingLineNumber = "112"
+                  endingLineNumber = "112"
+                  offsetFromSymbolStart = "552">
+               </Location>
+               <Location
+                  uuid = "9D7FE05B-5EA3-40A8-A83C-23F93CDF10EE - 4fb939ff0a50d498"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Talk2Meee.DatabaseManager.fetchUser(_: Swift.String, completion: (Swift.Optional&lt;Talk2Meee.ChatUser&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Talk2Meee"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/Supporting%20Files/Managers/DatabaseManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "111"
+                  endingLineNumber = "111"
                   offsetFromSymbolStart = "476">
                </Location>
             </Locations>

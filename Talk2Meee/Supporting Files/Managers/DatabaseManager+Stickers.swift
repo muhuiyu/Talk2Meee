@@ -1,0 +1,59 @@
+//
+//  DatabaseManager+Stickers.swift
+//  Talk2Meee
+//
+//  Created by Grace, Mu-Hui Yu on 8/20/23.
+//
+
+import Foundation
+import Firebase
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseStorage
+
+// MARK: - Stickers
+extension DatabaseManager {
+    func fetchStickers(for packIDs: [StickerPackID], isForCurrentUser: Bool = false) async {
+        var packs = [StickerPack]()
+        do {
+            try await withThrowingTaskGroup(of: StickerPack.self) { group in
+                for packID in packIDs {
+                    group.addTask {
+                        if let pack = await self.fetchStickerPack(for: packID) { return pack }
+                        throw DatabaseManagerError.noStickers
+                    }
+                }
+                for try await pack in group {
+                    packs.append(pack)
+                }
+            }
+            if isForCurrentUser {
+                UserManager.shared.setStickerPacks(packs)
+            }
+            CacheManager.shared.addStickerPackCache(for: packs) // save to cache
+        } catch {
+            print("Error", error)
+        }
+    }
+
+    func fetchStickerPack(for packID: StickerPackID) async -> StickerPack? {
+        do {
+            let snapshot = try await stickersCollectionRef.document(packID).getDocument()
+            guard snapshot.exists else { return nil }
+            return try StickerPack(snapshot: snapshot)
+        } catch {
+            print("Failed fetchStickerPack():", error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func fetchAllStickerPacks() async -> [StickerPack] {
+        do {
+            let snapshot = try await stickersCollectionRef.getDocuments()
+            return try snapshot.documents.compactMap({ try StickerPack(snapshot: $0) })
+        } catch {
+            print("Failed fetchAllStickerPacks():", error.localizedDescription)
+            return []
+        }
+    }
+}
