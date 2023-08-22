@@ -10,7 +10,6 @@ import RxSwift
 import RxRelay
 import MessageKit
 import InputBarAccessoryView
-import JGProgressHUD
 import Kingfisher
 import CoreLocation
 
@@ -21,7 +20,6 @@ class ChatViewController: MessagesViewController {
     internal let viewModel: ChatViewModel
     
     // MARK: - Views
-    private let spinner = JGProgressHUD(style: .dark)
     private let chatInputBar = ChatInputBar()
     internal var footerBottomConstraint: NSLayoutConstraint? = nil
     
@@ -41,19 +39,12 @@ class ChatViewController: MessagesViewController {
         configureConstraints()
         configureBindings()
         configureNotifications()
-        
-        spinner.show(in: view)
-        viewModel.listenForMessages()
+        viewModel.loadMessages()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        viewModel.stopListeningForMessages()
     }
 }
 
@@ -116,14 +107,8 @@ extension ChatViewController {
             .asObservable()
             .subscribe { _ in
                 DispatchQueue.main.async { [weak self] in
-                    self?.spinner.dismiss()
-                    if self?.viewModel.shouldScrollToLastItem ?? false {
-                        self?.messagesCollectionView.reloadData()
-                        self?.messagesCollectionView.scrollToLastItem()
-                        self?.viewModel.shouldScrollToLastItem = false
-                    } else {
-                        self?.messagesCollectionView.reloadDataAndKeepOffset()
-                    }
+                    self?.messagesCollectionView.reloadData()
+                    self?.messagesCollectionView.scrollToLastItem()
                 }
             }
             .disposed(by: disposeBag)
@@ -303,17 +288,6 @@ extension ChatViewController: MessageCellDelegate {
             return nil
         }
     }
-//    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        super.scrollViewDidScroll(_: scrollView)
-//        let threshold: CGFloat = 100
-//        let contentOffset = scrollView.contentOffset.y
-//        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
-//
-//        if maximumOffset - contentOffset <= threshold {
-//            // The user has scrolled within 100 points of the top
-//            viewModel.fetchMoreMessages()
-//        }
-//    }
 }
 
 // MARK: - InputBar Delegate

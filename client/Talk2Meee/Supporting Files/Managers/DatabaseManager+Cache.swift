@@ -12,6 +12,9 @@ extension DatabaseManager {
     func syncData() async {
         guard let user = UserManager.shared.getChatUser() else { return }
         await DatabaseManager.shared.fetchStickers(for: user.stickerPacks, isForCurrentUser: true)
+        DatabaseManager.shared.listenForAllChats(completion: { _ in
+            return
+        })
     }
 }
 
@@ -68,6 +71,15 @@ extension DatabaseManager {
             return []
         }
     }
+    func getChat(for id: ChatID) -> Chat? {
+        do {
+            let realm = try Realm()
+            return realm.objects(ChatObject.self).first(where: { $0.id == id }).map({ Chat(managedObject: $0) })
+        } catch {
+            print("Error", error)
+            return nil
+        }
+    }
     func updateChatCache(for updatedChats: [Chat]) {
         updatedChats.forEach({ updateChatCache(for: $0) })
         NotificationCenter.default.post(Notification(name: .didUpdateChats))
@@ -117,8 +129,20 @@ extension DatabaseManager {
                     self.resultHandler(result)
                 }
             }
+            // compare the updatedMessage and update lastMessage in chat
+            updateLastMessage(in: updatedMessage.chatID, with: updatedMessage)
         } catch {
             print("Error", error)
+        }
+    }
+    private func updateLastMessage(in chatID: ChatID, with message: ChatMessage) {
+        guard let chat = getChat(for: chatID) else { return }
+        guard let lastMessage = chat.lastMessage else {
+            updateLastMessageInFirebase(for: chatID, lastMessage: message.toMessagePreview())
+            return
+        }
+        if lastMessage.sentTime < message.sentTime {
+            updateLastMessageInFirebase(for: chatID, lastMessage: message.toMessagePreview())
         }
     }
 }

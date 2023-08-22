@@ -21,6 +21,7 @@ final class ChatObject: Object {
     @objc dynamic var lastMessageID: MessageID? = nil
     @objc dynamic var lastMessageSenderID: UserID? = nil
     @objc dynamic var lastMessagePreview: String? = nil
+    @objc dynamic var lastMessageSentTime: Date? = nil
 
     convenience init(id: ChatID, title: String?, imageStoragePath: String? = nil, members: [UserID], lastMessage: ChatMessagePreview?) {
         self.init()
@@ -31,5 +32,6 @@ final class ChatObject: Object {
         self.lastMessageID = lastMessage?.id
         self.lastMessageSenderID = lastMessage?.senderID
         self.lastMessagePreview = lastMessage?.preview
+        self.lastMessageSentTime = lastMessage?.sentTime
     }
 }

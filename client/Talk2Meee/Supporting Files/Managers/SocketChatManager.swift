@@ -1,5 +1,5 @@
 //
-//  SocketChatManager.swift
+//  SocketChatManger.swift
 //  Talk2Meee
 //
 //  Created by Grace, Mu-Hui Yu on 8/21/23.
@@ -8,85 +8,95 @@
 import Foundation
 import SocketIO
 
-class SocketChatManager {
-
-    // MARK: - Properties
-    let manager = SocketManager(socketURL: URL(string: "https://socket-io-chat.now.sh")!, config: [.log(false), .compress])
-    var socket: SocketIOClient? = nil
-
-    // MARK: - Life Cycle
+class SocketChatManger {
+    
+    static let shared = SocketChatManger()
+    
+    private let manager: SocketManager
+    private var socket: SocketIOClient!
+    private var resetAck: SocketAckEmitter?
+    
+    private var conversationID: String?
+    
     init() {
-        setupSocket()
-        setupSocketEvents()
-        socket?.connect()
+        manager = SocketManager(socketURL: URL(string: "http://192.168.11.61:3000")!, config: [.log(true), .compress, .forceWebsockets(true), .reconnectWait(10)])
+        socket = manager.defaultSocket
+        configureHandlers()
     }
+}
 
-    func stop() {
-        socket?.removeAllHandlers()
+extension SocketChatManger {
+    func connect() {
+        guard let userID = UserManager.shared.currentUserID else { return }
+        socket.connect(withPayload: [ "userId": userID ])
     }
-
-    // MARK: - Socket Setup
-    func setupSocket() {
-        self.socket = manager.defaultSocket
+    func disconnect() {
+        socket.disconnect()
     }
-
-    func setupSocketEvents() {
-        socket?.on(clientEvent: .connect) {data, ack in
-            print("Connected")
-        }
-
-        socket?.on("login") { (data, ack) in
-            guard let dataInfo = data.first else { return }
-            if let response: SocketLogin = try? SocketParser.convert(data: dataInfo) {
-                print("Now this chat has \(response.numUsers) users.")
-            }
-        }
-
-        socket?.on("user joined") { (data, ack) in
-            guard let dataInfo = data.first else { return }
-            if let response: SocketUserJoin = try? SocketParser.convert(data: dataInfo) {
-                print("User '\(response.username)' joined...")
-                print("Now this chat has \(response.numUsers) users.")
-            }
-        }
-
-        socket?.on("user left") { (data, ack) in
-            guard let dataInfo = data.first else { return }
-            if let response: SocketUserLeft = try? SocketParser.convert(data: dataInfo) {
-                print("User '\(response.username)' left...")
-                print("Now this chat has \(response.numUsers) users.")
-            }
-        }
-
-        socket?.on("new message") { (data, ack) in
-            guard let dataInfo = data.first else { return }
-            if let response: SocketMessage = try? SocketParser.convert(data: dataInfo) {
-                print("Message from '\(response.username)': \(response.message)")
-            }
-        }
-
-        socket?.on("typing") { (data, ack) in
-            guard let dataInfo = data.first else { return }
-            if let response: SocketUserTyping = try? SocketParser.convert(data: dataInfo) {
-                print("User \(response.username) is typing...")
-            }
-        }
-
-        socket?.on("stop typing") { (data, ack) in
-            guard let dataInfo = data.first else { return }
-            if let response: SocketUserTyping = try? SocketParser.convert(data: dataInfo) {
-                print("User \(response.username) stopped typing...")
-            }
-        }
+    func subscribleToChats() {
+        // subscribe to chats
+        let chatIDs = DatabaseManager.shared.getAllChats().map { $0.id }
+        socket.emit("subscribe", chatIDs)
     }
-
-    // MARK: - Socket Emits
-    func register(user: String) {
-        socket?.emit("add user", user)
+    func sendMessage(_ message: ChatMessage) {
+        socket.emit("sendMessage", message)
     }
+//    func userJoinOnConnect(user: User) {
+//        let u: [String: String] = ["sessionId": socket.sid!, "username": user.username]
+//        self.socket.emit("userJoin", with: [u])
+//    }
+//
+//    func handleNewMessage(handler: @escaping (_ message: Message) -> Void) {
+//        socket.on("newMessage") { (data, ack) in
+//            let msg = data[0] as! [String: Any]
+//            let usr = msg["user"] as! [String: Any]
+//            let user = User(sessionId: usr["sessionId"] as! String, username: usr["username"] as! String)
+//            let message = Message(user: user, message: msg["message"] as! String)
+//            handler(message)
+//        }
+//    }
+//
+//    func handleUserTyping(handler: @escaping () -> Void) {
+//        socket.on("userTyping") { (_, _) in
+//            handler()
+//        }
+//    }
+//
+//    func handleUserStopTyping(handler: @escaping () -> Void) {
+//        socket.on("userStopTyping") { (_, _) in
+//            handler()
+//        }
+//    }
+//
+//    func handleActiveUserChanged(handler: @escaping (_ count: Int) -> Void) {
+//        socket.on("count") { (data, ack) in
+//            let count = data[0] as! Int
+//            handler(count)
+//        }
+//    }
+//
+//    func sendMessage(message: Message) {
+//        let msg: [String: Any] = ["message": message.message,
+//                                  "user": ["sessionId": message.user.sessionId,
+//                                           "username": message.user.username
+//                                          ]
+//                                 ]
+//        socket.emit("sendMessage", with: [msg])
+//    }
+    
+}
 
-    func send(message: String) {
-        socket?.emit("new message", message)
+// MARK: - Handlers
+extension SocketChatManger {
+    private func configureHandlers() {
+        socket.on(clientEvent: .connect) { data, ack in
+            return
+        }
+        socket.on("receiveMessage") { data, ack in
+            DatabaseManager.shared.receiveMessage(data[0])
+        }
+        socket.onAny({
+            print("Got event: \($0.event), with items: \($0.items!)")
+        })
     }
-
 }

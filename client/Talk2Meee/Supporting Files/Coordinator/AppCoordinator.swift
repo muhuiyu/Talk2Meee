@@ -35,6 +35,7 @@ class AppCoordinator: Coordinator {
         Task {
             await restoreUserSession()
             await configureDatabase()
+            configureSocket()
             DispatchQueue.main.async { [weak self] in
                 self?.configureRootViewController()
                 self?.window.overrideUserInterfaceStyle = .light
@@ -46,6 +47,7 @@ class AppCoordinator: Coordinator {
     private func configureBindings() {
         loginObserver = NotificationCenter.default.addObserver(forName: .didChangeAuthState, object: nil, queue: .main, using: { [weak self] _ in
             self?.configureRootViewController()
+            self?.configureSocket()
         })
     }
 }
@@ -72,6 +74,9 @@ extension AppCoordinator {
 
 // MARK: - Services and managers
 extension AppCoordinator {
+    private func configureSocket() {
+        SocketChatManger.shared.connect()
+    }
     private func restoreUserSession() async {
         guard let currentUserID = UserManager.shared.currentUserID else { return }
         if let user = await DatabaseManager.shared.fetchUser(currentUserID) {

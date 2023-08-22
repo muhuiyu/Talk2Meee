@@ -22,25 +22,21 @@ extension HomeViewModel {
             case .success(let chats):
                 self.chats.accept(chats)
                 self.displayedChats.accept(chats)
+                SocketChatManger.shared.subscribleToChats()
             case .failure(let error):
                 print("Failed fetching chats", error.localizedDescription)
                 return
             }
         }
     }
-    func fetchChat(with userID: UserID) async -> Chat? {
+    func getChat(with userID: UserID) async -> Chat? {
         guard let currentUserID = UserManager.shared.currentUserID else { return nil }
-        let result = await DatabaseManager.shared.fetchChat([ currentUserID, userID ])
-        switch result {
-        case .failure(let error):
-            print("Failed fetching chat", error.localizedDescription)
-            return nil
-        case .success(let chat):
+        if let currentChat = DatabaseManager.shared.getAllChats().first(where: { $0.members == [currentUserID, userID].sorted() }) {
+            return currentChat
+        } else {
+            let chat = await DatabaseManager.shared.createChat(for: [currentUserID, userID])
             return chat
         }
-    }
-    func fetchChat(of memberIDs: [UserID]) async -> Chat? {
-        return nil 
     }
     func filterChats(for query: String) {
         if query.isEmpty {

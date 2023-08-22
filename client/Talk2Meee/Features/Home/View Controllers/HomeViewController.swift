@@ -125,7 +125,6 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         defer {
             tableView.deselectRow(at: indexPath, animated: true)
         }
-//        let viewController = ChatViewController(appCoordinator: self.appCoordinator, viewModel: ChatViewModel(appCoordinator: self.appCoordinator, chat: viewModel.displayedChats.value[indexPath.row]))
         guard let cell = tableView.cellForRow(at: indexPath) as? ChatPreviewCell, let viewModel = cell.viewModel else { return }
         let viewController = ChatViewController(appCoordinator: self.appCoordinator, viewModel: viewModel)
         navigationController?.pushViewController(viewController, animated: true)
@@ -167,7 +166,7 @@ extension HomeViewController: NewConversationViewControllerDelegate {
     func newConversationViewControllerDidSelectUser(_ user: ChatUser) {
         spinner.show(in: view)
         Task {
-            guard let chat = await viewModel.fetchChat(with: user.id) else { return }
+            guard let chat = await viewModel.getChat(with: user.id) else { return }
             spinner.dismiss()
             let viewController = ChatViewController(appCoordinator: self.appCoordinator, viewModel: ChatViewModel(appCoordinator: self.appCoordinator, chat: chat))
             DispatchQueue.main.async { [weak self] in

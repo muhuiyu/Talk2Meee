@@ -20,7 +20,7 @@ struct Chat: Codable {
     let createdTime: Date
     let imageStoragePath: String?
     let members: [UserID]
-    let lastMessage: ChatMessagePreview?
+    var lastMessage: ChatMessagePreview?
     
     init(id: ChatID, title: String? = nil, createdTime: Date, imageStoragePath: String? = nil, members: [UserID], lastMessage: ChatMessagePreview? = nil) {
         self.id = id
@@ -29,19 +29,6 @@ struct Chat: Codable {
         self.imageStoragePath = imageStoragePath
         self.members = members
         self.lastMessage = lastMessage
-    }
-}
-
-// MARK: - ChatMessagePreview
-struct ChatMessagePreview: Codable {
-    let id: MessageID
-    let senderID: UserID
-    let preview: String
-    
-    func toFirebaseData() -> [String: String] {
-        return [
-            "id": id, "senderID": senderID, "preview": preview
-        ]
     }
 }
 
@@ -64,28 +51,22 @@ extension Chat {
         lastMessage = data.lastMessage
     }
     
-    func toFirebaseData() -> [String: Any] {
-        return [
-            "members": members.sorted(),
-            "createdTime": Timestamp(date: createdTime),
-            "imageStoragePath": imageStoragePath,
-            "title": title,
-            "lastMessage": lastMessage?.toFirebaseData()
-        ]
-    }
-    
     static func getCreateChatFirebaseData(for members: [UserID]) -> [String: Any?] {
         return [
             "members": members.sorted(),
             "createdTime": Timestamp(date: Date()),
             "imageStoragePath": nil,
             "title": nil,
-            "lastMessage": nil
+            "lastMessage": nil,
         ]
     }
     
     var isSingleChat: Bool {
         return members.count == 2
+    }
+    
+    var isGroupChat: Bool {
+        return members.count > 2
     }
 }
 
@@ -97,13 +78,46 @@ extension Chat: Persistable {
         createdTime = managedObject.createdTime
         imageStoragePath = managedObject.imageStoragePath
         members = managedObject.members
-        if let lastMessageID = managedObject.lastMessageID, let lastMessageSenderID = managedObject.lastMessageSenderID, let lastMessagePreview = managedObject.lastMessagePreview {
-            lastMessage = ChatMessagePreview(id: lastMessageID, senderID: lastMessageSenderID, preview: lastMessagePreview)
+        if let lastMessageID = managedObject.lastMessageID, let lastMessageSenderID = managedObject.lastMessageSenderID, let lastMessagePreview = managedObject.lastMessagePreview, let lastMessageSentTime = managedObject.lastMessageSentTime {
+            lastMessage = ChatMessagePreview(id: lastMessageID, senderID: lastMessageSenderID, preview: lastMessagePreview, sentTime: lastMessageSentTime)
         } else {
             lastMessage = nil
         }
     }
     func managedObject() -> ChatObject {
         return ChatObject(id: id, title: title, imageStoragePath: imageStoragePath, members: members, lastMessage: lastMessage)
+    }
+}
+
+// MARK: - ChatMessagePreview
+struct ChatMessagePreview: Codable {
+    let id: MessageID
+    let senderID: UserID
+    let preview: String
+    let sentTime: Date
+}
+
+extension ChatMessagePreview {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(MessageID.self, forKey: .id)
+        self.senderID = try container.decode(UserID.self, forKey: .senderID)
+        self.preview = try container.decode(String.self, forKey: .preview)
+        let sentTimeInterval = try container.decode(TimeInterval.self, forKey: .sentTime)
+        self.sentTime = Date(timeIntervalSince1970: sentTimeInterval)
+    }
+    enum CodingKeys: CodingKey {
+        case id
+        case senderID
+        case preview
+        case sentTime
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.senderID, forKey: .senderID)
+        try container.encode(self.preview, forKey: .preview)
+        try container.encode(sentTime.timeIntervalSince1970, forKey: .sentTime)
     }
 }

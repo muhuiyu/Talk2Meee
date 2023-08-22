@@ -21,20 +21,11 @@ public enum VoidResult {
 final class DatabaseManager {
     static let shared = DatabaseManager()
     
-    // MARK: - Cache
-    internal var users = [UserID: ChatUser]()
-    internal var chats = [ChatID: Chat]()
-    internal var messages = [ChatID: [ChatMessage]]()
-    internal var stickerPacks = [StickerPackID: StickerPack]()
-    
     // MARK: - References
     internal let usersCollectionRef: CollectionReference = Firestore.firestore().collection("users")
     internal let friendsCollectionRef: CollectionReference = Firestore.firestore().collection("friends")
     internal let chatsCollectionRef: CollectionReference = Firestore.firestore().collection("chats")
     internal let stickersCollectionRef: CollectionReference = Firestore.firestore().collection("stickers")
-    
-    // MARK: - Query anchor
-    private var queryChatMessageDocumentAnchor = [ChatID: QueryChatMessageAnchor]()
     
     enum DatabaseManagerError: Error {
         case notLoggedIn
@@ -100,6 +91,7 @@ extension DatabaseManager {
             if shouldFetchUsers {
                 await fetchUsers(chat.members)
             }
+            self.updateChatCache(for: [ chat ])
             return .success(chat)
             
         } catch {
@@ -108,133 +100,47 @@ extension DatabaseManager {
         }
     }
     /// Creates and returns new chat with given members
-    private func createChat(for memberIDs: [UserID]) async -> Chat? {
+    public func createChat(for memberIDs: [UserID]) async -> Chat? {
         do {
             let createdTime = Date.now
             let document = try await chatsCollectionRef.addDocument(data: Chat.getCreateChatFirebaseData(for: memberIDs))
             let chat = Chat(id: document.documentID, createdTime: createdTime, members: memberIDs.sorted())
-            self.updateChatCache(for: [chat])
+            self.updateChatCache(for: [ chat ])
             return chat
         } catch {
             print("Error in createChat():", error.localizedDescription)
             return nil
         }
     }
-    private func saveChats(_ updatedChats: [Chat]) {
-        // TODO: -
-    }
 }
 
 // MARK: - Messages
 extension DatabaseManager {
-    /// Gets all messages for a given chat
-    func fetchMessages(for chatID: ChatID) async -> Result<[ChatMessage], Error> {
-        // TODO: - add pagings and certain time?
-        do {
-            let snapshot = try await chatsCollectionRef.document(chatID).collection("messages").getDocuments()
-            let messages = snapshot.documents.compactMap({ try? ChatMessage(snapshot: $0) })
-            self.updateMessageCache(for: messages)
-            return .success(messages)
-        } catch {
-            return .failure(error)
-        }
-    }
-    
-    private var numberOfMessagesPerFetchRequest: Int { return 5 }
-    
-    /// Fetches and returns all messages for current chat
-    func listenForMessages(for chatID: ChatID) {
-        let reference = chatsCollectionRef.document(chatID).collection("messages")
-        
-        // single query to get startAt snapshot
-        reference.order(by: "sentTime", descending: false).limit(to: numberOfMessagesPerFetchRequest).getDocuments { snapshot, error in
-            // save startAt snapshot
-            if let startAt = snapshot?.documents.last {
-                // create listener using startAt snapshot (starting boundary)
-                let listener = reference.order(by: "sentTime").start(atDocument: startAt).addSnapshotListener { snapshot, error in
-                    if let error = error {
-                        print("Error", error)
-                        return
-                    }
-                    guard let snapshot = snapshot else { return }
-                    // append new messages to message array
-                    let messages = snapshot.documents.compactMap({ try? ChatMessage(snapshot: $0) })
-                    self.updateMessageCache(for: messages)
-                }
-                // add listener to list
-                self.createAnchor(for: chatID, startAt: startAt, listener: listener)
-            }
-        }
-    }
-    
-    func fetchMoreMessages(for chatID: ChatID) {
-        let reference = chatsCollectionRef.document(chatID).collection("messages")
-        // single query to get new startAt snapshot
-        if let startAt = queryChatMessageDocumentAnchor[chatID]?.startAt {
-            reference.order(by: "sentTime").start(atDocument: startAt).limit(to: numberOfMessagesPerFetchRequest).getDocuments { snapshot, error in
-                if let newStartAt = snapshot?.documents.last {
-                    // previous starting boundary becomes new ending boundary
-                    // create another listener using new boundaries
-                    let listener = reference.order(by: "sentTime").start(atDocument: newStartAt).end(atDocument: startAt).addSnapshotListener { snapshot, error in
-                        if let error = error {
-                            print("Error", error)
-                            return
-                        }
-                        guard let snapshot = snapshot else { return }
-                        // append new messages to message array
-                        let messages = snapshot.documents.compactMap({ try? ChatMessage(snapshot: $0) })
-                        self.updateMessageCache(for: messages)
-                    }
-                    // add listener to list
-                    self.updateQueryChatMessageAnchor(for: chatID, startAt: newStartAt, endAt: startAt, newListener: listener)
-                }
-            }
-        }
-    }
-    func detachListeners(for chatID: ChatID) {
-        queryChatMessageDocumentAnchor[chatID]?.listeners.removeAll()
-    }
-}
-
-// MARK: - Sending messages
-extension DatabaseManager {
-    /// Creates a new conversation with target user email and first message sent
-    public func createNewConversation(with otherUserID: UserID, firstMessage: ChatMessageContent) {
-        
-    }
+    /// sends message
     public func sendMessage(_ message: ChatMessage) async -> VoidResult {
         do {
-            let data = message.toFirebaseMessage
-            print("data", data)
-            let reference = try await chatsCollectionRef.document(message.chatID).collection("messages").addDocument(data: data)
-            let previewMessage = ChatMessagePreview(id: reference.documentID, senderID: message.sender, preview: message.generateMessagePreview())
-            try await chatsCollectionRef.document(message.chatID).setData([
-                "lastMessage": previewMessage.toFirebaseData()
-            ], merge: true)
+            SocketChatManger.shared.sendMessage(message)
             return .success
         } catch {
             print("Failed sendMessage():", error.localizedDescription)
             return .failure(error)
         }
     }
-}
-
-// MARK: - QueryChatMessageAnchor
-extension DatabaseManager {
-    private func createAnchor(for chatID: ChatID, startAt: QueryDocumentSnapshot, listener: ListenerRegistration) {
-        queryChatMessageDocumentAnchor[chatID] = QueryChatMessageAnchor(startAt: startAt, listeners: [ listener ])
+    /// Receives message
+    func receiveMessage(_ data: Any) {
+        do {
+            guard JSONSerialization.isValidJSONObject(data) else { return }
+            let data = try JSONSerialization.data(withJSONObject: data)
+            let message = try JSONDecoder().decode(ChatMessage.self, from: data)
+            self.updateMessageCache(for: [message])
+        } catch {
+            print("Failed error", error.localizedDescription)
+        }
     }
-    private func updateQueryChatMessageAnchor(for chatID: ChatID, startAt: QueryDocumentSnapshot, endAt: QueryDocumentSnapshot, newListener: ListenerRegistration) {
-        if let _ = queryChatMessageDocumentAnchor[chatID] {
-            queryChatMessageDocumentAnchor[chatID]?.startAt = startAt
-            queryChatMessageDocumentAnchor[chatID]?.endAt = endAt
-            queryChatMessageDocumentAnchor[chatID]?.listeners.append(newListener)
+    func updateLastMessageInFirebase(for chatID: ChatID, lastMessage: ChatMessagePreview) {
+        // update firebase
+        Task {
+            try await chatsCollectionRef.document(chatID).setData([ "lastMessage": lastMessage.asDictionary() ], merge: true)
         }
     }
 }
-private struct QueryChatMessageAnchor {
-    var startAt: QueryDocumentSnapshot
-    var endAt: QueryDocumentSnapshot? = nil
-    var listeners: [ListenerRegistration]
-}
-

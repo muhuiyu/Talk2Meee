@@ -17,8 +17,6 @@ class ChatViewModel: Base.ViewModel {
     let displayedMessages: BehaviorRelay<[Message]> = BehaviorRelay(value: [])
     private(set) var stickerPacks = UserManager.shared.getStickerPacks()
     
-    var shouldScrollToLastItem = true
-    
     private var dataObserver: NSObjectProtocol?
     
     var sender: Sender? {
@@ -48,20 +46,16 @@ class ChatViewModel: Base.ViewModel {
 
 // MARK: - Listen and send messages
 extension ChatViewModel {
-    func listenForMessages() {
-        DatabaseManager.shared.listenForMessages(for: chat.id)
-    }
-    func fetchMoreMessages() {
-        shouldScrollToLastItem = false
-        DatabaseManager.shared.fetchMoreMessages(for: chat.id)
+    func loadMessages() {
+        let messages = DatabaseManager.shared.getMessages(for: chat.id)
+        self.messages.accept(messages)
     }
     func sendMessage(for content: ChatMessageContent, as type: ChatMessageType) {
         let newIdentifier = UUID().uuidString
         guard let sender = sender else { return }
         Task {
-            let chatMessage = ChatMessage(id: newIdentifier, chatID: chat.id, sender: sender.senderId, sentTime: Date(), type: type, content: content, searchableContent: content.getSearchableContent())
+            let chatMessage = ChatMessage(id: newIdentifier, chatID: chat.id, sender: sender.senderId, sentTime: Date(), type: type, content: content, searchableContent: content.getSearchableContent(), quotedMessageID: nil)
             let result = await DatabaseManager.shared.sendMessage(chatMessage)
-            shouldScrollToLastItem = true
             sendMessageResultHandler(result)
         }
     }
@@ -72,9 +66,6 @@ extension ChatViewModel {
         case .success:
             return
         }
-    }
-    func stopListeningForMessages() {
-        DatabaseManager.shared.detachListeners(for: chat.id)
     }
 }
 
@@ -127,8 +118,7 @@ extension ChatViewModel {
         dataObserver = NotificationCenter.default.addObserver(forName: .didUpdateMessages, object: nil, queue: .main, using: { [weak self] _ in
             guard let self = self else { return }
             print("should update messages")
-            let messages = DatabaseManager.shared.getMessages(for: self.chat.id)
-            self.messages.accept(messages)
+            self.loadMessages()
         })
     }
     private func removeObservers() {
