@@ -87,6 +87,10 @@ extension ChatViewModel {
 
 // MARK: - Get chat properties
 extension ChatViewModel {
+    func isSentByMe(at indexPath: IndexPath) -> Bool {
+        let message = messages.value[indexPath.section]
+        return message.sender == sender?.senderId
+    }
     func getMessage(at indexPath: IndexPath) -> ChatMessage {
         return messages.value[indexPath.section]
     }

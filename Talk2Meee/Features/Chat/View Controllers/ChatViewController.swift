@@ -41,6 +41,8 @@ class ChatViewController: MessagesViewController {
         configureConstraints()
         configureBindings()
         configureNotifications()
+        
+        spinner.show(in: view)
         viewModel.listenForMessages()
     }
     
@@ -114,6 +116,7 @@ extension ChatViewController {
             .asObservable()
             .subscribe { _ in
                 DispatchQueue.main.async { [weak self] in
+                    self?.spinner.dismiss()
                     if self?.viewModel.shouldScrollToLastItem ?? false {
                         self?.messagesCollectionView.reloadData()
                         self?.messagesCollectionView.scrollToLastItem()
@@ -183,6 +186,9 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             return
         }
     }
+    func avatarSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize? {
+        return .zero
+    }
 }
 
 // MARK: - MessageCollcetionView Delegate
@@ -212,21 +218,86 @@ extension ChatViewController: MessageCellDelegate {
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
         // Add double tap and long press gesture
         if indexPaths.count == 1 {
-            let message = viewModel.getMessage(at: indexPaths[0])
+            let starAction = UIAction(title: "Star", image: UIImage(systemName: Icons.star)) { _ in /* Implement the action. */ }
+            let downloadAction = UIAction(title: "Download", image: UIImage(systemName: Icons.squareAndArrowDown)) { [weak self] _ in
+                guard let content = self?.viewModel.getMessage(at: indexPaths[0]).content as? ChatMessageImageContent else { return }
+                if let url = URL(string: content.imageStoragePath), let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                }
+            }
+            let replyAction = UIAction(title: "Reply", image: UIImage(systemName: Icons.arrowshapeTurnUpBackward)) { _ in /* Implement the action. */ }
             
-            return UIContextMenuConfiguration(actionProvider: { suggestedActions in
-                // TODO: - determine by message type and sender
-                return UIMenu(children: [
-                    UIAction(title: "Star", image: UIImage(systemName: Icons.star)) { _ in /* Implement the action. */ },
-                    UIAction(title: "Reply", image: UIImage(systemName: Icons.arrowshapeTurnUpBackward)) { _ in /* Implement the action. */ },
-                    UIAction(title: "Forward", image: UIImage(systemName: Icons.arrowshapeTurnUpForward)) { _ in /* Implement the action. */ },
-                    UIAction(title: "Copy", image: UIImage(systemName: Icons.docOnDoc)) { _ in /* Implement the action. */ },
-                    UIAction(title: "Info", image: UIImage(systemName: Icons.infoCircle)) { _ in /* Implement the action. */ },
-                    UIAction(title: "Delete", image: UIImage(systemName: Icons.trash), attributes: .destructive) { [weak self] _ in
-                        // TODO: add delete messages
-                    }
-                ])
-            })
+            // don't allow to edit message for now
+//            let editAction = UIAction(title: "Edit", image: UIImage(systemName: Icons.pencil)) { _ in }
+            let copyAction = UIAction(title: "Copy", image: UIImage(systemName: Icons.docOnDoc)) { [weak self] _ in
+                guard let content = self?.viewModel.getMessage(at: indexPaths[0]).content as? ChatMessageTextContent else { return }
+                UIPasteboard.general.string = content.text
+            }
+            let viewStickerPackAction = UIAction(title: "View Sticker Pack", image: UIImage(systemName: Icons.rectangleOnRectangleCircle)) { [weak self] _ in
+                // TODO: - show sticker details page
+            }
+            let translateAction = UIAction(title: "Translate", image: UIImage(systemName: Icons.characterBubble)) { _ in /* Implement the action. */ }
+            let infoAction = UIAction(title: "Info", image: UIImage(systemName: Icons.infoCircle)) { _ in /* Implement the action. */ }
+            let unsendAction = UIAction(title: "Unsend", image: UIImage(systemName: Icons.xmark)) { [weak self] _ in
+                // TODO: - add unsend
+            }
+            let moreAction = UIAction(title: "More", image: UIImage(systemName: Icons.ellipsisCircle)) { [weak self] _ in
+                // TODO: - forward and delete
+            }
+            
+            let message = viewModel.getMessage(at: indexPaths[0])
+            switch message.type {
+            case .text:
+                if viewModel.isSentByMe(at: indexPaths[0]) {
+                    return UIContextMenuConfiguration(actionProvider: { suggestedActions in
+                        // TODO: - determine by message type and sender
+                        return UIMenu(children: [ starAction, replyAction, copyAction, translateAction, unsendAction, moreAction ])
+                    })
+                } else {
+                    return UIContextMenuConfiguration(actionProvider: { suggestedActions in
+                        // TODO: - determine by message type and sender
+                        return UIMenu(children: [ starAction, replyAction, copyAction, translateAction, moreAction ])
+                    })
+                }
+            case .image:
+                if viewModel.isSentByMe(at: indexPaths[0]) {
+                    return UIContextMenuConfiguration(actionProvider: { suggestedActions in
+                        // TODO: - determine by message type and sender
+                        return UIMenu(children: [ starAction, replyAction, downloadAction, unsendAction, moreAction ])
+                    })
+                } else {
+                    return UIContextMenuConfiguration(actionProvider: { suggestedActions in
+                        // TODO: - determine by message type and sender
+                        return UIMenu(children: [ starAction, replyAction, downloadAction, moreAction ])
+                    })
+                }
+            case .sticker:
+                if viewModel.isSentByMe(at: indexPaths[0]) {
+                    return UIContextMenuConfiguration(actionProvider: { suggestedActions in
+                        // TODO: - determine by message type and sender
+                        return UIMenu(children: [ starAction, replyAction, viewStickerPackAction, unsendAction, moreAction ])
+                    })
+                } else {
+                    return UIContextMenuConfiguration(actionProvider: { suggestedActions in
+                        // TODO: - determine by message type and sender
+                        return UIMenu(children: [ starAction, replyAction, viewStickerPackAction, moreAction ])
+                    })
+                }
+            case .location:
+                if viewModel.isSentByMe(at: indexPaths[0]) {
+                    return UIContextMenuConfiguration(actionProvider: { suggestedActions in
+                        // TODO: - determine by message type and sender
+                        return UIMenu(children: [ starAction, replyAction, unsendAction, moreAction ])
+                    })
+                } else {
+                    return UIContextMenuConfiguration(actionProvider: { suggestedActions in
+                        // TODO: - determine by message type and sender
+                        return UIMenu(children: [ starAction, replyAction, moreAction ])
+                    })
+                }
+            }
+            
+            
         } else {
             print("indexPaths multiple or empty...", indexPaths.count)
             return nil

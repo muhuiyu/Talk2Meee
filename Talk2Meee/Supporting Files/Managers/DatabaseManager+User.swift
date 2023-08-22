@@ -27,7 +27,8 @@ extension DatabaseManager {
                 "id": user.uid,
                 "name": name,
                 "email": email,
-                "photoURL": user.photoURL?.absoluteString ?? ""
+                "photoURL": user.photoURL?.absoluteString ?? "",
+                "stickerPacks": []
             ])
         } catch {
             print("Error in insertUser(): ", error)

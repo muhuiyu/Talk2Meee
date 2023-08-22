@@ -134,6 +134,7 @@ class Icons {
     static var tshirtFill: String { "tshirt.fill" }
     static var shippingBoxFill: String { "shippingbox.fill" }
     static var scrollFill: String { "scroll.fill" }
+    static var characterBubble: String { "character.bubble" }
     static var characterBubbleFill: String { "character.bubble.fill" }
     static var bubbleLeft: String { "bubble.left" }
     static var bubbleLeftFill: String { "bubble.left.fill" }
@@ -157,6 +158,7 @@ class Icons {
     static var chartBarFill: String { "chart.bar.fill" }
     static var magnifyingglass: String { "magnifyingglass" }
     static var squareGrid2x2: String { "square.grid.2x2" }
+    static var squareAndArrowDown: String { "square.and.arrow.down" }
     static var textAlignleft: String { "text.alignleft" }
     static var textAlignright: String { "text.alignright" }
     static var squareOnSquare: String { "square.on.square" }
@@ -171,6 +173,8 @@ class Icons {
     static var safari: String { "safari" }
     static var safariFill: String { "safari.fill" }
     static var ellipsis: String { "ellipsis" }
+    static var ellipsisCircle: String { "ellipsis.circle" }
+    static var rectangleOnRectangleCircle: String { "rectangle.on.rectangle.circle" }
     static var line3HorizontalDecrease: String { "line.3.horizontal.decrease" }
     static var bookmark: String { "bookmark" }
     static var bookmarkFill: String { "bookmark.fill" }
