@@ -33,10 +33,14 @@ final class DatabaseManager {
     internal let chatsCollectionRef: CollectionReference = Firestore.firestore().collection("chats")
     internal let stickersCollectionRef: CollectionReference = Firestore.firestore().collection("stickers")
     
+    // MARK: - Query anchor
+    private var queryChatMessageDocumentAnchor = [ChatID: QueryChatMessageAnchor]()
+    
     enum DatabaseManagerError: Error {
         case notLoggedIn
         case emptySnapshot
         case failedCreateChat
+        case noUser
         case noStickers
     }
     
@@ -109,7 +113,7 @@ extension DatabaseManager {
             let createdTime = Date.now
             let document = try await chatsCollectionRef.addDocument(data: Chat.getCreateChatFirebaseData(for: memberIDs))
             let chat = Chat(id: document.documentID, createdTime: createdTime, members: memberIDs.sorted())
-            self.updateChatCache(for: chat)
+            self.updateChatCache(for: [chat])
             return chat
         } catch {
             print("Error in createChat():", error.localizedDescription)
@@ -135,19 +139,60 @@ extension DatabaseManager {
             return .failure(error)
         }
     }
+    
+    private var numberOfMessagesPerFetchRequest: Int { return 5 }
+    
     /// Fetches and returns all messages for current chat
-    func listenForMessages(for chatID: ChatID, completion: @escaping ((Result<[ChatMessage], Error>) -> Void)) {
-        chatsCollectionRef.document(chatID).collection("messages").order(by: "sentTime", descending: false).addSnapshotListener({ snapshot, error in
-            if let error = error {
-                return completion(.failure(error))
+    func listenForMessages(for chatID: ChatID) {
+        let reference = chatsCollectionRef.document(chatID).collection("messages")
+        
+        // single query to get startAt snapshot
+        reference.order(by: "sentTime", descending: false).limit(to: numberOfMessagesPerFetchRequest).getDocuments { snapshot, error in
+            // save startAt snapshot
+            if let startAt = snapshot?.documents.last {
+                // create listener using startAt snapshot (starting boundary)
+                let listener = reference.order(by: "sentTime").start(atDocument: startAt).addSnapshotListener { snapshot, error in
+                    if let error = error {
+                        print("Error", error)
+                        return
+                    }
+                    guard let snapshot = snapshot else { return }
+                    // append new messages to message array
+                    let messages = snapshot.documents.compactMap({ try? ChatMessage(snapshot: $0) })
+                    self.updateMessageCache(for: messages)
+                }
+                // add listener to list
+                self.createAnchor(for: chatID, startAt: startAt, listener: listener)
             }
-            guard let snapshot = snapshot else {
-                return completion(.failure(DatabaseManagerError.emptySnapshot))
+        }
+    }
+    
+    func fetchMoreMessages(for chatID: ChatID) {
+        let reference = chatsCollectionRef.document(chatID).collection("messages")
+        // single query to get new startAt snapshot
+        if let startAt = queryChatMessageDocumentAnchor[chatID]?.startAt {
+            reference.order(by: "sentTime").start(atDocument: startAt).limit(to: numberOfMessagesPerFetchRequest).getDocuments { snapshot, error in
+                if let newStartAt = snapshot?.documents.last {
+                    // previous starting boundary becomes new ending boundary
+                    // create another listener using new boundaries
+                    let listener = reference.order(by: "sentTime").start(atDocument: newStartAt).end(atDocument: startAt).addSnapshotListener { snapshot, error in
+                        if let error = error {
+                            print("Error", error)
+                            return
+                        }
+                        guard let snapshot = snapshot else { return }
+                        // append new messages to message array
+                        let messages = snapshot.documents.compactMap({ try? ChatMessage(snapshot: $0) })
+                        self.updateMessageCache(for: messages)
+                    }
+                    // add listener to list
+                    self.updateQueryChatMessageAnchor(for: chatID, startAt: newStartAt, endAt: startAt, newListener: listener)
+                }
             }
-            let messages = snapshot.documents.compactMap({ try? ChatMessage(snapshot: $0) })
-            self.updateMessageCache(for: messages)
-            return completion(.success(messages))
-        })
+        }
+    }
+    func detachListeners(for chatID: ChatID) {
+        queryChatMessageDocumentAnchor[chatID]?.listeners.removeAll()
     }
 }
 
@@ -173,3 +218,23 @@ extension DatabaseManager {
         }
     }
 }
+
+// MARK: - QueryChatMessageAnchor
+extension DatabaseManager {
+    private func createAnchor(for chatID: ChatID, startAt: QueryDocumentSnapshot, listener: ListenerRegistration) {
+        queryChatMessageDocumentAnchor[chatID] = QueryChatMessageAnchor(startAt: startAt, listeners: [ listener ])
+    }
+    private func updateQueryChatMessageAnchor(for chatID: ChatID, startAt: QueryDocumentSnapshot, endAt: QueryDocumentSnapshot, newListener: ListenerRegistration) {
+        if let _ = queryChatMessageDocumentAnchor[chatID] {
+            queryChatMessageDocumentAnchor[chatID]?.startAt = startAt
+            queryChatMessageDocumentAnchor[chatID]?.endAt = endAt
+            queryChatMessageDocumentAnchor[chatID]?.listeners.append(newListener)
+        }
+    }
+}
+private struct QueryChatMessageAnchor {
+    var startAt: QueryDocumentSnapshot
+    var endAt: QueryDocumentSnapshot? = nil
+    var listeners: [ListenerRegistration]
+}
+

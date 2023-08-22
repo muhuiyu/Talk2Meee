@@ -15,8 +15,11 @@ class ChatViewModel: Base.ViewModel {
     let chat: Chat
     private let messages: BehaviorRelay<[ChatMessage]> = BehaviorRelay(value: [])
     let displayedMessages: BehaviorRelay<[Message]> = BehaviorRelay(value: [])
-    
     private(set) var stickerPacks = UserManager.shared.getStickerPacks()
+    
+    var shouldScrollToLastItem = true
+    
+    private var dataObserver: NSObjectProtocol?
     
     var sender: Sender? {
         guard let currentUser = UserManager.shared.currentUser else { return nil }
@@ -27,6 +30,8 @@ class ChatViewModel: Base.ViewModel {
         self.chat = chat
         super.init(appCoordinator: appCoordinator)
         
+        configureObservers()
+        
         messages
             .asObservable()
             .subscribe { value in
@@ -35,19 +40,20 @@ class ChatViewModel: Base.ViewModel {
             }
             .disposed(by: disposeBag)
     }
+    
+    deinit {
+        removeObservers()
+    }
 }
 
 // MARK: - Listen and send messages
 extension ChatViewModel {
     func listenForMessages() {
-        DatabaseManager.shared.listenForMessages(for: chat.id) { result in
-            switch result {
-            case .failure(let error):
-                print("Failed fetchMessages(): ", error.localizedDescription)
-            case .success(let messages):
-                self.messages.accept(messages)
-            }
-        }
+        DatabaseManager.shared.listenForMessages(for: chat.id)
+    }
+    func fetchMoreMessages() {
+        shouldScrollToLastItem = false
+        DatabaseManager.shared.fetchMoreMessages(for: chat.id)
     }
     func sendMessage(for content: ChatMessageContent, as type: ChatMessageType) {
         let newIdentifier = UUID().uuidString
@@ -55,6 +61,7 @@ extension ChatViewModel {
         Task {
             let chatMessage = ChatMessage(id: newIdentifier, chatID: chat.id, sender: sender.senderId, sentTime: Date(), type: type, content: content, searchableContent: content.getSearchableContent())
             let result = await DatabaseManager.shared.sendMessage(chatMessage)
+            shouldScrollToLastItem = true
             sendMessageResultHandler(result)
         }
     }
@@ -65,6 +72,9 @@ extension ChatViewModel {
         case .success:
             return
         }
+    }
+    func stopListeningForMessages() {
+        DatabaseManager.shared.detachListeners(for: chat.id)
     }
 }
 
@@ -106,5 +116,20 @@ extension ChatViewModel {
     func getChatSubtitle() -> String {
         return chat.lastMessage?.preview ?? ""
     }
+}
 
+extension ChatViewModel {
+    private func configureObservers() {
+        dataObserver = NotificationCenter.default.addObserver(forName: .didUpdateMessages, object: nil, queue: .main, using: { [weak self] _ in
+            guard let self = self else { return }
+            print("should update messages")
+            let messages = DatabaseManager.shared.getMessages(for: self.chat.id)
+            self.messages.accept(messages)
+        })
+    }
+    private func removeObservers() {
+        if let dataObserver = dataObserver {
+            NotificationCenter.default.removeObserver(dataObserver)
+        }
+    }
 }

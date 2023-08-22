@@ -101,7 +101,7 @@ extension DatabaseManager {
             group.enter()
             fetchUser(userID) { user in
                 if let user = user  {
-                    self.updateUserCache(for: user)
+                    self.updateUserCache(for: [user])
                 }
                 group.leave()
             }
@@ -112,16 +112,20 @@ extension DatabaseManager {
         }
     }
     internal func fetchUsers(_ userIDs: [UserID]) async {
-        let group = DispatchGroup()
-        for userID in userIDs {
-            group.enter()
-            if let user = await fetchUser(userID) {
-                self.updateUserCache(for: user)
-            }
-            group.leave()
-        }
-        group.notify(queue: .main) {
-            print("Finished all requests.")
+        do {
+            try await withThrowingTaskGroup(of: ChatUser.self, body: { group in
+                for userID in userIDs {
+                    group.addTask {
+                        if let user = await self.fetchUser(userID) { return user }
+                        throw DatabaseManagerError.noUser
+                    }
+                }
+                for try await user in group {
+                    self.updateUserCache(for: [user])
+                }
+            })
+        } catch {
+            
         }
     }
     func getUser(_ userID: UserID) -> ChatUser? {

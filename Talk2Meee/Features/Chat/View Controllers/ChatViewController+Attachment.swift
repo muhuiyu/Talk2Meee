@@ -93,35 +93,23 @@ extension ChatViewController: LocationPickerViewControllerDelegate {
     func locationPickerViewControllerDidSelectLocation(_ viewController: LocationPickerViewController, location: CLLocationCoordinate2D) {
         viewModel.sendMessage(for: ChatMessageLocationContent(longtitude: location.longitude, latitdue: location.latitude), as: .location)
     }
-    func animationBlockForLocation(
-      message _: MessageType,
-      at _: IndexPath,
-      in _: MessagesCollectionView) -> ((UIImageView) -> Void)?
-    {
-      { view in
-        view.layer.transform = CATransform3DMakeScale(2, 2, 2)
-        UIView.animate(
-          withDuration: 0.6,
-          delay: 0,
-          usingSpringWithDamping: 0.9,
-          initialSpringVelocity: 0,
-          options: [],
-          animations: {
-            view.layer.transform = CATransform3DIdentity
-          },
-          completion: nil)
-      }
-    }
-
-    func snapshotOptionsForLocation(
-      message _: MessageType,
-      at _: IndexPath,
-      in _: MessagesCollectionView)
-      -> LocationMessageSnapshotOptions
-    {
-      LocationMessageSnapshotOptions(
-        showsBuildings: true,
-        showsPointsOfInterest: true,
-        span: MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10))
+//    func animationBlockForLocation(message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> ((UIImageView) -> Void)? {
+//        {
+//            view in
+//            view.layer.transform = CATransform3DMakeScale(2, 2, 2)
+//            UIView.animate(
+//              withDuration: 0.6,
+//              delay: 0,
+//              usingSpringWithDamping: 0.9,
+//              initialSpringVelocity: 0,
+//              options: [],
+//              animations: {
+//                view.layer.transform = CATransform3DIdentity
+//              },
+//              completion: nil)
+//        }
+//    }
+    func snapshotOptionsForLocation(message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> LocationMessageSnapshotOptions {
+        return LocationMessageSnapshotOptions(showsBuildings: true, showsPointsOfInterest: true, span: MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10))
     }
 }

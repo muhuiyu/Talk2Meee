@@ -37,8 +37,9 @@ extension DatabaseManager {
     }
     func updateStickerPackCache(for updatedPacks: [StickerPack]) {
         updatedPacks.forEach({ updateStickerPackCache(for: $0) })
+        NotificationCenter.default.post(Notification(name: .didUpdateStickers))
     }
-    func updateStickerPackCache(for updatedPack: StickerPack) {
+    private func updateStickerPackCache(for updatedPack: StickerPack) {
         do {
             let realm = try Realm()
             
@@ -69,8 +70,9 @@ extension DatabaseManager {
     }
     func updateChatCache(for updatedChats: [Chat]) {
         updatedChats.forEach({ updateChatCache(for: $0) })
+        NotificationCenter.default.post(Notification(name: .didUpdateChats))
     }
-    func updateChatCache(for updatedChat: Chat) {
+    private func updateChatCache(for updatedChat: Chat) {
         do {
             let realm = try Realm()
             if let _ = realm.objects(ChatObject.self).first(where: { $0.id == updatedChat.id }) {
@@ -93,7 +95,7 @@ extension DatabaseManager {
     func getMessages(for chatID: ChatID) -> [ChatMessage] {
         do {
             let realm = try Realm()
-            return realm.objects(ChatMessageObject.self).filter({ $0.chatID == chatID }).map({ ChatMessage(managedObject: $0) })
+            return realm.objects(ChatMessageObject.self).filter({ $0.chatID == chatID }).map({ ChatMessage(managedObject: $0) }).sorted(by: { $0.sentTime < $1.sentTime })
         } catch {
             print("Error", error)
             return []
@@ -101,8 +103,9 @@ extension DatabaseManager {
     }
     func updateMessageCache(for updatedMessages: [ChatMessage]) {
         updatedMessages.forEach({ updateMessageCache(for: $0) })
+        NotificationCenter.default.post(Notification(name: .didUpdateMessages))
     }
-    func updateMessageCache(for updatedMessage: ChatMessage) {
+    private func updateMessageCache(for updatedMessage: ChatMessage) {
         do {
             let realm = try Realm()
             if let _ = realm.objects(ChatMessageObject.self).first(where: { $0.id == updatedMessage.id }) {
@@ -140,7 +143,7 @@ extension DatabaseManager {
             return nil
         }
     }
-    func updateUserCache(for updatedUser: ChatUser) {
+    private func updateUserCache(for updatedUser: ChatUser) {
         do {
             let realm = try Realm()
             if let _ = realm.objects(UserObject.self).first(where: { $0.id == updatedUser.id }) {
@@ -158,6 +161,7 @@ extension DatabaseManager {
     }
     func updateUserCache(for updatedUsers: [ChatUser]) {
         updatedUsers.forEach({ updateUserCache(for: $0) })
+        NotificationCenter.default.post(Notification(name: .didUpdateUsers))
     }
 }
 
@@ -196,4 +200,11 @@ extension DatabaseManager {
             print("Failed with error", error)
         }
     }
+}
+
+extension Notification.Name {
+    static let didUpdateChats = Notification.Name("didUpdateChats")
+    static let didUpdateMessages = Notification.Name("didUpdateMessages")
+    static let didUpdateUsers = Notification.Name("didUpdateUsers")
+    static let didUpdateStickers = Notification.Name("didUpdateStickers")
 }
