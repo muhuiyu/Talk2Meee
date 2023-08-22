@@ -1,24 +1,30 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+const express = require('express')
+const app = express()
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
+const { randomUUID } = require('crypto')
 
-io.on('connection', function(socket)
-{
-  console.log('a user connected');
-  //io.emit('Wellcome', msg);
-   
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
-  
-  socket.on('chatMessage', function(msg){
-    console.log('message: ' + msg);
-	io.emit('chatMessage', 'Message came bro');
-  });
-  
-});
+const users = new Map()
 
+io.on('connection', (socket) => {
+  let userId = socket.handshake.auth.userId
+  console.log('a user connected')
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
-});
+  users.set(socket.id, userId)
+
+  io.emit('receiveNewUser', userId, Object.fromEntries(users))
+
+  socket.on('sendMessage', (message) => {
+    const userId = users.get(socket.id)
+    io.emit('receiveMessage', randomUUID(), userId, message)
+  })
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected')
+    users.delete(socket.id)
+  })
+})
+
+server.listen(3000, () => {
+  console.log('listening on *:3000')
+})
