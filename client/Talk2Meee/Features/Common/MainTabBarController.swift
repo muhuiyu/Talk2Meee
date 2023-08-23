@@ -25,7 +25,7 @@ extension MainTabBarController {
     private func generateViewController(_ category: TabBarCategory) -> UINavigationController? {
         let viewController = category.getViewController(appCoordinator).embedInNavgationController()
         // TODO: - add background color...?
-        viewController.navigationController?.navigationBar.backgroundColor = UIColor(hex: UserManager.shared.getChatTheme().navigationBarColor)
+        viewController.navigationController?.navigationBar.backgroundColor = UIColor(hex: UserManager.shared.getAppTheme().navigationBarColor)
         return viewController
     }
 }

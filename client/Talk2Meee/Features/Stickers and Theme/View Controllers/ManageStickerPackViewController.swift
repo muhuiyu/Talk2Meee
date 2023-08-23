@@ -36,7 +36,7 @@ class ManageStickerPackViewController: Base.MVVMViewController<ManageStickerPack
 extension ManageStickerPackViewController {
     @objc
     private func didChangeSegmentControl(_ sender: UISegmentedControl) {
-        guard let toTab = ManageStickerPackViewModel.ManageStickerPackTab(rawValue: sender.selectedSegmentIndex) else { return }
+        guard let toTab = ManageStickerPackViewModel.Tab(rawValue: sender.selectedSegmentIndex) else { return }
         if viewModel.currentTab.value.rawValue != sender.selectedSegmentIndex {
             viewModel.currentTab.accept(toTab)
         }

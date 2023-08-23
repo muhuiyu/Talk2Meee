@@ -10,7 +10,7 @@ import RxSwift
 import RxRelay
 
 class ManageStickerPackViewModel: Base.ViewModel {
-    enum ManageStickerPackTab: Int {
+    enum Tab: Int {
         case allPacks = 0
         case myPacks = 1
     }
@@ -18,7 +18,7 @@ class ManageStickerPackViewModel: Base.ViewModel {
     
     let displayedPacks: BehaviorRelay<[StickerPack]> = BehaviorRelay(value: [])
     
-    var currentTab: BehaviorRelay<ManageStickerPackTab> = BehaviorRelay(value: .allPacks)
+    var currentTab: BehaviorRelay<Tab> = BehaviorRelay(value: .allPacks)
     
     override init(appCoordinator: AppCoordinator? = nil) {
         super.init(appCoordinator: nil)

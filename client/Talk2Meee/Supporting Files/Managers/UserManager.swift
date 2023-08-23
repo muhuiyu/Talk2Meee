@@ -14,7 +14,7 @@ class UserManager {
     private var user: ChatUser?
     
     static private var userKey: String { "k_chat_user" }
-    static private var chatThemeKey: String { "k_chat_theme" }
+    static private var appThemeKey: String { "k_app_theme" }
     static private var stickerPacksKey: String { "k_sticker_packs" }
 }
 
@@ -40,16 +40,16 @@ extension UserManager {
             UserDefaults.standard.set(encoded, forKey: UserManager.userKey)
         }
     }
-    func getChatTheme() -> ChatTheme {
-        if let data = UserDefaults.standard.object(forKey: UserManager.chatThemeKey) as? Data,
-           let theme = try? JSONDecoder().decode(ChatTheme.self, from: data) {
+    func getAppTheme() -> AppTheme {
+        if let data = UserDefaults.standard.object(forKey: UserManager.appThemeKey) as? Data,
+           let theme = try? JSONDecoder().decode(AppTheme.self, from: data) {
              return theme
         }
-        return ChatTheme.mikanTheme
+        return AppTheme.mikanTheme
     }
-    func setChatTheme(_ theme: ChatTheme) {
+    func setAppTheme(_ theme: AppTheme) {
         if let encoded = try? JSONEncoder().encode(theme) {
-            UserDefaults.standard.set(encoded, forKey: UserManager.chatThemeKey)
+            UserDefaults.standard.set(encoded, forKey: UserManager.appThemeKey)
         }
     }
     func removeChatUser() {
@@ -72,4 +72,8 @@ extension UserManager {
             UserDefaults.standard.set(encoded, forKey: UserManager.stickerPacksKey)
         }
     }
+}
+
+extension Notification.Name {
+    static let didChangeAppTheme = Notification.Name("didChangeAppTheme")
 }

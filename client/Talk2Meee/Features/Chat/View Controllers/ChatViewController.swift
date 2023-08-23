@@ -80,7 +80,7 @@ extension ChatViewController {
         }
     }
     private func configureMessageCollectionView() {
-        messagesCollectionView.backgroundColor = UIColor(hex: UserManager.shared.getChatTheme().backgroundColor)
+        messagesCollectionView.backgroundColor = UIColor(hex: UserManager.shared.getAppTheme().backgroundColor)
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
@@ -130,12 +130,12 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         let chatMessage = viewModel.getMessage(at: indexPath)
-        let chatTheme = UserManager.shared.getChatTheme()
+        let appTheme = UserManager.shared.getAppTheme()
         if chatMessage.type.hasBackground {
             if message.sender.senderId == viewModel.sender?.senderId {
-                return UIColor(hex: chatTheme.selfMessageBubbleColor)
+                return UIColor(hex: appTheme.selfMessageBubbleColor)
             } else {
-                return UIColor(hex: chatTheme.otherMessageBubbleColor)
+                return UIColor(hex: appTheme.otherMessageBubbleColor)
             }
         } else {
             return .clear
@@ -143,11 +143,11 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
     
     func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        let chatTheme = UserManager.shared.getChatTheme()
+        let appTheme = UserManager.shared.getAppTheme()
         if message.sender.senderId == viewModel.sender?.senderId {
-            return UIColor(hex: chatTheme.selfMessageBubbleTextColor)
+            return UIColor(hex: appTheme.selfMessageBubbleTextColor)
         } else {
-            return UIColor(hex: chatTheme.otherMessageBubbleTextColor)
+            return UIColor(hex: appTheme.otherMessageBubbleTextColor)
         }
     }
     

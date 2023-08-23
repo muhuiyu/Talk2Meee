@@ -109,9 +109,13 @@
 		E49FC23E2A9057B60016F309 /* ChatPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FC23D2A9057B60016F309 /* ChatPreviewCell.swift */; };
 		E49FF35F2A96805400F113A5 /* ManageStickerPackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FF35E2A96805400F113A5 /* ManageStickerPackViewModel.swift */; };
 		E49FF3612A9685A200F113A5 /* StickerPackDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FF3602A9685A200F113A5 /* StickerPackDetailsViewController.swift */; };
+		E49FF3632A9699C000F113A5 /* ProfileChatSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FF3622A9699C000F113A5 /* ProfileChatSettingsViewController.swift */; };
+		E49FF3652A969BD300F113A5 /* ManageThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FF3642A969BD300F113A5 /* ManageThemeViewController.swift */; };
+		E49FF3672A969C3C00F113A5 /* ManageThemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FF3662A969C3C00F113A5 /* ManageThemeViewModel.swift */; };
+		E4CC17532A96C401002D446A /* ManageThemeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CC17522A96C401002D446A /* ManageThemeCell.swift */; };
 		E4D3AE4C2A926AAE00208684 /* StickerInputViewHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE4B2A926AAE00208684 /* StickerInputViewHeaderCell.swift */; };
 		E4D3AE4E2A92731700208684 /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE4D2A92731700208684 /* ChatInputBar.swift */; };
-		E4D3AE502A9277ED00208684 /* ChatTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE4F2A9277ED00208684 /* ChatTheme.swift */; };
+		E4D3AE502A9277ED00208684 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE4F2A9277ED00208684 /* AppTheme.swift */; };
 		E4D3AE532A92B07900208684 /* LocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE522A92B07900208684 /* LocationPickerViewController.swift */; };
 		E4D3AE552A92E7B300208684 /* ManageStickerPackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE542A92E7B300208684 /* ManageStickerPackViewController.swift */; };
 		E4D3AE572A92E86600208684 /* ManageStickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE562A92E86600208684 /* ManageStickerCell.swift */; };
@@ -200,9 +204,13 @@
 		E49FC23D2A9057B60016F309 /* ChatPreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPreviewCell.swift; sourceTree = "<group>"; };
 		E49FF35E2A96805400F113A5 /* ManageStickerPackViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageStickerPackViewModel.swift; sourceTree = "<group>"; };
 		E49FF3602A9685A200F113A5 /* StickerPackDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPackDetailsViewController.swift; sourceTree = "<group>"; };
+		E49FF3622A9699C000F113A5 /* ProfileChatSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileChatSettingsViewController.swift; sourceTree = "<group>"; };
+		E49FF3642A969BD300F113A5 /* ManageThemeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageThemeViewController.swift; sourceTree = "<group>"; };
+		E49FF3662A969C3C00F113A5 /* ManageThemeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageThemeViewModel.swift; sourceTree = "<group>"; };
+		E4CC17522A96C401002D446A /* ManageThemeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageThemeCell.swift; sourceTree = "<group>"; };
 		E4D3AE4B2A926AAE00208684 /* StickerInputViewHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputViewHeaderCell.swift; sourceTree = "<group>"; };
 		E4D3AE4D2A92731700208684 /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
-		E4D3AE4F2A9277ED00208684 /* ChatTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTheme.swift; sourceTree = "<group>"; };
+		E4D3AE4F2A9277ED00208684 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		E4D3AE522A92B07900208684 /* LocationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerViewController.swift; sourceTree = "<group>"; };
 		E4D3AE542A92E7B300208684 /* ManageStickerPackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageStickerPackViewController.swift; sourceTree = "<group>"; };
 		E4D3AE562A92E86600208684 /* ManageStickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageStickerCell.swift; sourceTree = "<group>"; };
@@ -396,7 +404,7 @@
 				E41D2B912A8FD4AE004C917D /* Auth */,
 				E41D2B6E2A8FD41E004C917D /* Profile */,
 				E41D2B732A8FD41E004C917D /* Home */,
-				E4D3AE582A92EF9A00208684 /* Stickers */,
+				E4D3AE582A92EF9A00208684 /* Stickers and Theme */,
 				E41D2B792A8FD41E004C917D /* Chat */,
 				E41D2B812A8FD41E004C917D /* Common */,
 			);
@@ -428,6 +436,7 @@
 				E41D2B722A8FD41E004C917D /* ProfileViewController.swift */,
 				E490750F2A9548D300CF0632 /* ProfileDetailsViewController.swift */,
 				E49075112A9549BF00CF0632 /* ProfileQRCodeViewController.swift */,
+				E49FF3622A9699C000F113A5 /* ProfileChatSettingsViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -557,7 +566,7 @@
 				E49FC2352A9029190016F309 /* ChatMessage.swift */,
 				E49FC2392A9051370016F309 /* ChatMessageContent.swift */,
 				E49FC2372A9051280016F309 /* ChatMessageType.swift */,
-				E4D3AE4F2A9277ED00208684 /* ChatTheme.swift */,
+				E4D3AE4F2A9277ED00208684 /* AppTheme.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -576,25 +585,27 @@
 			isa = PBXGroup;
 			children = (
 				E49FF35E2A96805400F113A5 /* ManageStickerPackViewModel.swift */,
+				E49FF3662A969C3C00F113A5 /* ManageThemeViewModel.swift */,
 			);
 			path = "View Models";
 			sourceTree = "<group>";
 		};
-		E4D3AE582A92EF9A00208684 /* Stickers */ = {
+		E4D3AE582A92EF9A00208684 /* Stickers and Theme */ = {
 			isa = PBXGroup;
 			children = (
 				E4D3AE5A2A92EFA600208684 /* Views */,
 				E49FF35D2A96803E00F113A5 /* View Models */,
 				E4D3AE592A92EF9F00208684 /* View Controllers */,
 			);
-			path = Stickers;
+			path = "Stickers and Theme";
 			sourceTree = "<group>";
 		};
 		E4D3AE592A92EF9F00208684 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				E4D3AE542A92E7B300208684 /* ManageStickerPackViewController.swift */,
 				E49FF3602A9685A200F113A5 /* StickerPackDetailsViewController.swift */,
+				E4D3AE542A92E7B300208684 /* ManageStickerPackViewController.swift */,
+				E49FF3642A969BD300F113A5 /* ManageThemeViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -603,6 +614,7 @@
 			isa = PBXGroup;
 			children = (
 				E4D3AE562A92E86600208684 /* ManageStickerCell.swift */,
+				E4CC17522A96C401002D446A /* ManageThemeCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -731,6 +743,7 @@
 				E41B98322A91C0B900E3544A /* ChatViewController+Keyboard.swift in Sources */,
 				E41D2B612A8FD419004C917D /* YearMonthDay.swift in Sources */,
 				E41B98382A91C7FD00E3544A /* ChatSendButton.swift in Sources */,
+				E49FF3652A969BD300F113A5 /* ManageThemeViewController.swift in Sources */,
 				E453E82B2A912DB800C2D615 /* StickerInputView.swift in Sources */,
 				E41D2B5C2A8FD419004C917D /* Constants.swift in Sources */,
 				E41D2B5D2A8FD419004C917D /* DateFormat.swift in Sources */,
@@ -739,6 +752,7 @@
 				E4D3AE532A92B07900208684 /* LocationPickerViewController.swift in Sources */,
 				E453E82F2A91349600C2D615 /* Sticker.swift in Sources */,
 				E4662D862A95CFBB00B27B81 /* PushNotificationManager.swift in Sources */,
+				E49FF3672A969C3C00F113A5 /* ManageThemeViewModel.swift in Sources */,
 				E41D2B552A8FD419004C917D /* Coordinator.swift in Sources */,
 				E49FC2342A90286E0016F309 /* Chat.swift in Sources */,
 				E490750E2A95425800CF0632 /* ProfileUserCell.swift in Sources */,
@@ -755,11 +769,12 @@
 				E40DE6012A93ACD700EEC51F /* ChatMessageObject.swift in Sources */,
 				E41D2B652A8FD419004C917D /* UIImageView+loadImageUsingURL.swift in Sources */,
 				E41D2BA22A8FD565004C917D /* ChatViewModel.swift in Sources */,
-				E4D3AE502A9277ED00208684 /* ChatTheme.swift in Sources */,
+				E4D3AE502A9277ED00208684 /* AppTheme.swift in Sources */,
 				E49FC2382A9051280016F309 /* ChatMessageType.swift in Sources */,
 				E41D2B862A8FD41E004C917D /* HomeViewModel.swift in Sources */,
 				E49075182A956F9C00CF0632 /* ProfileDetailsViewModel.swift in Sources */,
 				E41D2B5A2A8FD419004C917D /* BaseCell.swift in Sources */,
+				E49FF3632A9699C000F113A5 /* ProfileChatSettingsViewController.swift in Sources */,
 				E4D3AE552A92E7B300208684 /* ManageStickerPackViewController.swift in Sources */,
 				E41D2B672A8FD419004C917D /* String+Extensions.swift in Sources */,
 				E40DE60C2A946D9900EEC51F /* SocketChatManager.swift in Sources */,
@@ -780,6 +795,7 @@
 				E49FC2192A900C540016F309 /* StorageManager.swift in Sources */,
 				E49FF3612A9685A200F113A5 /* StickerPackDetailsViewController.swift in Sources */,
 				E41D2B632A8FD419004C917D /* ViewController.swift in Sources */,
+				E4CC17532A96C401002D446A /* ManageThemeCell.swift in Sources */,
 				E41D2B6A2A8FD419004C917D /* UINavigationController+Extensions.swift in Sources */,
 				E41D2B5B2A8FD419004C917D /* ErrorHandler.swift in Sources */,
 				E49FC21B2A901A9C0016F309 /* ChatUser.swift in Sources */,

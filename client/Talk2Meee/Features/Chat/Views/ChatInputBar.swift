@@ -71,7 +71,7 @@ extension ChatInputBar {
         chatInputTextField.inputBarAccessoryView = self
         setMiddleContentView(chatInputTextField, animated: false)
         
-        backgroundColor = UIColor(hex: UserManager.shared.getChatTheme().chatInputBarBackgroundColor)
+        backgroundColor = UIColor(hex: UserManager.shared.getAppTheme().chatInputBarBackgroundColor)
     }
 }
 

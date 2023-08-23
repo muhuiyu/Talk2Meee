@@ -45,6 +45,7 @@ class Icons {
     static var camera: String { "camera" }
     static var cameraFill: String { "camera.fill" }
     static var cameraCircleFill: String { "camera.circle.fill" }
+    static var rectanglePortraitTopthirdInsetFilled: String { "rectangle.portrait.topthird.inset.filled" }
     static var sparkle: String { "sparkle" }
     static var sparkles: String { "sparkles" }
     static var cursorarrowRays: String { "cursorarrow.rays" }

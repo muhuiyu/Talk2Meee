@@ -76,7 +76,7 @@ extension ChatInputTextField {
         layer.borderWidth = 1.0
         layer.cornerRadius = 16.0
         layer.masksToBounds = true
-        backgroundColor = UIColor(hex: UserManager.shared.getChatTheme().chatInputBarTextFieldColor)
+        backgroundColor = UIColor(hex: UserManager.shared.getAppTheme().chatInputBarTextFieldColor)
     }
     private func configureConstraints() {
         inputTextView.snp.remakeConstraints { make in

@@ -1,5 +1,5 @@
 //
-//  ChatTheme.swift
+//  AppTheme.swift
 //  Talk2Meee
 //
 //  Created by Grace, Mu-Hui Yu on 8/20/23.
@@ -7,7 +7,12 @@
 
 import Foundation
 
-struct ChatTheme: Codable {
+typealias AppThemeID = String
+struct AppTheme: Codable {
+    var id: AppThemeID
+    var name: String
+    var previewImageURL: String
+    
     // save colors in hex forms
     
     // TODO: - Change to image
@@ -21,9 +26,10 @@ struct ChatTheme: Codable {
     let chatInputBarTextFieldColor: String
 }
 
-extension ChatTheme {
-    static var defaultTheme: ChatTheme {
-        return ChatTheme(backgroundColor: "#ffffff",
+extension AppTheme {
+    static var defaultTheme: AppTheme {
+        return AppTheme(id: "default", name: "Default", previewImageURL: "https://firebasestorage.googleapis.com/v0/b/hey-there-muyuuu.appspot.com/o/themes%2Fdefault.png?alt=media",
+                        backgroundColor: "#ffffff",
                          selfMessageBubbleColor: "#59981A",
                          otherMessageBubbleColor: "#F0F0F0",
                          selfMessageBubbleTextColor: "#ffffff",
@@ -32,8 +38,9 @@ extension ChatTheme {
                          chatInputBarBackgroundColor: "#f0f0f0",
                          chatInputBarTextFieldColor: "#f5f5f5")
     }
-    static var mikanTheme: ChatTheme {
-        return ChatTheme(backgroundColor: "#FFC100",
+    static var mikanTheme: AppTheme {
+        return AppTheme(id: "mikan", name: "Mikan", previewImageURL: "https://firebasestorage.googleapis.com/v0/b/hey-there-muyuuu.appspot.com/o/themes%2Fmikan.png?alt=media",
+                        backgroundColor: "#FFC100",
                          selfMessageBubbleColor: "##FFF684",
                          otherMessageBubbleColor: "#ffffff",
                          selfMessageBubbleTextColor: "#1E1C0C",

@@ -31,8 +31,8 @@ struct Sticker {
 struct StickerPack: Codable {
     static var coverImageName: String { return "cover.png" }
     
-    let id: StickerPackID
-    let name: String
+    var id: StickerPackID
+    var name: String
     let numberOfStickers: Int
     
     func getCoverImageURL() -> String {

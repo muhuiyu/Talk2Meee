@@ -27,7 +27,7 @@ class ManageStickerCell: UITableViewCell, BaseCell {
         }
     }
 
-    var tab: ManageStickerPackViewModel.ManageStickerPackTab = .allPacks {
+    var tab: ManageStickerPackViewModel.Tab = .allPacks {
         didSet {
             addButton.isHidden = tab == .myPacks
         }
