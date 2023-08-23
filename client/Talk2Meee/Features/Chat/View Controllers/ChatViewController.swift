@@ -304,7 +304,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate, ChatInputBarDelegat
         viewModel.sendMessage(for: ChatMessageStickerContent(id: stickerID, packID: packID), as: .sticker)
     }
     func chatInputBarShowAddStickerPackView(_ view: ChatInputBar) {
-        let viewController = ManageStickerPackViewController(appCoordinator: self.appCoordinator)
+        let viewController = ManageStickerPackViewController(appCoordinator: self.appCoordinator, viewModel: ManageStickerPackViewModel(appCoordinator: self.appCoordinator))
         present(viewController.embedInNavgationController(), animated: true)
     }
 }

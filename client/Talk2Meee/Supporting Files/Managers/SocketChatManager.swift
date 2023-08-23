@@ -25,6 +25,7 @@ class SocketChatManger {
     }
 }
 
+// MARK: - Emit
 extension SocketChatManger {
     func connect() {
         guard let userID = UserManager.shared.currentUserID else { return }
@@ -41,21 +42,45 @@ extension SocketChatManger {
     func sendMessage(_ message: ChatMessage) {
         socket.emit("sendMessage", message)
     }
-//    func userJoinOnConnect(user: User) {
-//        let u: [String: String] = ["sessionId": socket.sid!, "username": user.username]
-//        self.socket.emit("userJoin", with: [u])
-//    }
-//
-//    func handleNewMessage(handler: @escaping (_ message: Message) -> Void) {
-//        socket.on("newMessage") { (data, ack) in
-//            let msg = data[0] as! [String: Any]
-//            let usr = msg["user"] as! [String: Any]
-//            let user = User(sessionId: usr["sessionId"] as! String, username: usr["username"] as! String)
-//            let message = Message(user: user, message: msg["message"] as! String)
-//            handler(message)
-//        }
-//    }
-//
+    func emitUserTyping(in chatID: ChatID) {
+        guard let user = UserManager.shared.getChatUser() else { return }
+        socket.emit("userTyping", [ "userID": user.id, "chatID": chatID ])
+    }
+    func emitUserStoppedTyping(in chatID: ChatID) {
+        guard let user = UserManager.shared.getChatUser() else { return }
+        socket.emit("userStoppedTyping", [ "userID": user.id, "chatID": chatID ])
+    }
+}
+
+// MARK: - Handlers
+extension SocketChatManger {
+    private func handleReceiveMessage(_ data: [Any]) {
+        DatabaseManager.shared.receiveMessage(data[0])
+    }
+    private func handleUserTyping(_ data: [Any]) {
+//        guard let userID = data[0]["userID"] as? UserID, let chatID = data[0]["chatID"] as? ChatID else { return }
+        // TODO: -
+    }
+    private func handleUserStopTyping(_ data: [Any]) {
+        // TODO: -
+    }
+    private func configureHandlers() {
+        socket.on(clientEvent: .connect) { data, ack in
+            return
+        }
+        socket.on("receiveMessage") { data, ack in
+            self.handleReceiveMessage(data)
+        }
+        socket.on("userTyping") { data, ack in
+            self.handleUserTyping(data)
+        }
+        socket.on("userStoppedTyping") { data, ack in
+            self.handleUserStopTyping(data)
+        }
+        socket.onAny({
+            print("Got event: \($0.event), with items: \($0.items!)")
+        })
+    }
 //    func handleUserTyping(handler: @escaping () -> Void) {
 //        socket.on("userTyping") { (_, _) in
 //            handler()
@@ -84,19 +109,4 @@ extension SocketChatManger {
 //        socket.emit("sendMessage", with: [msg])
 //    }
     
-}
-
-// MARK: - Handlers
-extension SocketChatManger {
-    private func configureHandlers() {
-        socket.on(clientEvent: .connect) { data, ack in
-            return
-        }
-        socket.on("receiveMessage") { data, ack in
-            DatabaseManager.shared.receiveMessage(data[0])
-        }
-        socket.onAny({
-            print("Got event: \($0.event), with items: \($0.items!)")
-        })
-    }
 }

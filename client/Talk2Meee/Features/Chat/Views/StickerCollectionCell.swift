@@ -1,5 +1,5 @@
 //
-//  StickerInputViewContentCell.swift
+//  StickerCollectionCell.swift
 //  Talk2Meee
 //
 //  Created by Grace, Mu-Hui Yu on 8/19/23.
@@ -8,9 +8,9 @@
 import UIKit
 import Kingfisher
 
-class StickerInputViewContentCell: UICollectionViewCell, BaseCell {
+class StickerCollectionCell: UICollectionViewCell, BaseCell {
     static var reuseID: String {
-        return NSStringFromClass(StickerInputViewContentCell.self)
+        return NSStringFromClass(StickerCollectionCell.self)
     }
     
     private var imageView = UIImageView()
@@ -31,7 +31,6 @@ class StickerInputViewContentCell: UICollectionViewCell, BaseCell {
     var urlString: String = "" {
         didSet {
             let placeholder = UIImage(systemName: Icons.squareFill)
-            placeholder?.withTintColor(.secondaryLabel)
             imageView.kf.setImage(with: URL(string: urlString), placeholder: placeholder)
         }
     }

@@ -7,10 +7,9 @@
 
 import UIKit
 import RxSwift
-import FirebaseAuth
 
 class ProfileViewModel: Base.ViewModel {
-    
+    // should reload header
 }
 
 extension ProfileViewModel {

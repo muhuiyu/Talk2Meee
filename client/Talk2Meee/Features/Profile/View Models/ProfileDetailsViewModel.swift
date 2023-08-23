@@ -5,4 +5,11 @@
 //  Created by Grace, Mu-Hui Yu on 8/22/23.
 //
 
-import Foundation
+import UIKit
+import RxSwift
+import RxRelay
+
+class ProfileDetailsViewModel: Base.ViewModel {
+    
+}
+

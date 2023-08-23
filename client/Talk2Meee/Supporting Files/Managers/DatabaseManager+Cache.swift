@@ -7,6 +7,7 @@
 
 import Foundation
 import RealmSwift
+import Kingfisher
 
 extension DatabaseManager {
     func syncData() async {
@@ -179,6 +180,14 @@ extension DatabaseManager {
                     self.resultHandler(result)
                 }
             }
+            // remove cache
+            if ImageCache.default.isCached(forKey: updatedUser.photoURL) {
+                ImageCache.default.removeImage(forKey: updatedUser.photoURL)
+            }
+            if let userID = UserManager.shared.currentUserID, userID == updatedUser.id {
+                UserManager.shared.setChatUser(updatedUser)
+                NotificationCenter.default.post(Notification(name: .didUpdateCurrentUser))
+            }
         } catch {
             print("Error", error)
         }
@@ -230,5 +239,6 @@ extension Notification.Name {
     static let didUpdateChats = Notification.Name("didUpdateChats")
     static let didUpdateMessages = Notification.Name("didUpdateMessages")
     static let didUpdateUsers = Notification.Name("didUpdateUsers")
+    static let didUpdateCurrentUser = Notification.Name("didUpdateCurrentUser")
     static let didUpdateStickers = Notification.Name("didUpdateStickers")
 }

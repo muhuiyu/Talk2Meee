@@ -10,20 +10,13 @@ import RxSwift
 import RxRelay
 import JGProgressHUD
 
-class ManageStickerPackViewController: BaseViewController {
+class ManageStickerPackViewController: Base.MVVMViewController<ManageStickerPackViewModel> {
     
     // MARK: - Views
     private let spinner = JGProgressHUD(style: .dark)
     private let segmentControl = UISegmentedControl(items: ["All packs", "My packs"])
     private let tableView = UITableView()
-    
-    private var packs = [StickerPack]() {
-        didSet {
-            DispatchQueue.main.async { [weak self] in
-                self?.tableView.reloadData()
-            }
-        }
-    }
+    private let emptyLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +25,9 @@ class ManageStickerPackViewController: BaseViewController {
         configureBindings()
         
         Task {
-            await self.fetchStickerPacks()
+            self.spinner.show(in: self.view)
+            await self.viewModel.fetchStickerPacks()
+            self.spinner.dismiss()
         }
     }
 }
@@ -40,28 +35,34 @@ class ManageStickerPackViewController: BaseViewController {
 // MARK: - Handlers
 extension ManageStickerPackViewController {
     @objc
-    private func didChangeSegmentControl() {
-        // TODO: - 
+    private func didChangeSegmentControl(_ sender: UISegmentedControl) {
+        guard let toTab = ManageStickerPackViewModel.ManageStickerPackTab(rawValue: sender.selectedSegmentIndex) else { return }
+        if viewModel.currentTab.value.rawValue != sender.selectedSegmentIndex {
+            viewModel.currentTab.accept(toTab)
+        }
     }
 }
 
 // MARK: - View Config
 extension ManageStickerPackViewController {
-    private func fetchStickerPacks() async {
-        self.packs = await DatabaseManager.shared.fetchAllStickerPacks()
-    }
     private func configureViews() {
         title = "Stickers"
         
         segmentControl.selectedSegmentIndex = 0
-        segmentControl.addTarget(self, action: #selector(didChangeSegmentControl), for: .valueChanged)
+        segmentControl.addTarget(self, action: #selector(didChangeSegmentControl(_:)), for: .valueChanged)
         view.addSubview(segmentControl)
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.allowsSelection = false
         tableView.register(ManageStickerCell.self, forCellReuseIdentifier: ManageStickerCell.reuseID)
         view.addSubview(tableView)
+        
+        emptyLabel.font = .small
+        emptyLabel.textColor = .secondaryLabel
+        emptyLabel.textAlignment = .center
+        emptyLabel.text = "No sticker pack"
+        emptyLabel.isHidden = true
+        view.addSubview(emptyLabel)
     }
     private func configureConstraints() {
         segmentControl.snp.remakeConstraints { make in
@@ -72,20 +73,50 @@ extension ManageStickerPackViewController {
             make.top.equalTo(segmentControl.snp.bottom).offset(Constants.Spacing.trivial)
             make.leading.bottom.trailing.equalTo(view.safeAreaLayoutGuide)
         }
+        emptyLabel.snp.remakeConstraints { make in
+            make.center.equalToSuperview()
+        }
     }
     private func configureBindings() {
+        viewModel.currentTab
+            .asObservable()
+            .subscribe { value in
+                DispatchQueue.main.async { [weak self] in
+                    if value.rawValue != self?.segmentControl.selectedSegmentIndex {
+                        self?.segmentControl.selectedSegmentIndex = value.rawValue
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
         
+        viewModel.displayedPacks
+            .asObservable()
+            .subscribe { _ in
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    if self.viewModel.displayedPacks.value.isEmpty {
+                        self.tableView.isHidden = true
+                        self.emptyLabel.isHidden = false
+                    } else {
+                        self.tableView.reloadData()
+                        self.tableView.isHidden = false
+                        self.emptyLabel.isHidden = true
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }
 
 // MARK: - TableView DataSource and Delegate
 extension ManageStickerPackViewController: UITableViewDataSource, UITableViewDelegate, ManageStickerCellDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return packs.count
+        return viewModel.displayedPacks.value.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ManageStickerCell.reuseID, for: indexPath) as? ManageStickerCell else { return UITableViewCell() }
-        cell.stickerPack = packs[indexPath.row]
+        cell.tab = viewModel.currentTab.value
+        cell.stickerPack = viewModel.displayedPacks.value[indexPath.row]
         cell.delegate = self
         return cell
     }
@@ -96,6 +127,20 @@ extension ManageStickerPackViewController: UITableViewDataSource, UITableViewDel
         defer {
             tableView.deselectRow(at: indexPath, animated: true)
         }
-        // TODO: - present sticker details page and add button
+        let viewController = StickerPackDetailsViewController(appCoordinator: self.appCoordinator)
+        viewController.delegate = self
+        viewController.stickerPack = viewModel.displayedPacks.value[indexPath.row]
+        present(viewController.embedInNavgationController(), animated: true)
+    }
+}
+
+// MARK: - StickerPackDetailsViewControllerDelegate
+extension ManageStickerPackViewController: StickerPackDetailsViewControllerDelegate {
+    func stickerPackDetailsViewControllerDidTapRemove(_ viewController: StickerPackDetailsViewController, _ stickerPack: StickerPack) {
+        viewModel.removeStickerPack(for: stickerPack.id)
+    }
+    func stickerPackDetailsViewControllerDidTapAdd(_ viewController: StickerPackDetailsViewController, _ stickerPack: StickerPack) {
+        // download -> move to myPacks tab, and reload tableView
+        viewModel.addStickerPack(for: stickerPack.id)
     }
 }

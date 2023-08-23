@@ -81,7 +81,7 @@ extension StickerInputView {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(StickerInputViewContentCell.self, forCellWithReuseIdentifier: StickerInputViewContentCell.reuseID)
+        collectionView.register(StickerCollectionCell.self, forCellWithReuseIdentifier: StickerCollectionCell.reuseID)
         addSubview(collectionView)
     }
     private func configureConstraints() {
@@ -131,9 +131,8 @@ extension StickerInputView: UICollectionViewDataSource, UICollectionViewDelegate
             cell.urlString = stickerPacks[indexPath.item].getCoverImageURL()
             return cell
         case Section.contentTag:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StickerInputViewContentCell.reuseID, for: indexPath) as? StickerInputViewContentCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StickerCollectionCell.reuseID, for: indexPath) as? StickerCollectionCell else { return UICollectionViewCell() }
             cell.urlString = stickerPacks[selectedPackIndex].getStickers()[indexPath.item].getImageURL()
-            cell.backgroundColor = .yellow
             cell.layer.cornerRadius = 5
             cell.layer.masksToBounds = true
             return cell

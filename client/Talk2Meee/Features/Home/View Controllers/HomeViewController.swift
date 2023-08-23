@@ -142,7 +142,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         return UISwipeActionsConfiguration(actions: [ deleteAction ])
     }
     func presentDeleteConfirmation(for indexPath: IndexPath, _ completion: @escaping ((Bool) -> Void)) {
-        let alert = UIAlertController(title: nil, message: "Remove chat?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Delete chat?", message: "All messages will be deleted. You won't be able to load them again.", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
             completion(true)
         }))

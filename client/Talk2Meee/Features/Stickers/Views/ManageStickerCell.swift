@@ -23,20 +23,13 @@ class ManageStickerCell: UITableViewCell, BaseCell {
     
     var stickerPack: StickerPack? {
         didSet {
-            guard let stickerPack = stickerPack else { return }
-            nameLabel.text = stickerPack.name
-            previewStackView.removeAllArrangedSubviews()
-            let numberOfPreviewStickers = stickerPack.numberOfStickers < 5 ? stickerPack.numberOfStickers : 5
-            for (index, sticker) in stickerPack.getStickers().enumerated() {
-                if index >= numberOfPreviewStickers { return }
-                let imageView = UIImageView()
-                imageView.kf.setImage(with: URL(string: sticker.getImageURL()))
-                imageView.contentMode = .scaleAspectFit
-                imageView.snp.remakeConstraints { make in
-                    make.size.equalTo(48)
-                }
-                previewStackView.addArrangedSubview(imageView)
-            }
+            configureData()
+        }
+    }
+
+    var tab: ManageStickerPackViewModel.ManageStickerPackTab = .allPacks {
+        didSet {
+            addButton.isHidden = tab == .myPacks
         }
     }
     
@@ -59,12 +52,36 @@ extension ManageStickerCell {
         DispatchQueue.main.async { [weak self] in
             self?.addButton.setImage(UIImage(systemName: Icons.checkmark), for: .normal)
             self?.addButton.tintColor = .secondaryLabel
+            self?.addButton.isEnabled = false
         }
     }
 }
 
 // MARK: - View Config
 extension ManageStickerCell {
+    private func configureData() {
+        guard let user = UserManager.shared.getChatUser(), let stickerPack = stickerPack else { return }
+        
+        let hasStickerPack = user.stickerPacks.contains(stickerPack.id)
+        addButton.setImage(UIImage(systemName: hasStickerPack ? Icons.checkmark : Icons.plusCircle), for: .normal)
+        addButton.tintColor = hasStickerPack ? .secondaryLabel : .tintColor
+        addButton.isEnabled = !hasStickerPack
+        
+        nameLabel.text = stickerPack.name
+        previewStackView.removeAllArrangedSubviews()
+        let numberOfPreviewStickers = stickerPack.numberOfStickers < 5 ? stickerPack.numberOfStickers : 5
+        let placeholder = UIImage(systemName: Icons.square)
+        for (index, sticker) in stickerPack.getStickers().enumerated() {
+            if index >= numberOfPreviewStickers { return }
+            let imageView = UIImageView()
+            imageView.kf.setImage(with: URL(string: sticker.getImageURL()), placeholder: placeholder)
+            imageView.contentMode = .scaleAspectFit
+            imageView.snp.remakeConstraints { make in
+                make.size.equalTo(48)
+            }
+            previewStackView.addArrangedSubview(imageView)
+        }
+    }
     private func configureViews() {
         nameLabel.font = .smallMedium
         nameLabel.textAlignment = .left

@@ -29,13 +29,13 @@ extension StorageManager {
         }
     }
     /*
-     /images/yourname-gmail-com_profile_picture.png
+     /profile_pictures/uid_profile_picture.png
      */
     /// Uploads picture to Firebase storage and returns a completion with URL string to download
     public func updateProfilePicture(with data: Data,
                                      filename: String) async -> UploadPictureResult {
         do {
-            let path = "images/\(filename)"
+            let path = "profile_pictures/\(filename)"
             _ = try await storage.child(path).putDataAsync(data)
             let downloadURL = try await storage.child(path).downloadURL()
             return .success(downloadURL.absoluteString)

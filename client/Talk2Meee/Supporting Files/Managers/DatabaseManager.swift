@@ -117,14 +117,8 @@ extension DatabaseManager {
 // MARK: - Messages
 extension DatabaseManager {
     /// sends message
-    public func sendMessage(_ message: ChatMessage) async -> VoidResult {
-        do {
-            SocketChatManger.shared.sendMessage(message)
-            return .success
-        } catch {
-            print("Failed sendMessage():", error.localizedDescription)
-            return .failure(error)
-        }
+    public func sendMessage(_ message: ChatMessage) {
+        SocketChatManger.shared.sendMessage(message)
     }
     /// Receives message
     func receiveMessage(_ data: Any) {
@@ -138,7 +132,6 @@ extension DatabaseManager {
         }
     }
     func updateLastMessageInFirebase(for chatID: ChatID, lastMessage: ChatMessagePreview) {
-        // update firebase
         Task {
             try await chatsCollectionRef.document(chatID).setData([ "lastMessage": lastMessage.asDictionary() ], merge: true)
         }

@@ -135,4 +135,50 @@ extension DatabaseManager {
         // if not, query user
 //        return await fetchUser(userID)
     }
+    func listenForCurrentUser() {
+        guard let currentUserID = UserManager.shared.currentUserID else { return }
+        usersCollectionRef.document(currentUserID).addSnapshotListener { snapshot, error in
+            if let error = error {
+                print("Error", error)
+                return
+            }
+            guard let snapshot = snapshot, snapshot.exists else { return }
+            if let user = try? ChatUser(snapshot: snapshot) {
+                self.updateUserCache(for: [ user ])
+            }
+        }
+    }
+    func updateCurrentUserData(to data: ChatUser, imageData: Data? = nil) async {
+        guard let user = UserManager.shared.getChatUser() else { return }
+        
+        var photoURL: String? = nil
+        
+        if let imageData = imageData {
+            let fileName = "profile_image_\(user.id).png"
+            let result = await StorageManager.shared.updateProfilePicture(with: imageData, filename: fileName)
+            switch result {
+            case .success(let urlString):
+                photoURL = urlString
+            case .failure(let error):
+                print("message photo upload error: \(error)")
+            }
+        }
+        var updatedData = [String: Any]()
+        if data.name != user.name {
+            updatedData["name"] = data.name
+        }
+        if data.stickerPacks != user.stickerPacks {
+            updatedData["stickerPacks"] = data.stickerPacks
+        }
+        if let photoURL = photoURL {
+            updatedData["photoURL"] = photoURL
+        }
+        if !updatedData.isEmpty {
+            do {
+                try await usersCollectionRef.document(user.id).setData(updatedData, merge: true)
+            } catch {
+                print("Error", error)
+            }
+        }
+    }
 }

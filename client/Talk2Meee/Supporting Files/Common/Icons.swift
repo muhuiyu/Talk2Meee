@@ -44,6 +44,7 @@ class Icons {
     static var trashFill: String { "trash.fill" }
     static var camera: String { "camera" }
     static var cameraFill: String { "camera.fill" }
+    static var cameraCircleFill: String { "camera.circle.fill" }
     static var sparkle: String { "sparkle" }
     static var sparkles: String { "sparkles" }
     static var cursorarrowRays: String { "cursorarrow.rays" }
@@ -81,6 +82,11 @@ class Icons {
     static var plusminusCircle: String { "plusminus.circle" }
     static var clock: String { "clock" }
     static var clockFill: String { "clock.fill" }
+    static var qrcode: String { "qrcode" }
+    static var qrcodeViewfinder: String { "qrcode.viewfinder" }
+    static var squareAndArrowUp: String { "square.and.arrow.up" }
+    static var lock: String { "lock" }
+    static var lockFill: String { "lock.fill" }
     static var gearshape: String { "gearshape" }
     static var gearshapeFill: String { "gearshape.fill" }
     static var calender: String { "calendar" }

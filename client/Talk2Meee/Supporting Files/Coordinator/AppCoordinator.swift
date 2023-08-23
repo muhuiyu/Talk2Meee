@@ -81,6 +81,7 @@ extension AppCoordinator {
         guard let currentUserID = UserManager.shared.currentUserID else { return }
         if let user = await DatabaseManager.shared.fetchUser(currentUserID) {
             UserManager.shared.setChatUser(user)
+            DatabaseManager.shared.listenForCurrentUser()
         }
     }
     private func configureDatabase() async {
