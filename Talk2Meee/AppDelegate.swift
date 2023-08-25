@@ -66,5 +66,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     }
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         completionHandler()
+        
+        let userInfo = response.notification.request.content.userInfo
+        if let data = userInfo["data"] as? [String: Any] {
+            print(data)
+        }
     }
 }

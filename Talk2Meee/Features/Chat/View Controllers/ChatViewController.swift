@@ -80,7 +80,13 @@ extension ChatViewController {
         }
     }
     private func configureMessageCollectionView() {
-        messagesCollectionView.backgroundColor = UIColor(hex: UserManager.shared.getAppTheme().backgroundColor)
+        messagesCollectionView.backgroundColor = UserManager.shared.getAppTheme().colorSkin.chatroomBackgroundColor
+        if let backgroundImageURL = UserManager.shared.getAppTheme().images.chatroomBackgroundImageURL {
+            let imageView = UIImageView()
+            imageView.contentMode = .scaleAspectFill
+            imageView.kf.setImage(with: URL(string: backgroundImageURL))
+            messagesCollectionView.backgroundView = imageView
+        }
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
@@ -112,7 +118,7 @@ extension ChatViewController {
             }
             .disposed(by: disposeBag)
         
-        viewModel.stickerPacks
+        viewModel.userStickerPacks
             .asObservable()
             .subscribe { value in
                 self.chatInputBar.stickerPacks = value
@@ -139,9 +145,9 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         let appTheme = UserManager.shared.getAppTheme()
         if chatMessage.type.hasBackground {
             if message.sender.senderId == viewModel.sender?.senderId {
-                return UIColor(hex: appTheme.selfMessageBubbleColor)
+                return appTheme.colorSkin.selfChatBubbleColor
             } else {
-                return UIColor(hex: appTheme.otherMessageBubbleColor)
+                return appTheme.colorSkin.otherChatBubbleColor
             }
         } else {
             return .clear
@@ -151,9 +157,9 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         let appTheme = UserManager.shared.getAppTheme()
         if message.sender.senderId == viewModel.sender?.senderId {
-            return UIColor(hex: appTheme.selfMessageBubbleTextColor)
+            return appTheme.colorSkin.selfChatBubbleTextColor
         } else {
-            return UIColor(hex: appTheme.otherMessageBubbleTextColor)
+            return appTheme.colorSkin.otherChatBubbleTextColor
         }
     }
     
@@ -172,7 +178,8 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         switch message.kind {
         case .photo(let item):
             guard let imageURL = item.url else { return }
-            imageView.kf.setImage(with: imageURL)
+            let placeholder = UIImage(systemName: Icons.photo)
+            imageView.kf.setImage(with: imageURL, placeholder: placeholder)
         default:
             return
         }
@@ -300,7 +307,7 @@ extension ChatViewController: MessageCellDelegate {
 extension ChatViewController: InputBarAccessoryViewDelegate, ChatInputBarDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty else { return }
-        viewModel.sendMessage(for: ChatMessageTextContent(text: text), as: .text)
+        viewModel.sendMessage(for: ChatMessageTextContent(text: text.trimmingCharacters(in: .whitespaces)), as: .text)
         chatInputBar.clearTextView()
     }
     func chatInputBarDidTapAttachmentButton(_ view: ChatInputBar) {

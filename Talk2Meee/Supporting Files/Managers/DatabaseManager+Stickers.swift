@@ -58,6 +58,6 @@ extension DatabaseManager {
     
     func fetchAllAppThemes() async -> [AppTheme] {
         // TODO: -
-        return [ AppTheme.defaultTheme, AppTheme.mikanTheme ]
+        return Array(AppTheme.themes.values)
     }
 }

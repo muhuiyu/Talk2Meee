@@ -15,6 +15,7 @@ class ChatAddAttachmentButton: InputBarButtonItem {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        tintColor = UserManager.shared.getAppTheme().colorSkin.chatInputBarTintColor
         setSize(CGSize(width: 35, height: 44), animated: false)
         setImage(UIImage(systemName: Icons.plus), for: .normal)
         onTouchUpInside { [weak self] _ in

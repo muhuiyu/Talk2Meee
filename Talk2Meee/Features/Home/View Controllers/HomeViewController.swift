@@ -54,7 +54,7 @@ extension HomeViewController {
 // MARK: - View Config
 extension HomeViewController {
     private func configureViews() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didTapCompose))
+        navigationItem.rightBarButtonItem = UIBarButtonItem.initWithThemeColor(barButtonSystemItem: .compose, target: self, action: #selector(didTapCompose))
         
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -65,6 +65,7 @@ extension HomeViewController {
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         tableView.refreshControl = refreshControl
         
+        tableView.backgroundColor = UserManager.shared.getAppTheme().colorSkin.chatListBackgroundColor
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ChatPreviewCell.self, forCellReuseIdentifier: ChatPreviewCell.reuseID)
@@ -72,7 +73,7 @@ extension HomeViewController {
         
         emptyStateLabel.text = "No converstaions"
         emptyStateLabel.textAlignment = .center
-        emptyStateLabel.textColor = .secondaryLabel
+        emptyStateLabel.textColor = UserManager.shared.getAppTheme().colorSkin.secondaryLabelColor
         emptyStateLabel.isHidden = true // hide while loading
         emptyStateLabel.font = .body
         

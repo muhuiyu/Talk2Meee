@@ -17,7 +17,8 @@ class ProfileDetailsPhotoCell: UITableViewCell, BaseCell {
     var photoURL: String? {
         didSet {
             guard let photoURL = photoURL else { return }
-            avatarView.kf.setImage(with: URL(string: photoURL))
+            let placeholder = UIImage(systemName: Icons.personCropCircle)
+            avatarView.kf.setImage(with: URL(string: photoURL), placeholder: placeholder)
         }
     }
     
@@ -39,7 +40,7 @@ class ProfileDetailsPhotoCell: UITableViewCell, BaseCell {
         contentView.addSubview(avatarView)
         editButton.setTitle("Edit", for: .normal)
         editButton.addTarget(self, action: #selector(didTapEdit), for: .touchUpInside)
-        editButton.setTitleColor(.systemBlue, for: .normal)
+        editButton.setTitleColor(UserManager.shared.getAppTheme().colorSkin.tintColor, for: .normal)
         editButton.titleLabel?.font = .smallMedium
         contentView.addSubview(editButton)
         avatarView.snp.remakeConstraints { make in

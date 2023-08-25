@@ -53,9 +53,10 @@ extension ProfileUserCell {
     private func configureViews() {
         guard let user = UserManager.shared.getChatUser() else { return }
         
+        let placeholder = UIImage(systemName: Icons.personCropCircle)
         avatarView.contentMode = .scaleAspectFit
         avatarView.clipsToBounds = true
-        avatarView.kf.setImage(with: URL(string: user.photoURL))
+        avatarView.kf.setImage(with: URL(string: user.photoURL), placeholder: placeholder)
         contentView.addSubview(avatarView)
         nameLabel.font = .h3
         nameLabel.numberOfLines = 0
@@ -64,6 +65,7 @@ extension ProfileUserCell {
         contentView.addSubview(nameLabel)
         
         qrCodeButton.setImage(UIImage(systemName: Icons.qrcode), for: .normal)
+        qrCodeButton.tintColor = UserManager.shared.getAppTheme().colorSkin.tintColor
         qrCodeButton.addTarget(self, action: #selector(didTapQRCode), for: .touchUpInside)
         contentView.addSubview(qrCodeButton)
     }

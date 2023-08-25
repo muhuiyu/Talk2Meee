@@ -71,7 +71,7 @@ extension LocationPickerViewController {
     private func configureViews() {
         title = isEditable ? "Pick Location" : "Location"
         if isEditable {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Send", style: .done, target: self, action: #selector(didTapSend))
+            navigationItem.rightBarButtonItem = UIBarButtonItem.initWithThemeColor(title: "Send", style: .done, target: self, action: #selector(didTapSend))
         }
         mapView.isUserInteractionEnabled = true
         view.addSubview(mapView)

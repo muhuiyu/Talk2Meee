@@ -28,7 +28,8 @@ class ChatPreviewCell: UITableViewCell, BaseCell {
         didSet {
             guard let viewModel = viewModel else { return }
             if let imageURL = viewModel.getChatImageURL() {
-                photoView.kf.setImage(with: URL(string: imageURL))
+                let placeholder = UIImage(systemName: Icons.personCropCircle)
+                photoView.kf.setImage(with: URL(string: imageURL), placeholder: placeholder)
             }
             titleLabel.text = viewModel.getChatTitle()
             previewLabel.text = viewModel.getChatSubtitle()
@@ -60,12 +61,12 @@ extension ChatPreviewCell {
         contentView.addSubview(photoView)
         
         titleLabel.textAlignment = .left
-        titleLabel.textColor = .label
+        titleLabel.textColor = UserManager.shared.getAppTheme().colorSkin.labelColor
         titleLabel.font = .bodyBold
         stackView.addArrangedSubview(titleLabel)
         
         previewLabel.textAlignment = .left
-        previewLabel.textColor = .secondaryLabel
+        previewLabel.textColor = UserManager.shared.getAppTheme().colorSkin.secondaryLabelColor
         previewLabel.font = .small
         stackView.addArrangedSubview(previewLabel)
         

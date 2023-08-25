@@ -38,7 +38,8 @@ extension ManageThemeCell {
         guard let theme = theme else { return }
         let currentAppTheme = UserManager.shared.getAppTheme()
         isUsingView.isHidden = theme.id != currentAppTheme.id
-        imageView.kf.setImage(with: URL(string: theme.previewImageURL))
+        let placeholder = UIImage(systemName: Icons.squareFill)
+        imageView.kf.setImage(with: URL(string: theme.images.thumbnailURL), placeholder: placeholder)
         titleLabel.text = theme.name
     }
     private func configureViews() {

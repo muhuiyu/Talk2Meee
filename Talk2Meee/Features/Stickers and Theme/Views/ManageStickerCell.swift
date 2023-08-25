@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 protocol ManageStickerCellDelegate: AnyObject {
-    func manageStickerCellDidTapAdd(_ cell: ManageStickerCell)
+    func manageStickerCellDidTapAdd(_ cell: ManageStickerCell, _ stickerPack: StickerPack)
 }
 
 class ManageStickerCell: UITableViewCell, BaseCell {
@@ -48,10 +48,11 @@ class ManageStickerCell: UITableViewCell, BaseCell {
 extension ManageStickerCell {
     @objc
     private func didTapAdd() {
-        delegate?.manageStickerCellDidTapAdd(self)
+        guard let stickerPack = stickerPack else { return }
+        delegate?.manageStickerCellDidTapAdd(self, stickerPack)
         DispatchQueue.main.async { [weak self] in
             self?.addButton.setImage(UIImage(systemName: Icons.checkmark), for: .normal)
-            self?.addButton.tintColor = .secondaryLabel
+            self?.addButton.tintColor = UserManager.shared.getAppTheme().colorSkin.secondaryLabelColor
             self?.addButton.isEnabled = false
         }
     }
@@ -64,7 +65,7 @@ extension ManageStickerCell {
         
         let hasStickerPack = user.stickerPacks.contains(stickerPack.id)
         addButton.setImage(UIImage(systemName: hasStickerPack ? Icons.checkmark : Icons.plusCircle), for: .normal)
-        addButton.tintColor = hasStickerPack ? .secondaryLabel : .tintColor
+        addButton.tintColor = hasStickerPack ? UserManager.shared.getAppTheme().colorSkin.secondaryLabelColor : UserManager.shared.getAppTheme().colorSkin.tintColor
         addButton.isEnabled = !hasStickerPack
         
         nameLabel.text = stickerPack.name
@@ -85,7 +86,7 @@ extension ManageStickerCell {
     private func configureViews() {
         nameLabel.font = .smallMedium
         nameLabel.textAlignment = .left
-        nameLabel.textColor = .label
+        nameLabel.textColor = UserManager.shared.getAppTheme().colorSkin.labelColor
         contentView.addSubview(nameLabel)
         
         previewStackView.axis = .horizontal

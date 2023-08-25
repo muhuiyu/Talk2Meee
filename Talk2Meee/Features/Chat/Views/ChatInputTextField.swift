@@ -64,7 +64,9 @@ extension ChatInputTextField {
         
         inputTextView.delegate = self
         inputTextView.returnKeyType = .next
+        inputTextView.textColor = UserManager.shared.getAppTheme().colorSkin.chatInputBarTextFieldTextColor
         addSubview(inputTextView)
+        stickerButton.tintColor = UserManager.shared.getAppTheme().colorSkin.chatInputBarTintColor
         stickerButton.setSize(CGSize(width: 32, height: 32), animated: false)
         stickerButton.setImage(UIImage(systemName: Icons.faceSmiling), for: .normal)
         stickerButton.onTouchUpInside { [weak self] _ in
@@ -76,7 +78,8 @@ extension ChatInputTextField {
         layer.borderWidth = 1.0
         layer.cornerRadius = 16.0
         layer.masksToBounds = true
-        backgroundColor = UIColor(hex: UserManager.shared.getAppTheme().chatInputBarTextFieldColor)
+        
+        backgroundColor = UserManager.shared.getAppTheme().colorSkin.chatInputBarTextFieldBackgroundColor
     }
     private func configureConstraints() {
         inputTextView.snp.remakeConstraints { make in

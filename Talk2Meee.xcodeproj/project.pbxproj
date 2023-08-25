@@ -68,6 +68,7 @@
 		E41D2BAC2A8FD5B9004C917D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E41D2BAB2A8FD5B9004C917D /* RxSwift */; };
 		E41D2BAF2A8FD61D004C917D /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41D2BAE2A8FD61D004C917D /* LoginViewModel.swift */; };
 		E41D2BC82A8FDDF5004C917D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E41D2BC72A8FDDF5004C917D /* GoogleService-Info.plist */; };
+		E434FDBA2A983C31006BC36F /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E434FDB92A983C31006BC36F /* UIBarButtonItem+Extension.swift */; };
 		E453E82B2A912DB800C2D615 /* StickerInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E82A2A912DB800C2D615 /* StickerInputView.swift */; };
 		E453E82D2A912F8600C2D615 /* ChatInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E82C2A912F8600C2D615 /* ChatInputTextField.swift */; };
 		E453E82F2A91349600C2D615 /* Sticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E453E82E2A91349600C2D615 /* Sticker.swift */; };
@@ -111,6 +112,8 @@
 		E49FF3632A9699C000F113A5 /* ProfileChatSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FF3622A9699C000F113A5 /* ProfileChatSettingsViewController.swift */; };
 		E49FF3652A969BD300F113A5 /* ManageThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FF3642A969BD300F113A5 /* ManageThemeViewController.swift */; };
 		E49FF3672A969C3C00F113A5 /* ManageThemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49FF3662A969C3C00F113A5 /* ManageThemeViewModel.swift */; };
+		E4AD3DB42A981D6F00039368 /* AppColorSkin.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4AD3DB32A981D6F00039368 /* AppColorSkin.swift */; };
+		E4AD3DB62A981E2C00039368 /* AppColorSkin+Green.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4AD3DB52A981E2C00039368 /* AppColorSkin+Green.swift */; };
 		E4CC17532A96C401002D446A /* ManageThemeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CC17522A96C401002D446A /* ManageThemeCell.swift */; };
 		E4D3AE4C2A926AAE00208684 /* StickerInputViewHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE4B2A926AAE00208684 /* StickerInputViewHeaderCell.swift */; };
 		E4D3AE4E2A92731700208684 /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3AE4D2A92731700208684 /* ChatInputBar.swift */; };
@@ -180,6 +183,7 @@
 		E41D2BA12A8FD565004C917D /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		E41D2BAE2A8FD61D004C917D /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		E41D2BC72A8FDDF5004C917D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E434FDB92A983C31006BC36F /* UIBarButtonItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
 		E453E82A2A912DB800C2D615 /* StickerInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputView.swift; sourceTree = "<group>"; };
 		E453E82C2A912F8600C2D615 /* ChatInputTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputTextField.swift; sourceTree = "<group>"; };
 		E453E82E2A91349600C2D615 /* Sticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
@@ -206,6 +210,8 @@
 		E49FF3622A9699C000F113A5 /* ProfileChatSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileChatSettingsViewController.swift; sourceTree = "<group>"; };
 		E49FF3642A969BD300F113A5 /* ManageThemeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageThemeViewController.swift; sourceTree = "<group>"; };
 		E49FF3662A969C3C00F113A5 /* ManageThemeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageThemeViewModel.swift; sourceTree = "<group>"; };
+		E4AD3DB32A981D6F00039368 /* AppColorSkin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColorSkin.swift; sourceTree = "<group>"; };
+		E4AD3DB52A981E2C00039368 /* AppColorSkin+Green.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppColorSkin+Green.swift"; sourceTree = "<group>"; };
 		E4CC17522A96C401002D446A /* ManageThemeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageThemeCell.swift; sourceTree = "<group>"; };
 		E4D3AE4B2A926AAE00208684 /* StickerInputViewHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputViewHeaderCell.swift; sourceTree = "<group>"; };
 		E4D3AE4D2A92731700208684 /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
@@ -393,6 +399,7 @@
 				E41D2B512A8FD419004C917D /* UINavigationController+Extensions.swift */,
 				E41D2B522A8FD419004C917D /* UUID+Extensions.swift */,
 				E41D2B532A8FD419004C917D /* Date+Extensions.swift */,
+				E434FDB92A983C31006BC36F /* UIBarButtonItem+Extension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -566,6 +573,8 @@
 				E49FC2392A9051370016F309 /* ChatMessageContent.swift */,
 				E49FC2372A9051280016F309 /* ChatMessageType.swift */,
 				E4D3AE4F2A9277ED00208684 /* AppTheme.swift */,
+				E4AD3DB32A981D6F00039368 /* AppColorSkin.swift */,
+				E4AD3DB52A981E2C00039368 /* AppColorSkin+Green.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -786,12 +795,14 @@
 				E41D2B6B2A8FD419004C917D /* UUID+Extensions.swift in Sources */,
 				E49FC1EF2A8FE8570016F309 /* DatabaseManager.swift in Sources */,
 				E41D2B562A8FD419004C917D /* IconButton.swift in Sources */,
+				E434FDBA2A983C31006BC36F /* UIBarButtonItem+Extension.swift in Sources */,
 				E49FC21D2A901F0F0016F309 /* NewConversationViewModel.swift in Sources */,
 				E41D2B962A8FD4C6004C917D /* LoginViewController.swift in Sources */,
 				E40DE6032A93ACE400EEC51F /* StickerPackObject.swift in Sources */,
 				E4D3AE4E2A92731700208684 /* ChatInputBar.swift in Sources */,
 				E49FC2192A900C540016F309 /* StorageManager.swift in Sources */,
 				E49FF3612A9685A200F113A5 /* StickerPackDetailsViewController.swift in Sources */,
+				E4AD3DB62A981E2C00039368 /* AppColorSkin+Green.swift in Sources */,
 				E41D2B632A8FD419004C917D /* ViewController.swift in Sources */,
 				E4CC17532A96C401002D446A /* ManageThemeCell.swift in Sources */,
 				E41D2B6A2A8FD419004C917D /* UINavigationController+Extensions.swift in Sources */,
@@ -805,6 +816,7 @@
 				E41D2B582A8FD419004C917D /* CircleView.swift in Sources */,
 				E41B98362A91C74E00E3544A /* ChatAddAttachmentButton.swift in Sources */,
 				E453E82D2A912F8600C2D615 /* ChatInputTextField.swift in Sources */,
+				E4AD3DB42A981D6F00039368 /* AppColorSkin.swift in Sources */,
 				E41D2B682A8FD419004C917D /* UIColor+Extensions.swift in Sources */,
 				E49075122A9549BF00CF0632 /* ProfileQRCodeViewController.swift in Sources */,
 				E41D2B212A8FD3AA004C917D /* SceneDelegate.swift in Sources */,

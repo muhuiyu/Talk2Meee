@@ -45,7 +45,7 @@ extension UserManager {
         if let themeID = UserDefaults.standard.object(forKey: UserManager.appThemeIDKey) as? String {
             return AppTheme.themes[themeID] ?? AppTheme.defaultTheme
         }
-        return AppTheme.mikanTheme
+        return AppTheme.kaeruTheme
     }
     func setAppTheme(_ themeID: AppThemeID) {
         UserDefaults.standard.set(themeID, forKey: UserManager.appThemeIDKey)
@@ -53,7 +53,7 @@ extension UserManager {
     func removeChatUser() {
         UserDefaults.standard.removeObject(forKey: UserManager.userKey)
     }
-    func getStickerPacks() -> [StickerPack] {
+    func getUserStickerPacks() -> [StickerPack] {
         guard let stickerPackIDs = getChatUser()?.stickerPacks else { return [] }
         return stickerPackIDs.compactMap({ DatabaseManager.shared.getStickerPack(for: $0) })
     }

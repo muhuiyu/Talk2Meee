@@ -117,6 +117,11 @@ extension AppCoordinator {
     }
     private func applyAppTheme() {
         let appTheme = UserManager.shared.getAppTheme()
+        let appearance = UINavigationBar.appearance()
+        appearance.standardAppearance = appTheme.navigationBarAppearance
+        appearance.scrollEdgeAppearance = appTheme.navigationBarAppearance
+        appearance.compactAppearance = appTheme.navigationBarAppearance
+        
         mainTabBarController?.tabBar.standardAppearance = appTheme.tabBarAppearance
         mainTabBarController?.tabBar.scrollEdgeAppearance = appTheme.tabBarAppearance
         mainTabBarController?.configureTabBarItems()

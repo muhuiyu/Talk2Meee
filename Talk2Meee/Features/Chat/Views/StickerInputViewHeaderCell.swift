@@ -32,7 +32,8 @@ final class StickerInputViewHeaderCell: UICollectionViewCell, BaseCell {
     
     var urlString: String = "" {
         didSet {
-            imageView.kf.setImage(with: URL(string: urlString))
+            let placeholder = UIImage(systemName: Icons.squareFill)
+            imageView.kf.setImage(with: URL(string: urlString), placeholder: placeholder)
         }
     }
 }

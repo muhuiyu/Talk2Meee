@@ -58,15 +58,16 @@ extension ManageStickerPackViewController {
         view.addSubview(tableView)
         
         emptyLabel.font = .small
-        emptyLabel.textColor = .secondaryLabel
+        emptyLabel.textColor = UserManager.shared.getAppTheme().colorSkin.secondaryLabelColor
         emptyLabel.textAlignment = .center
         emptyLabel.text = "No sticker pack"
         emptyLabel.isHidden = true
+        view.backgroundColor = UserManager.shared.getAppTheme().colorSkin.backgroundColor
         view.addSubview(emptyLabel)
     }
     private func configureConstraints() {
         segmentControl.snp.remakeConstraints { make in
-            make.top.equalTo(view.layoutMarginsGuide)
+            make.top.equalTo(view.layoutMarginsGuide).inset(Constants.Spacing.medium)
             make.centerX.equalToSuperview()
         }
         tableView.snp.remakeConstraints { make in
@@ -120,8 +121,8 @@ extension ManageStickerPackViewController: UITableViewDataSource, UITableViewDel
         cell.delegate = self
         return cell
     }
-    func manageStickerCellDidTapAdd(_ cell: ManageStickerCell) {
-        // TODO: -
+    func manageStickerCellDidTapAdd(_ cell: ManageStickerCell, _ stickerPack: StickerPack) {
+        viewModel.addStickerPack(for: stickerPack.id)
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         defer {
@@ -140,7 +141,6 @@ extension ManageStickerPackViewController: StickerPackDetailsViewControllerDeleg
         viewModel.removeStickerPack(for: stickerPack.id)
     }
     func stickerPackDetailsViewControllerDidTapAdd(_ viewController: StickerPackDetailsViewController, _ stickerPack: StickerPack) {
-        // download -> move to myPacks tab, and reload tableView
         viewModel.addStickerPack(for: stickerPack.id)
     }
 }

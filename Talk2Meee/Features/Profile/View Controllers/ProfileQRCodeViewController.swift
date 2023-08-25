@@ -29,10 +29,7 @@ extension ProfileQRCodeViewController {
 extension ProfileQRCodeViewController {
     private func configureViews() {
         title = "QR Code"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: Icons.squareAndArrowUp), style: .plain, target: self, action: #selector(didTapShare))
-        
-        
-                                                            
+        navigationItem.rightBarButtonItem = UIBarButtonItem.initWithThemeColor(image: UIImage(systemName: Icons.squareAndArrowUp), style: .plain, target: self, action: #selector(didTapShare))
     }
     private func configureConstraints() {
         

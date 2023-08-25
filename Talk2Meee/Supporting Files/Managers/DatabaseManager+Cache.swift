@@ -242,3 +242,7 @@ extension Notification.Name {
     static let didUpdateCurrentUser = Notification.Name("didUpdateCurrentUser")
     static let didUpdateStickers = Notification.Name("didUpdateStickers")
 }
+
+// save each chat and last read message ID when quit ChatViewController
+// compare message ID, if it's not read show red dot
+// try generate ID +1 (do it later...)

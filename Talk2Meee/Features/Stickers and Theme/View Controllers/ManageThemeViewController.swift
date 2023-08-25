@@ -45,11 +45,13 @@ extension ManageThemeViewController {
         view.addSubview(collectionView)
         
         emptyLabel.font = .small
-        emptyLabel.textColor = .secondaryLabel
+        emptyLabel.textColor = UserManager.shared.getAppTheme().colorSkin.secondaryLabelColor
         emptyLabel.textAlignment = .center
         emptyLabel.text = "No themes"
         emptyLabel.isHidden = true
         view.addSubview(emptyLabel)
+        
+        view.backgroundColor = UserManager.shared.getAppTheme().colorSkin.backgroundColor
     }
     private func configureConstraints() {
         collectionView.snp.remakeConstraints { make in

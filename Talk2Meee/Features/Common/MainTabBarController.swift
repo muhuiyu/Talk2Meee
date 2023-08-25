@@ -24,10 +24,6 @@ extension MainTabBarController {
     
     private func generateViewController(_ category: TabBarCategory) -> UINavigationController? {
         let viewController = category.getViewController(appCoordinator).embedInNavgationController()
-        let appTheme = UserManager.shared.getAppTheme()
-        viewController.navigationBar.standardAppearance = appTheme.navigationBarAppearance
-        viewController.navigationBar.scrollEdgeAppearance = appTheme.navigationBarAppearance
-        viewController.navigationBar.compactAppearance = appTheme.navigationBarAppearance
         return viewController
     }
 }

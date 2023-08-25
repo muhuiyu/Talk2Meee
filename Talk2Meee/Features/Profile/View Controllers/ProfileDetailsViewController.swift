@@ -43,10 +43,10 @@ extension ProfileDetailsViewController {
         dismissKeyboard()
     }
     private func configureViews() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction(handler: { _ in
+        navigationItem.leftBarButtonItem = UIBarButtonItem.initWithThemeColor(systemItem: .cancel, primaryAction: UIAction(handler: { _ in
             self.navigationController?.popViewController(animated: true)
         }))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .save, primaryAction: UIAction(handler: { [weak self] _ in
+        navigationItem.rightBarButtonItem = UIBarButtonItem.initWithThemeColor(systemItem: .save, primaryAction: UIAction(handler: { [weak self] _ in
             self?.updateData()
             self?.navigationController?.popViewController(animated: true)
         }))

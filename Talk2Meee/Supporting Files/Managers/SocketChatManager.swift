@@ -19,7 +19,7 @@ class SocketChatManger {
     private var conversationID: String?
     
     init() {
-        manager = SocketManager(socketURL: URL(string: "http://192.168.1.204:3000")!, config: [.log(true), .compress, .forceWebsockets(true), .reconnectWait(10)])
+        manager = SocketManager(socketURL: URL(string: "https://talk2meee.onrender.com")!, config: [.log(true), .compress, .forceWebsockets(true), .reconnectWait(10)])
         socket = manager.defaultSocket
         configureHandlers()
     }

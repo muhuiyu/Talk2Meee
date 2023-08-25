@@ -35,8 +35,9 @@ class PhotoViewerViewController: BaseViewController {
 // MARK: - View Config
 extension PhotoViewerViewController {
     private func configureViews() {
+        let placeholder = UIImage(systemName: Icons.photo)
         imageView.contentMode = .scaleAspectFit
-        imageView.kf.setImage(with: url)
+        imageView.kf.setImage(with: url, placeholder: placeholder)
         view.addSubview(imageView)
         
         title = "Photo"

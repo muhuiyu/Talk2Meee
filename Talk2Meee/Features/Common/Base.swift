@@ -55,5 +55,6 @@ class BaseViewController: ViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.backBarButtonItem?.tintColor = UserManager.shared.getAppTheme().colorSkin.navigationBarItemTintColor
     }
 }

@@ -49,7 +49,7 @@ extension NewConversationViewController {
         searchBar.placeholder = "Search for users..."
         searchBar.delegate = self
         navigationItem.titleView = searchBar
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(didTapCancel))
+        navigationItem.rightBarButtonItem = UIBarButtonItem.initWithThemeColor(title: "Cancel", style: .done, target: self, action: #selector(didTapCancel))
         
         tableView.isHidden = true
         tableView.dataSource = self
@@ -59,7 +59,7 @@ extension NewConversationViewController {
         emptyStateLabel.isHidden = true
         emptyStateLabel.text = "No results"
         emptyStateLabel.textAlignment = .center
-        emptyStateLabel.textColor = .secondaryLabel
+        emptyStateLabel.textColor = UserManager.shared.getAppTheme().colorSkin.secondaryLabelColor
         emptyStateLabel.font = .body
         view.addSubview(emptyStateLabel)
     }

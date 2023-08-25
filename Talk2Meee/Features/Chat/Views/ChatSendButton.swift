@@ -15,11 +15,9 @@ class ChatSendButton: InputBarButtonItem {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setSize(CGSize(width: 35, height: 44), animated: false)
+        tintColor = UserManager.shared.getAppTheme().colorSkin.chatInputBarTintColor
         setImage(UIImage(systemName: Icons.arrowUp), for: .normal)
-        imageView?.tintColor = .systemBlue
         imageView?.layer.cornerRadius = 16
-        imageView?.backgroundColor = UIColor(white: 0.85, alpha: 1)
-        backgroundColor = .cyan
         onTouchUpInside { [weak self] _ in
             self?.tapHandler?()
         }

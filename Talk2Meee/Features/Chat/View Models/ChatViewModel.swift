@@ -15,7 +15,7 @@ class ChatViewModel: Base.ViewModel {
     let chat: Chat
     private let messages: BehaviorRelay<[ChatMessage]> = BehaviorRelay(value: [])
     let displayedMessages: BehaviorRelay<[Message]> = BehaviorRelay(value: [])
-    let stickerPacks: BehaviorRelay<[StickerPack]> = BehaviorRelay(value: UserManager.shared.getStickerPacks())
+    let userStickerPacks: BehaviorRelay<[StickerPack]> = BehaviorRelay(value: UserManager.shared.getUserStickerPacks())
     
     private var dataObserver: NSObjectProtocol?
     private var stickerPacksObserver: NSObjectProtocol?
@@ -28,7 +28,6 @@ class ChatViewModel: Base.ViewModel {
     init(appCoordinator: AppCoordinator? = nil, chat: Chat) {
         self.chat = chat
         super.init(appCoordinator: appCoordinator)
-        getStickerPacks()
         configureBindings()
     }
     
@@ -68,8 +67,8 @@ extension ChatViewModel {
 
 // MARK: - Stickers
 extension ChatViewModel {
-    private func getStickerPacks() {
-        stickerPacks.accept(UserManager.shared.getStickerPacks())
+    private func getUserStickerPacks() {
+        userStickerPacks.accept(UserManager.shared.getUserStickerPacks())
     }
 }
 
@@ -119,10 +118,10 @@ extension ChatViewModel {
             self.loadMessages()
         })
         
-        stickerPacksObserver = NotificationCenter.default.addObserver(forName: .didUpdateStickers, object: nil, queue: .main, using: { [weak self] _ in
+        stickerPacksObserver = NotificationCenter.default.addObserver(forName: .didUpdateCurrentUser, object: nil, queue: .main, using: { [weak self] _ in
             guard let self = self else { return }
             print("should update stickers")
-            self.getStickerPacks()
+            self.getUserStickerPacks()
         })
         
         messages

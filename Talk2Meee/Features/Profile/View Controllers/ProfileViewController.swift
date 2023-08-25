@@ -35,6 +35,7 @@ extension ProfileViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(ProfileUserCell.self, forCellReuseIdentifier: ProfileUserCell.reuseID)
+        view.backgroundColor = UserManager.shared.getAppTheme().colorSkin.backgroundColor
         view.addSubview(tableView)
     }
     private func configureConstraints() {
@@ -65,6 +66,7 @@ extension ProfileViewController: UITableViewDataSource {
         if item.isDefaultCell {
             let cell = UITableViewCell()
             cell.imageView?.image = item.image
+            cell.imageView?.tintColor = UserManager.shared.getAppTheme().colorSkin.tintColor
             cell.textLabel?.text = item.title
             if item == .logOut {
                 cell.textLabel?.textColor = .systemRed

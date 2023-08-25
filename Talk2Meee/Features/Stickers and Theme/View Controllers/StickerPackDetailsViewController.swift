@@ -79,11 +79,11 @@ extension StickerPackDetailsViewController {
         title = stickerPack.name
         collectionView.reloadData()
         let hasSticker = user.stickerPacks.contains(stickerPack.id)
-        actionButton.buttonColor = hasSticker ? .systemRed : .tintColor
+        actionButton.buttonColor = hasSticker ? .systemRed : UserManager.shared.getAppTheme().colorSkin.tintColor
         actionButton.text = hasSticker ? "Remove" : "Add"
     }
     private func configureViews() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: Icons.arrowshapeTurnUpForward), style: .plain, target: self, action: #selector(didTapForward))
+        navigationItem.rightBarButtonItem = UIBarButtonItem.initWithThemeColor(image: UIImage(systemName: Icons.arrowshapeTurnUpForward), style: .plain, target: self, action: #selector(didTapForward))
         layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
         layout.itemSize = CGSize(width: 84, height: 84)
         layout.scrollDirection = .vertical
