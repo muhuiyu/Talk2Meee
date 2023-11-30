@@ -91,6 +91,9 @@ extension ChatViewController {
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.messageCellDelegate = self
+        
+        maintainPositionOnInputBarHeightChanged = true
+        showMessageTimestampOnSwipeLeft = true
     }
     private func configureInputBar() {
         chatInputBar.delegate = self
@@ -186,6 +189,16 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
     func avatarSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize? {
         return .zero
+    }
+    func messageTimestampLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        let sentDate = message.sentDate
+        let sentDateString = MessageKitDateFormatter.shared.string(from: sentDate)
+        let timeLabelFont: UIFont = .boldSystemFont(ofSize: 10)
+        let timeLabelColor: UIColor = .systemGray
+        return NSAttributedString(
+          string: sentDateString,
+          attributes: [NSAttributedString.Key.font: timeLabelFont, NSAttributedString.Key.foregroundColor: timeLabelColor]
+        )
     }
 }
 

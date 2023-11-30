@@ -82,7 +82,7 @@ extension Chat: Persistable {
             lastMessage = ChatMessagePreview(id: lastMessageID, senderID: lastMessageSenderID, preview: lastMessagePreview, sentTime: lastMessageSentTime)
         } else {
             lastMessage = nil
-        }
+        } 
     }
     func managedObject() -> ChatObject {
         return ChatObject(id: id, title: title, imageStoragePath: imageStoragePath, members: members, lastMessage: lastMessage)

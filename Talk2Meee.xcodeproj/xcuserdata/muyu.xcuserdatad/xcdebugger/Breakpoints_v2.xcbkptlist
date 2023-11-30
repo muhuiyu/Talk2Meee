@@ -20,5 +20,244 @@
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6201CBEE-9E64-4081-84E2-8082BE41DFB8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Talk2Meee/AppDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "userNotificationCenter(_:didReceive:withCompletionHandler:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "6201CBEE-9E64-4081-84E2-8082BE41DFB8 - 98fa983f0707d17"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Talk2Meee.AppDelegate.userNotificationCenter(_: __C.UNUserNotificationCenter, didReceive: __C.UNNotificationResponse, withCompletionHandler: () -&gt; ()) -&gt; ()"
+                  moduleName = "Talk2Meee"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "70"
+                  endingLineNumber = "70"
+                  offsetFromSymbolStart = "136">
+               </Location>
+               <Location
+                  uuid = "6201CBEE-9E64-4081-84E2-8082BE41DFB8 - 98fa983f0707d17"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Talk2Meee.AppDelegate.userNotificationCenter(_: __C.UNUserNotificationCenter, didReceive: __C.UNNotificationResponse, withCompletionHandler: () -&gt; ()) -&gt; ()"
+                  moduleName = "Talk2Meee"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "70"
+                  endingLineNumber = "70"
+                  offsetFromSymbolStart = "100">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C930A199-843D-46A5-97E6-C7DA28004443"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Talk2Meee/AppDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
+            landmarkName = "userNotificationCenter(_:willPresent:withCompletionHandler:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "C930A199-843D-46A5-97E6-C7DA28004443 - 98fa983f0707dd5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Talk2Meee.AppDelegate.userNotificationCenter(_: __C.UNUserNotificationCenter, didReceive: __C.UNNotificationResponse, withCompletionHandler: () -&gt; ()) -&gt; ()"
+                  moduleName = "Talk2Meee"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68"
+                  offsetFromSymbolStart = "104">
+               </Location>
+               <Location
+                  uuid = "C930A199-843D-46A5-97E6-C7DA28004443 - aaf33945cc81e469"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Talk2Meee.AppDelegate.userNotificationCenter(_: __C.UNUserNotificationCenter, willPresent: __C.UNNotification, withCompletionHandler: (__C.UNNotificationPresentationOptions) -&gt; ()) -&gt; ()"
+                  moduleName = "Talk2Meee"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "67"
+                  endingLineNumber = "67"
+                  offsetFromSymbolStart = "396">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "59E0CDC9-34BA-45FC-BD0B-88435B05B4C0"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Talk2Meee/Features/Chat/View Models/ChatViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "sendImageMessage(_:_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "02C5655B-E6C7-4751-B97C-AA14ACF81960"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Talk2Meee/Supporting Files/Managers/StorageManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "uploadMessagePhoto(in:with:_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "02C5655B-E6C7-4751-B97C-AA14ACF81960 - 2dc97b5a2a5acded"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(6) suspend resume partial function for Talk2Meee.StorageManager.uploadMessagePhoto(in: Swift.String, with: Foundation.Data, _: Swift.String) async -&gt; Swift.Result&lt;Swift.String, Swift.Error&gt;"
+                  moduleName = "Talk2Meee"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/Supporting%20Files/Managers/StorageManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "56"
+                  endingLineNumber = "56"
+                  offsetFromSymbolStart = "132">
+               </Location>
+               <Location
+                  uuid = "02C5655B-E6C7-4751-B97C-AA14ACF81960 - ac5791c5d94d6fec"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(7) suspend resume partial function for Talk2Meee.StorageManager.uploadMessagePhoto(in: Swift.String, with: Foundation.Data, _: Swift.String) async -&gt; Swift.Result&lt;Swift.String, Swift.Error&gt;"
+                  moduleName = "Talk2Meee"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/Supporting%20Files/Managers/StorageManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "56"
+                  endingLineNumber = "56"
+                  offsetFromSymbolStart = "132">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F74D9631-E92F-4C1D-AD58-B91E2141FDC8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Talk2Meee/Features/Chat/View Models/ChatViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "sendImageMessage(_:_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "38E68DD1-5FFF-45A3-B6AB-4B0C05340A31"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Talk2Meee/Features/Chat/View Models/ChatViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "sendImageMessage(_:_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "38E68DD1-5FFF-45A3-B6AB-4B0C05340A31 - 9cfbdd36b90b1a08"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #1 @Sendable () async -&gt; () in Talk2Meee.ChatViewModel.sendImageMessage(__C.UIImage, Foundation.Data) -&gt; ()"
+                  moduleName = "Talk2Meee"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/Features/Chat/View%20Models/ChatViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "732">
+               </Location>
+               <Location
+                  uuid = "38E68DD1-5FFF-45A3-B6AB-4B0C05340A31 - 3a0d91b141ad3c11"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for closure #1 @Sendable () async -&gt; () in Talk2Meee.ChatViewModel.sendImageMessage(__C.UIImage, Foundation.Data) -&gt; ()"
+                  moduleName = "Talk2Meee"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/Features/Chat/View%20Models/ChatViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "38E68DD1-5FFF-45A3-B6AB-4B0C05340A31 - 401d233153524606"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #1 @Sendable () async -&gt; () in Talk2Meee.ChatViewModel.sendImageMessage(__C.UIImage, Foundation.Data) -&gt; ()"
+                  moduleName = "Talk2Meee"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/muyu/Dev/mine/Talk2Meee/Talk2Meee/Features/Chat/View%20Models/ChatViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "124">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

@@ -9,6 +9,7 @@ import UIKit
 import MessageKit
 import MapKit
 import CoreLocation
+import PhotosUI
 
 // MARK: - UINavigationControllerDelegate
 extension ChatViewController: UINavigationControllerDelegate {
@@ -51,13 +52,25 @@ extension ChatViewController: UINavigationControllerDelegate {
 }
 
 // MARK: - UIImagePickerControllerDelegate
-extension ChatViewController: UIImagePickerControllerDelegate {
+extension ChatViewController: UIImagePickerControllerDelegate, PHPickerViewControllerDelegate {
     private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
-        let picker = UIImagePickerController()
-        picker.sourceType = sourceType
-        picker.delegate = self
-        picker.allowsEditing = true
-        self.present(picker, animated: true)
+        switch sourceType {
+        case .camera:
+            let picker = UIImagePickerController()
+            picker.sourceType = .camera
+            picker.delegate = self
+            picker.allowsEditing = false
+            self.present(picker, animated: true)
+        case .photoLibrary:
+            var configuration = PHPickerConfiguration()
+            configuration.selectionLimit = 5
+            configuration.filter = .images
+            let picker = PHPickerViewController(configuration: configuration)
+            picker.delegate = self
+            present(picker, animated: true)
+        default:
+            return
+        }
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true)
@@ -66,17 +79,19 @@ extension ChatViewController: UIImagePickerControllerDelegate {
         defer {
             picker.dismiss(animated: true)
         }
-        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage, let imageData = image.pngData() else { return }
-        Task {
-            let fileName = "\(viewModel.chat.id)_image_\(Date().ISO8601Format()).png"
-            let result = await StorageManager.shared.uploadMessagePhoto(in: viewModel.chat.id, with: imageData, fileName)
-            switch result {
-            case .success(let urlString):
-                // TODO: - Send message
-                // viewModel.sendMessage(for: ChatMessageImageContent(imageStoragePath: urlString, thumbnailStoragePath: <#T##String#>, caption: <#T##String?#>, width: <#T##Int#>, height: <#T##Int#>, format: "png"), as: .image)
-                return
-            case .failure(let error):
-                print("message photo upload error: \(error)")
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage, let imageData = image.pngData() else { return }
+        viewModel.sendImageMessage(image, imageData)
+    }
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        defer {
+            picker.dismiss(animated: true)
+        }
+        for result in results {
+            guard result.itemProvider.canLoadObject(ofClass: UIImage.self) else { continue }
+            result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                if let image = image as? UIImage, let imageData = image.pngData() {
+                    self?.viewModel.sendImageMessage(image, imageData)
+                }
             }
         }
     }

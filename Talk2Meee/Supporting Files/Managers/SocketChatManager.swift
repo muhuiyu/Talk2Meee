@@ -16,10 +16,14 @@ class SocketChatManger {
     private var socket: SocketIOClient!
     private var resetAck: SocketAckEmitter?
     
+    private var messageQueue = [ChatMessage]()
+    
     private var conversationID: String?
     
     init() {
-        manager = SocketManager(socketURL: URL(string: "https://talk2meee.onrender.com")!, config: [.log(true), .compress, .forceWebsockets(true), .reconnectWait(10)])
+//        let url = "http://192.168.1.204:3000"
+        let url = "https://talk2meee.onrender.com"
+        manager = SocketManager(socketURL: URL(string: url)!, config: [.log(true), .compress, .forceWebsockets(true), .reconnectWait(10)])
         socket = manager.defaultSocket
         configureHandlers()
     }
@@ -39,6 +43,7 @@ extension SocketChatManger {
         socket.emit("subscribe", chatIDs)
     }
     func sendMessage(_ message: ChatMessage) {
+        messageQueue.append(message)
         socket.emit("sendMessage", message)
     }
     func emitUserTyping(in chatID: ChatID) {
@@ -49,12 +54,21 @@ extension SocketChatManger {
         guard let user = UserManager.shared.getChatUser() else { return }
         socket.emit("userStoppedTyping", [ "userID": user.id, "chatID": chatID ])
     }
+    func updateLastReadMessage(_ messageID: MessageID, in chatID: ChatID) {
+        guard let user = UserManager.shared.getChatUser() else { return }
+        socket.emit("updateLastReadMessage", [ "userID": user.id, "messageID": messageID, "chatID": chatID ])
+    }
 }
 
 // MARK: - Handlers
 extension SocketChatManger {
     private func handleReceiveMessage(_ data: [Any]) {
         DatabaseManager.shared.receiveMessage(data[0])
+    }
+    private func handleDidSendMessage(_ data: [Any]) {
+        guard let data = data[0] as? [String: Any], let messageID = data["messageID"] as? String, let chatID = data["chatID"] as? String else { return }
+        messageQueue.removeAll(where: { $0.id == messageID && $0.chatID == chatID })
+        // TODO: - Update to chat
     }
     private func handleUserTyping(_ data: [Any]) {
 //        guard let userID = data[0]["userID"] as? UserID, let chatID = data[0]["chatID"] as? ChatID else { return }
@@ -69,6 +83,9 @@ extension SocketChatManger {
         }
         socket.on("receiveMessage") { data, ack in
             self.handleReceiveMessage(data)
+        }
+        socket.on("didSendMessage") { data, ack in
+            self.handleDidSendMessage(data)
         }
         socket.on("userTyping") { data, ack in
             self.handleUserTyping(data)

@@ -48,6 +48,20 @@ extension ChatViewModel {
         let chatMessage = ChatMessage(id: newIdentifier, chatID: chat.id, sender: sender.senderId, sentTime: Date(), type: type, content: content, searchableContent: content.getSearchableContent(), quotedMessageID: nil)
         DatabaseManager.shared.sendMessage(chatMessage)
     }
+    func sendImageMessage(_ image: UIImage, _ imageData: Data) {
+        Task {
+            let fileName = "image_\(Date().ISO8601Format())_\(UUID().uuidString).png"
+            let result = await StorageManager.shared.uploadMessagePhoto(in: chat.id, with: imageData, fileName)
+            switch result {
+            case .success(let urlString):
+                // TODO: - Generate thumbnail image; add caption
+                sendMessage(for: ChatMessageImageContent(imageStoragePath: urlString, thumbnailStoragePath: urlString, caption: nil, width: Int(image.size.width), height: Int(image.size.height), format: "png"), as: .image)
+                return
+            case .failure(let error):
+                print("message photo upload error: \(error)")
+            }
+        }
+    }
     private func sendMessageResultHandler(_ result: VoidResult) {
         switch result {
         case .failure(let error):
